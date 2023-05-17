@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Send Message to {{ recipient }}</h1>
+    <div class="post-container">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.body.label(class="form-control-label") }}
+
+                {% if form.body.errors %}
+                    {{form.body(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.body.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.body(class="form-control form-control-lg")}}
+                {% endif %}
+            </div>
+            <div>
+                {{ form.submit }}
+            </div>
+        </form>
+    </div>
+    
+{% endblock content %}

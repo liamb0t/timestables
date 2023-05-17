@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Followers</h1>
+    <div class="post-container">
+        {% for follower in followers %}
+            {{ follower.username }}
+        {% endfor %}
+    </div>
+    
+{% endblock content %}

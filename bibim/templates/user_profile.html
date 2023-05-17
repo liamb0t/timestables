@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+    
+<div class="user-page-container">
+    <div class="user-page-profile-header">
+        <img class="user-page-profile-image" src="/static/pics/default.jpg" alt="Profile Image">
+        <div class="user-page-profile-info">
+            <div class="user-page-user-bar">
+                <h2 class="user-page-username">{{ user.username }}</h2>
+                <button class="user-page-follow-button">Follow</button>
+                <a href="{{ url_for('posts.send_message', recipient=user.username) }}">
+                    <button class="user-page-message-button">Message</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="user-page-stats">
+        <div class="user-page-stat">
+            <h3 class="user-page-count">{{ user.karma }}</h3>
+            <span class="user-page-label">Karma</span>
+        </div>
+        <div class="user-page-stat">
+            <h3 class="user-page-count">{{ followers_count }}</h3>
+            <span class="user-page-label">Followers</span>
+        </div>
+        <div class="user-page-stat">
+            <h3 class="user-page-count">{{ following_count}}</h3>
+            <span class="user-page-label">Following</span>
+        </div>
+    </div>
+    <div class="user-page-about-section">
+        {% if user.about %}
+            <p>{{ user.about }} </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

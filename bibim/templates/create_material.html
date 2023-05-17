@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+{% block content %}
+    <legend class="border-bottom mb-4">Create a post for {{ legend }}</legend>
+    <div class="creator-container">
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <div>
+                    {% if form.title.errors %}
+                        {{form.title(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                {% else %}
+                    {{ form.title(class="form-control form-control-lg")}}
+                {% endif %}
+                    
+                </div>
+
+                <div>
+                   
+                    
+                    {% if form.grade.errors %}
+                        {{form.grade(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.grade.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ form.grade(class="filter-select")}}
+                    {% endif %}
+
+                    
+                    
+                    {% if form.publisher.errors %}
+                        {{form.publisher(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.publisher.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.publisher(class="filter-select")}}
+                    {% endif %}
+
+                   
+                    
+                    {% if form.lesson.errors %}
+                        {{form.lesson(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.lesson.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.lesson(class="filter-select")}}
+                    {% endif %}
+
+                   
+                    
+                    
+                </div>
+                
+                <div>
+                    
+                    {% if form.material_type.errors %}
+                        {{form.material_type(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.material_type.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.material_type(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                   
+                <div>
+                  
+                    {% if form.content.errors %}
+                        {{form.content(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.content.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.content(class="form-control form-control-lg")}}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.files.label(class="form-control-label") }}
+                    
+                    {% if form.files.errors %}
+                        {{form.files(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.files.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.files(class="form-control form-control-lg")}}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div>
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='js/create_material.js') }}"></script>
+{% endblock content %}

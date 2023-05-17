@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block content %}
+   
+    <h1>Teachers Lounge</h1>
+   
+    <div class="posts">
+        <div class="post-form-container">
+            <div class="post-form-header">
+                <img class="post-form-img" src="static/pics/default.jpg">
+                <form method="POST" action="">
+                    {{ post_form.hidden_tag() }}
+                    <div class="form-group">      
+                        {% if post_form.content.errors %}
+                            {{post_form.content(class="form-control form-control-lg is-invalid")}}
+                            <div class="invalid-feedback">
+                                {% for error in post_form.content.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ post_form.content}}
+                        {% endif %}
+                    </div>
+                    <div class="post-form-footer">
+                        <div>{{ post_form.submit }}</div>
+                    </div>
+                </form>
+            </div>
+            
+            
+        </div>
+    </div>
+    <div class="announcement-container">
+        <div class="announcement-bar">
+          <p class='text-muted'>You can put any information here you'd like.
+            <ul class="list-group">
+              <li class="list-group-item list-group-item-light">Latest Posts
+                <div>
+                    {% for post in popular_posts %}
+                        {{ post.author.username }}
+                        {{ post.content }}
+                    {% endfor %}
+                </div>
+              </li>
+              <li class="list-group-item list-group-item-light">Announcements</li>
+              <li class="list-group-item list-group-item-light">Calendars</li>
+              <li class="list-group-item list-group-item-light">etc</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock content %}

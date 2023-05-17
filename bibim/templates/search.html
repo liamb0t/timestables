@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Search Results</h1>
+    {% for post in posts %}
+        {{ post.title }}
+        {{ post.creator.username }}
+        {{ post.content }}
+    {% endfor %}
+{% endblock content %}

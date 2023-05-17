@@ -1,0 +1,132 @@
+const addCommentBtn = document.getElementById('submit');
+const commentForm = document.querySelector('.material-comment-form');
+const postID = commentForm.dataset.postid;
+const mainLikeIcon = document.getElementById(`material-like-button`);
+const commentField = document.querySelector('.material-comment-field-input');
+const commentFieldHidden = document.querySelector('#reply_id');
+const replyBtns = document.querySelectorAll('.reply-btn');
+const showReplyBtns = document.querySelectorAll('.show-replies-btn');
+
+commentForm.addEventListener('submit', handleSubmit);
+
+showReplyBtns.forEach(btn => {  
+    btn.addEventListener('click', function() {
+        console.log('isjdofji')
+        const commentId = this.dataset.commentId;
+        const repliesCount = this.dataset.repliesCount
+        const replyDiv = document.getElementById(`comment-reply-${commentId}`);
+        replyDiv.style.display = replyDiv.style.display === 'block' ? 'none' : 'block';
+        this.innerHTML = replyDiv.style.display === 'block' ? '&mdash;&mdash; Hide replies' : `&mdash;&mdash; View replies (${repliesCount})`;
+    })
+});
+
+const commentLikeIcons = document.querySelectorAll('.like-icon i')
+console.log(commentLikeIcons)
+
+commentLikeIcons.forEach(icon => {
+    icon.addEventListener('click', handleLikesComment)
+});
+
+replyBtns.forEach(btn => {
+    btn.addEventListener('click', handleReply);
+});
+
+mainLikeIcon.addEventListener('click', handleLikesMaterial)
+
+function handleReply() {
+    commentField.value = '';
+    const commentId = this.dataset.commentId;
+    const author = this.dataset.author;
+    commentField.value += '@' + author + ' ';
+    commentField.focus();
+    commentFieldHidden.value = commentId;
+    console.log(commentFieldHidden)
+}
+
+function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+    const textareaValue = formData.get('content');
+    const parentId = formData.get('reply_id');
+  
+    // Create the payload
+    const payload = {
+        textAreaData: textareaValue,
+        parent_id: parentId
+    };
+  
+    // Send a POST request to the route using AJAX
+    fetch(`/material/${postID}/comment`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(comment => {
+        // Create a new comment element and add it to the comments list
+        const commentElement = document.createElement('li');
+        commentElement.classList.add('comment');    
+        commentElement.innerHTML = `
+            <a href="/users/${comment.author}">${comment.author}</a>
+            <span>${comment.content}</span>
+            <small>${comment.date_posted}</small>
+        `;
+        const commentsList = document.querySelector('.comments');
+        commentsList.appendChild(commentElement);
+        // Clear the content of the comment form
+        this.reset();
+    });
+  }
+
+function handleLikesMaterial() {
+    const material_id = this.dataset.materialId;
+    const counter = document.getElementById(`material-like-count`);
+    let count = parseInt(counter.dataset.materialLikes);
+
+    fetch(`/like-material/${material_id}`)  
+    .then(response => response.json())
+    .then(data => {
+        if (data['liked']) {
+            counter.innerHTML = `${count + 1} likes`;
+            counter.dataset.materialLikes = count + 1;
+            mainLikeIcon.setAttribute('class', 'fa-solid fa-heart');
+            mainLikeIcon.style.color = 'red'
+        }
+        else {
+            counter.innerHTML = `${count - 1} likes`;
+            counter.dataset.materialLikes = count - 1;
+            mainLikeIcon.setAttribute('class', 'fa-regular fa-heart');
+            mainLikeIcon.style.color = 'black'
+        }
+    })
+}
+
+function handleLikesComment() {
+    console.log('test')
+    const comment_id = this.dataset.commentId;
+    const counter = document.getElementById(`like-counter-${comment_id}`);
+    let count = parseInt(counter.dataset.count);
+
+    fetch(`/like-comment/${comment_id}`)  
+    .then(response => response.json())
+    .then(data => {
+        if (data['liked']) {
+            counter.innerHTML = `${count + 1} likes`;
+            counter.dataset.count = count + 1;
+            this.setAttribute('class', 'fa-solid fa-heart');
+            this.style.color = 'red';
+            counter.style.display = 'block';
+        }
+        else {
+            counter.innerHTML = `${count - 1} likes`;
+            counter.dataset.count = count - 1;
+            if (counter.dataset.count == 0) {
+                counter.style.display = 'none';
+            }
+            this.setAttribute('class', 'fa-regular fa-heart');
+            this.style.color = 'black';
+        }
+    })
+}

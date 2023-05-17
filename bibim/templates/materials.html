@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Materials for {{ level }} school</h1>
+
+    <a href="{{ url_for('materials.create_material', level=level) }}">Create</a>
+
+    <nav class="materials-nav">
+        <a href="{{ url_for('materials.load_materials', level=level) }}">All</a>
+        {% if level == 'elementary' %}
+        <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">Kindergarten</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">1st grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=2) }}">2nd grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=3) }}">3rd grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=4) }}">4th grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=5) }}">5th grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">6th grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Afterschool</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Phonics</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Themed lessons</a>
+        
+    {% elif level == 'middle' %}
+        <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">1st grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=2) }}">2nd grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=3) }}">3rd grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Afterschool</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Tests</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Themed lessons</a>
+    {% elif level == 'high' %}
+        <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">1st grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=2) }}">2nd grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=3) }}">3rd grade</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Afterschool</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Tests</a>
+        <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Themed lessons</a>
+    {% elif level == 'games' %}
+
+    {% elif level == 'camp' %}
+        <a href="{{ url_for('materials.load_materials', level=level) }}">Movie themed</a>
+        <a href="{{ url_for('materials.load_materials', level=level) }}">Music themed</a>
+        <a href="{{ url_for('materials.load_materials', level=level) }}">Science themed</a>
+        <a href="{{ url_for('materials.load_materials', level=level) }}">Travel & culture themed</a>
+        <a href="{{ url_for('materials.load_materials', level=level) }}">Game themed</a>
+        <a href="{{ url_for('materials.load_materials', level=level) }}">Reading themed</a>
+        <a href="{{ url_for('materials.load_materials', level=level) }}">Other</a>
+    {% endif %}
+    </nav>
+
+    <div class="materials-filters">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            {% if level == 'camp' %}
+               
+            {% else %}
+    
+                {% if form.publisher.errors %}
+                    {{form.publisher(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.publisher.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ form.publisher(class="filter-select")}}
+                {% endif %}
+    
+                {% if form.lesson.errors %}
+                    {{form.lesson(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.lesson.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ form.lesson(class="filter-select")}}
+                {% endif %}
+    
+                {% if form.type.errors %}
+                    {{form.type(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.type.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ form.type(class="filter-select")}}
+                {% endif %}
+
+                {{ form.submit}}
+               
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="material-posts">
+        {% for material in materials %}
+            <a href="{{ url_for('materials.material', material_id=material.id)}}">
+                <div class="material-post-container">
+                <img class="material-post-profile-picture" src="/static/pics/default.jpg" alt="Profile Picture">
+                <div>
+                    <div class="material-post-header">
+                        <div class="material-post-grade">Grade {{ material.grade }}</div>
+                        <div class="material-post-title">{{ material.title }}</div>
+                    </div>
+                    <div class="material-post-footer">
+                        <div class="material-post-user-info">
+                            <span class="material-post-author">{{ material.creator.username }}</span>
+                            <span>&bull;</span>
+                            <span class="material-post-date">{{ post_timestamp(material.date_posted) }}</span>
+                        </div>
+                        <div class="material-post-comment-info">
+                            <i class="fa-regular fa-heart"></i>
+                            <span class="material-post-likes">{{ material.likes_count() }}</span>
+                            <i class="fa-regular fa-comment"></i>
+                            <span class="material-post-comments">{{ material.comments_count() }}</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    {% for page_num in materials.iter_pages() %}
+        {% if page_num %}
+            <a class="btn btn-info mb4" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}    
+    
+{% endblock content %}
+

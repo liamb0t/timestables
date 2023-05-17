@@ -1,0 +1,1034 @@
+/* create a post styling */
+
+.creator-container {
+  background-color:#ffffff;
+  padding: 20px;
+}
+
+/* login styling */
+
+.login-body {
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #eeeeee;
+  font-family: Arial, sans-serif;
+}
+
+.login-container {
+  width: 300px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.login-logo {
+  display: block;
+  margin: 0 auto;
+  width: 150px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-input, .login-button {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+.login-input[type="checkbox"] {
+  margin-top: 5px;
+}
+
+.login-body a {
+  color: blue;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.login-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #45a049;
+}
+
+
+
+/* navbar styling */
+
+body {
+  background-color: #f6f6f6;;
+}
+
+i {
+  color: rgb(57, 62, 88);
+  transform: scale(1.5);
+  margin-right: 20px;
+  transition: transform 0.2s ease-in-out;
+}
+
+a:hover i {
+  transform: scale(1.6);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  padding: 10px;
+}
+
+.navbar a {
+  color: #333;
+  font-size: 16px;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+#navbar-home {
+  width: 20%;
+  height: 20%;
+}
+
+.notification {
+  position: relative;
+  display: inline-block;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 50%;
+  background-color: #f44336;
+  color: white;
+  animation: scale-up 0.3s ease-in-out;
+  animation-fill-mode: both;
+  visibility: hidden;
+}
+
+.notification.new .badge {
+  visibility: visible;
+}
+
+@keyframes scale-up {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+/* wrapper styling */
+.wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+/* sidebar styling */
+.sidebar {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: fixed;
+  left: 0;
+  width: 300px;
+  height: 100%;
+  padding: 55px 20px 20px 50px; /* added padding here */
+}
+
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 5x;
+  margin-top: 5px;
+}
+
+.sidebar a {
+  color: #4f4f4f;
+  display: block;
+  font-size: 16px;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+
+
+.sidebar ul li a {
+  display: block;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  background-color: rgba(154, 154, 154, 0.138);
+  color: #161616;
+}
+
+
+/* main content styling */
+.main-content {
+  margin-left: 400px;
+  flex: 1;
+  padding: 15px;
+}
+
+/* add padding for the navbar */
+body {
+  padding-top: 60px; /* adjust this value to suit your navbar height */
+}
+
+
+
+/*** Styling for displaying a material (a single material, not all materials) ***/
+
+/* Main container */
+
+.material-container {
+  background-color: #ffffff;
+  padding: 20px;
+  max-width: 800px;
+}
+
+/* Header */
+.material-container .header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.material-container .profile-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.material-container .username {
+  font-weight: bold;
+}
+
+.material-container .date {
+  color: gray;
+}
+
+/* Title */
+.material-container .title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+/* Content */
+.material-container .content {
+  margin-bottom: 170px;
+}
+
+/* Like button */
+.material-container i {
+  margin: 0;
+  padding-right: 5px;
+  margin-bottom: 10px;
+}
+
+.uploads {
+  margin-top: 20px;
+}
+
+.uploads a{
+  text-decoration: none;
+}
+
+.attachment-count {
+  margin-left: 5px;
+  color: #888;
+}
+
+.attachment {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.attachment:hover {
+  background-color: #ebebeb;
+}
+
+
+.attachment-image {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.attachment-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.attachment-filename {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.attachment-size {
+  color: #888;
+  font-size: 12px;
+}
+
+
+.material-container .like-count {
+  color: gray;
+}
+
+/* Tags */
+.material-container .tags {
+  margin-bottom: 10px;
+}
+
+/* Footer */
+.material-container .footer {
+  border-top: 1px solid rgb(216, 216, 216);
+  margin-top: 20px;
+}
+
+/* Comments */
+.material-container .comments {
+  margin-bottom: 20px;
+}
+
+/* Comment form */
+.material-container .comment-form {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.material-container .comment-profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comments .comment-container {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
+.comment-container .user-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment-container .user-info {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.comment-container .header {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+}
+
+.comment-container .footer {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  border: none;
+  margin-bottom: 15px;
+}
+
+.comment-container .user-info .username {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+
+
+.comment-container .date {
+  font-size: 12px;
+  color: #999;
+  margin-right: 10px;
+}
+
+.comment-container .reply-btn {
+  font-size: 12px;
+  color: #999;
+  margin-right: 10px;
+}
+
+.comments-replies {
+  margin-top: 14px;
+}
+
+.show-replies-btn {
+  font-size: 12px;
+  color: #676767;
+  margin-right: 0;
+}
+
+.show-replies-btn:hover {
+  cursor: pointer;
+}
+
+.comment-container .reply-btn:hover {
+  cursor: pointer;
+}
+
+.comment-container .like-btn {
+  font-size: 12px;
+  color: #999;
+  margin-left: auto;
+}
+
+.comment-container .like-icon {
+  background-image: url('path-to-like-icon.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  transform: scale(0.75);
+}
+
+.material-comment-form {
+  width: 100%;
+}
+
+.material-comment-field {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 500px; /* adjust as needed */
+  height: 50px;
+  border-radius: 25px;
+  background-color: #f2f2f2;
+  padding: 10px;
+}
+
+.material-comment-field-profile-pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.material-comment-field-input {
+  resize: none;
+  flex: 1;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  border-radius: 25px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.material-comment-field-submit {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #4CAF50;
+  margin-left: 10px;
+  border: none;
+  outline: none;
+  position: relative;
+}
+
+.material-comment-field-submit::before {
+  content: "\f054";
+  font-family: FontAwesome;
+  font-size: 18px;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+/* Styling for displaying posts */
+
+.post-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.post-form-container {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  overflow: hidden;
+  width: 600px;
+  resize: none;
+}
+
+.post-form-header {
+  display: flex;
+}
+
+.post-form-footer {
+  display: flex;
+  justify-content: right;
+}
+
+.post-form-footer #submit {
+  padding: 10px;
+  border: none;
+  background-color: #ffffff;
+  color: #0077CC;
+}
+
+
+
+.post-form-container textarea {
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  padding: 10px;
+  width: 100%;
+  resize: none;
+  outline: none;
+}
+
+
+.post-form-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.post {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  overflow: hidden;
+  width: 600px;
+}
+
+.post a {
+  text-decoration: none;
+  color: #1d2024;
+  margin-right: 5px;
+}
+
+.post a:hover {
+  color: #96a1b2;
+}
+
+.post span {
+  margin-right: 5px;
+}
+
+.post-header {
+  align-items: center;
+  display: flex;
+  padding: 10px;
+}
+
+.post-username {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.post-date {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.post-content {
+  padding-left: 10px;
+}
+
+.post-footer {
+  border-top: 1px solid rgb(216, 216, 216);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.post-likes {
+  padding-left: 10px;
+  font-size: 0.8rem;
+}
+
+.posts icon:hover {
+  color: #959494;
+}
+
+.fa-solid {
+  cursor: pointer;
+  transform: scale(1.5);
+  margin-bottom: 10px;
+}
+
+.fa-regular {
+  cursor: pointer;
+  transform: scale(1.5);
+  margin-bottom: 10px;
+}
+
+.post-comments {
+  flex-grow: 1;
+}
+
+.post-comments textarea {
+  border: none;
+
+  font-size: 1rem;
+  width: 100%;
+  resize: none;
+  outline: none;
+}
+
+.post-comments button {
+  background-color: #256ecd;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.comments-list {
+  padding: 0;
+}
+
+.comment {
+  list-style: none;
+}
+
+.post-profile-pic {
+  top: 10px;
+  left: 10px;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  border-radius: 50%; /* Make the picture circular */
+  background-color: #030303; /* Add a background color to the profile picture */
+}
+
+.like-counter {
+  cursor: pointer;
+}
+
+/* likes pop up style */
+
+.likes-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  padding: 20px;
+  z-index: 9999;
+  transition: transform 0.3s ease;
+}
+
+.likes-popup h3 {
+  color: #030303;
+}
+
+.likes-content {
+  color: #fff;
+}
+
+.user-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-list li {
+  margin-bottom: 10px;
+}
+
+.user-info a {
+  text-decoration: none;
+  color: #494949;
+}
+
+.user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.follow-button {
+  background-color: #3897f0;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+/* overlay-bar styling */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 9998;
+  display: none;
+}
+
+/* freeze background scroll when overlay is played */
+
+.body-no-scroll {
+  overflow: hidden;
+}
+
+/* announcement-bar styling */
+
+.announcement-bar {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 50px; /* adjust this value to suit your navbar height */
+  right: 0;
+  width: 300px;
+  padding: 55px 20px 20px 50px;
+}
+
+.announcement-bar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.announcement-bar li {
+  margin-bottom: 5x;
+  margin-top: 5px;
+}
+
+.announcement-bar a {
+  color: #4f4f4f;
+  display: block;
+  font-size: 16px;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+
+.announcement-bar ul li a {
+  display: block;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.announcement-bar ul li a:hover {
+  background-color: rgba(154, 154, 154, 0.138);
+  color: #161616;
+}
+
+/* styling for hall of fame page */
+
+/* User container */
+.user {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-right: 40px;
+}
+
+/* Profile picture */
+.user img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* User info */
+.user-info h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.user-info p {
+  margin: 5px 0;
+  color: gray;
+}
+
+/* User list */
+.users-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination a,
+.pagination .current-page {
+  padding: 5px 10px;
+  margin-right: 5px;
+  color: #0077CC;
+  text-decoration: none;
+  border: 1px solid #0077CC;
+  border-radius: 3px;
+}
+
+.pagination .current-page {
+  background-color: #0077CC;
+  color: white;
+}
+
+.pagination .ellipsis {
+  margin-right: 5px;
+}
+
+
+/* style for displaying all materials for a grade/catergory */
+
+.materials-nav {
+  display: flex;
+  align-items: center;
+}
+
+
+
+.materials-nav a {
+  color: #757575;
+  border-radius: 10px;
+  text-decoration: none;
+  padding: 2px;
+  margin-right: 5px;
+}
+
+.materials-nav a:hover {
+  color: rgb(27, 26, 26);
+  background-color: #d1d1d1a5;
+}
+
+.material-posts {
+  max-width: 800px;
+  margin-bottom: 50px;
+}
+
+.material-post-container {
+  display: flex;
+  align-items: center;  
+  padding: 10px;
+  background-color: #ffffff;
+  border-bottom: solid 1px rgb(200, 200, 200);
+}
+
+.material-posts a {
+  color: #0e0e0e;
+  text-decoration: none;
+}
+
+.material-posts a:visited {
+  color: grey;
+}
+
+.material-post-container:hover {
+  background-color: rgba(154, 154, 154, 0.138);
+  color: #161616;
+}
+
+.material-post-header {
+  display: flex;
+  align-items: baseline;
+}
+
+.filter-select {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.material-post-profile-picture {
+  width: 50px; /* Adjust the size as needed */
+  height: 50px; /* Adjust the size as needed */
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.material-post-grade {
+  color: #ffffff;
+  background-color: #a4a4a4;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.material-post-title {
+  margin-right: 10px;
+}
+
+.material-post-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+
+
+.material-post-date {
+  font-size: 12px;
+  color: gray;
+  margin-right: 10px;
+}
+
+.material-post-icon {
+  margin-right: 5px;
+}
+
+.material-post-likes,
+.material-post-comments {
+  font-size: 12px;
+  color: gray;
+}
+
+
+/* style for users profile page */
+
+.user-page-container {
+  background-color: hsl(0, 43%, 99%);
+  max-width: 600px;
+  padding: 20px;
+}
+
+.user-page-profile-header {
+  display: flex;
+  align-items: center;
+}
+
+.user-page-profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.user-page-profile-info {
+  flex-grow: 1;
+}
+
+.user-page-user-bar {
+  display: flex;
+  align-items: center;
+}
+
+.user-page-username {
+  margin: 0;
+  margin-right: 20px;
+}
+
+.user-page-follow-button,
+.user-page-message-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.user-page-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.user-page-follow-button {
+  margin-right: 10px;
+}
+
+
+.user-page-stat {
+  text-align: center;
+}
+
+.user-page-count {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.user-page-label {
+  font-size: 12px;
+}
+
+.about-section {
+  margin-top: 20px;
+}
+
+.about-section h2 {
+  margin: 0;
+}
+
+.about-section p {
+  margin: 10px 0;
+}
