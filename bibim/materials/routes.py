@@ -73,7 +73,7 @@ def material_comment(material_id):
     comment.save()
     return jsonify({
         'content': comment.content,
-        'date_posted': comment.date_posted.strftime('%Y-%m-%d'),
+        'date_posted': post_timestamp(comment.date_posted),
         'author': current_user.username,
         'parent': parent_comment.commenter.username if parent_id else None
     })

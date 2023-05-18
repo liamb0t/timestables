@@ -78,7 +78,6 @@ def logout():
 def home():
     #posts =  Post.query.order_by(Post.date_posted.desc()).limit(10).all()
     post_form = PostForm()
-    print(post_form)
     placeholder =  choice(prompts)
     if not current_user.is_anonymous:
         post_form.content.render_kw['placeholder'] = f"{current_user.username}, {placeholder[0].lower()}{placeholder[1:]}"

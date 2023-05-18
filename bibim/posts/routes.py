@@ -35,15 +35,21 @@ def like_post(post_id):
 def post_comment(post_id):
     data = request.get_json()
     content = data["textAreaData"]
+    parent_id = data["parent_id"]
     post = Post.query.get(post_id)
     comment = Comment(content=content, post=post, commenter=current_user)
-    db.session.add(comment)
-    db.session.commit()
+    if parent_id:
+        parent_comment = Comment.query.filter_by(id=parent_id).first()
+        if parent_comment:
+            comment.parent = parent_comment
+    comment.save()
     return jsonify({
         'content': comment.content,
         'date_posted': comment.date_posted.strftime('%Y-%m-%d'),
-        'author': current_user.username
+        'author': current_user.username,
+        'parent': parent_comment.commenter.username if parent_id else None
     })
+
 
 @posts.route("/send_message/<string:recipient>", methods=["GET", "POST"])
 @login_required

@@ -7,11 +7,10 @@ const commentFieldHidden = document.querySelector('#reply_id');
 const replyBtns = document.querySelectorAll('.reply-btn');
 const showReplyBtns = document.querySelectorAll('.show-replies-btn');
 
-commentForm.addEventListener('submit', handleSubmit);
+commentForm.addEventListener('submit', handleSubmit);   
 
 showReplyBtns.forEach(btn => {  
     btn.addEventListener('click', function() {
-        console.log('isjdofji')
         const commentId = this.dataset.commentId;
         const repliesCount = this.dataset.repliesCount
         const replyDiv = document.getElementById(`comment-reply-${commentId}`);
@@ -40,7 +39,6 @@ function handleReply() {
     commentField.value += '@' + author + ' ';
     commentField.focus();
     commentFieldHidden.value = commentId;
-    console.log(commentFieldHidden)
 }
 
 function handleSubmit(event) {
@@ -66,15 +64,41 @@ function handleSubmit(event) {
     .then(response => response.json())
     .then(comment => {
         // Create a new comment element and add it to the comments list
-        const commentElement = document.createElement('li');
-        commentElement.classList.add('comment');    
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment-container');    
         commentElement.innerHTML = `
-            <a href="/users/${comment.author}">${comment.author}</a>
-            <span>${comment.content}</span>
-            <small>${comment.date_posted}</small>
+            <div>
+                <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+            </div>
+            <div class="user-info">
+                <div class="header">
+                    <div class="username">${comment["author"]}</div>
+                        ${comment.parent ? `<a href="url_for('users.user_profile', username=comment.parent)}" style="color: rgb(53, 152, 157)">@${comment.parent}</a>` : ''}
+                    <div class="comment">${comment["content"]}</div>
+                </div>
+                <div class="footer">
+                    <div class="date">${comment["date_posted"]}</div>
+                    ${comment["likes_count"] > 0 ? `<div class="date" id="like-counter-${comment["id"]} data-count="${comment["likes_count"]}" style="display: block">${comment["likes_count"]} likes_count</div>` : `<div class="date" id="like-counter-${comment["likes_count"]}" data-count="${comment["likes_count"]}" style="display: none;">${comment["likes_count"]} likes</div>`}
+                    <div class="reply-btn" data-comment-id="${comment["id"]}" data-author="${comment["author"]}">Reply</div>
+                </div>
+            </div>
         `;
-        const commentsList = document.querySelector('.comments');
-        commentsList.appendChild(commentElement);
+        const parentDiv = document.getElementById(`comment-reply-${parentId}`)
+        if (parentDiv) {
+            parentDiv.appendChild(commentElement)
+            const showRepliesBtn = document.getElementById(`show-replies-btn-${parentId}`)
+            showRepliesBtn.style.display = 'block';
+            let count = showRepliesBtn.dataset.repliesCount;
+            count ++;
+            showRepliesBtn.dataset.repliesCount = count;
+            showRepliesBtn.innerHTML = `&mdash;&mdash; View replies (${count})`;
+            parentDiv.style.display = 'block';
+        }
+        else {
+            const commentsList = document.querySelector('.comments');
+            commentsList.appendChild(commentElement);
+        }
+       
         // Clear the content of the comment form
         this.reset();
     });

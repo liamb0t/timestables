@@ -4,6 +4,18 @@ const submitPostBtn = document.querySelector('#submit');
 const overlay = document.querySelector('.overlay');
 const popupContainer = document.querySelector('.likes-popup');
 
+function handleReply(data) {
+    const commentId = data["comment_id"];
+    const author = data["author"];
+    const postId = data["post_id"];
+    const commentTextArea = document.getElementById(`post-textarea-${postId}`);
+    const hiddenField = document.getElementById(`post-hidden-${postId}`);
+    commentTextArea.value = '';
+    commentTextArea.value += '@' + author + ' ';
+    commentTextArea.focus();
+    hiddenField.value = commentId;
+}
+
 overlay.addEventListener('click', function() {
     overlay.style.display = 'none';
     popupContainer.style.display = 'none';
@@ -19,7 +31,15 @@ document.querySelectorAll('.like-counter').forEach(counter => {
     })
 });
 
-document.addEventListener('DOMContentLoaded', load);
+document.addEventListener('DOMContentLoaded', () =>{
+    load();
+    
+    const replyBtns = document.querySelectorAll('button');
+    console.log(replyBtns)  
+    replyBtns.forEach(btn => {
+        btn.addEventListener('click', handleReply);
+    });
+});
 
 window.onscroll = () => {
     if (Math.ceil(window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
@@ -137,11 +157,11 @@ function add_post(post) {
         popupContainer.style.display = 'block';
         overlay.style.display = 'block';
         document.body.classList.add("body-no-scroll");
-    })
+    });
 
     likesText.textContent = `${post['likes']} likes`;
    
-    const likeButton = document.createElement('icon');
+    const likeButton = document.createElement('i');
     likeButton.setAttribute('class', 'fa-regular fa-heart');
     likeButton.setAttribute('id', `like-counter-icon-${post['id']}`);
     likeButton.dataset.post_id = post['id'];
@@ -153,39 +173,118 @@ function add_post(post) {
     likesText.setAttribute('id', `like-counter-${post['id']}`);
     likesText.dataset.count = post['likes'];
     
-    likes.append(likeButton)
+    likes.append(likeButton);
     likes.appendChild(likesText);
    
     //add function to like button to handle likes on click 
-    likeButton.addEventListener('click', handleLikes)
+    likeButton.addEventListener('click', handleLikes);
     
     // Create the footer element
     const footer = document.createElement('div');
     footer.classList.add('post-footer');
     
-    // Create the comments element
+    // Create the comments element **********
+
     const comments = document.createElement('div');
-    comments.classList.add('post-comments');
+    comments.classList.add('comments');
+    
+    if (post["comments"]) {
+        post["comments"].forEach(comment => {
+            const commentContainer = document.createElement('div');
+            commentContainer.classList.add('comment-container');
+            const html = `
+            <div>
+                <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+            </div>
+            <div class="user-info">
+                <div class="header">
+                    <div class="username">${comment["author"]}</div>
+                    ${comment.parent ? `<a href="${url_for('users.user_profile', username=comment.parent)}" style="color: rgb(53, 152, 157)">@${comment.parent}</a>` : ''}
+                    <div class="comment">${comment["content"]}</div>
+                </div>
+                <div class="footer">
+                    <div class="date">${comment["date_posted"]}</div>
+                    ${comment["likes_count"] > 0 ? `<div class="date" id="like-counter-${comment["id"]}" data-count="${comment["likes_count"]}" style="display: block">${comment["likes_count"]} likes_count</div>` : `<div class="date" id="like-counter-${comment["likes_count"]}" data-count="${comment["likes_count"]}" style="display: none;">${comment["likes_count"]} likes</div>`}
+                    <div onclick="handleReply({ author: '${comment["author"]}', comment_id: ${comment["id"]}, post_id: ${post["id"]}})" class="reply-btn">Reply</div>
+                </div>
+            </div>
+            `;
+            commentContainer.innerHTML = html;
+            comments.appendChild(commentContainer);
+
+            const replyContainer = document.createElement('div');
+            const replies = document.createElement('div');
+            const replyBtn = document.createElement('button');
+
+            replies.style.display = 'none';
+            replyBtn.innerHTML = 'Reply';
+            replyContainer.appendChild(replyBtn);
+            replyContainer.appendChild(replies)
+            
+            
+            if (comment["replies"].length > 0) {
+                const replyDiv = document.createElement('div');
+               
+                comment["replies"].forEach(reply => {
+                    
+                    const html = `
+                        <div class="comment-container">
+                        <div>
+                            <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+                        </div>
+                        <div class="user-info">
+                            <div class="header">
+                            <div class="username">${reply["author"]}</div>
+                            
+                            <div class="comment">${reply["content"]}</div>
+                            </div>
+                            <div class="footer">
+                            <div class="date">${reply["date_posted"]}</div>
+                            
+                            <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>
+                             
+                            <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
+                            </div> 
+                        </div>
+                        <div class="like-btn">
+                            <div class="like-icon">
+                            <i id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-plrey-id="${comment.id}"></i>
+                            </div>
+                        </div>
+                        </div>    
+                    `;
+                    replyDiv.innerHTML = html;
+                    replies.appendChild(replyDiv);
+                });
+                commentContainer.appendChild(replyContainer);
+            }
+             
+            });
+        }
+    
     
     // Create the comment container element
-    const commentContainer = document.createElement('div');
-    commentContainer.classList.add('comment-container');
-
-    // Create comment list container
-    const commentsList = document.createElement('ul');
-    commentsList.classList.add('comments-list');
-    comments.appendChild(commentsList);
+    
     
     // Create the form element
     const commentForm = document.createElement('form');
     commentForm.setAttribute('class', 'comment-form');
-    commentForm.dataset.postId = post["id"]
+    commentForm.dataset.postId = post["id"];
     commentForm.addEventListener('submit', handleSubmit);
+
+    const hiddenField = document.createElement('input');
+    hiddenField.setAttribute('id', `post-hidden-${post.id}`);
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'secret';
+    hiddenField.value = 'mySecretValue';
+    commentForm.appendChild(hiddenField);
+
     
     // Create the textarea element
     const commentTextArea = document.createElement('textarea');
     commentTextArea.placeholder = 'Add a comment...';
     commentTextArea.setAttribute('name', 'myTextarea');
+    commentTextArea.setAttribute('id', `post-textarea-${post.id}`);
 
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
@@ -196,10 +295,7 @@ function add_post(post) {
     commentForm.appendChild(submitBtn);
     
     // Append the form element to the comment container element
-    commentContainer.appendChild(commentForm);
-    
-    // Append the comment container element to the comments element
-    comments.appendChild(commentContainer);
+    comments.appendChild(commentForm);
     
     // Append the header, content, likes, and footer elements to the new post element
     newPost.appendChild(header);
@@ -212,8 +308,8 @@ function add_post(post) {
     
     // Append the new post element to the post container
     postContainer.appendChild(newPost);
-    
 }
+
 
 // Function to create the likes popup
 function createLikesPopup(user) {

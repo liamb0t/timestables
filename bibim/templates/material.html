@@ -59,7 +59,7 @@
           <div>
             <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
           </div>
-          <div class="user-info">
+          <div class="user-info" id="user-info-{{ comment.id }}">
             <div class="header">
               <div class="username">{{ comment.commenter.username }}</div>
               {% if comment.parent %}
@@ -78,7 +78,7 @@
             </div>  
             
             {% if comment.get_replies() %}
-              <btn class="show-replies-btn" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies ({{ comment.get_replies()|length }})</btn>
+              <btn class="show-replies-btn" id="show-replies-btn-{{ comment.id }}" style="display: block" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies ({{ comment.get_replies()|length }})</btn>
               <div class="comments-replies" id="comment-reply-{{ comment.id }}" style="display: none">
                 {% for reply in comment.get_replies() %}
                   <div class="comment-container">
@@ -103,12 +103,14 @@
                     </div>
                     <div class="like-btn">
                       <div class="like-icon">
-                        <i id="material-comment-like-icon-{{ reply.id}}" class="fa-regular fa-heart" data-plrey-id="{{ comment.id }}"></i>
+                        <i id="material-comment-like-icon-{{ reply.id}}" class="fa-regular fa-heart" data-comment-id="{{ reply.id }}"></i>
                       </div>
                     </div>
                   </div>    
                 {% endfor %}
               </div>
+            {% else %}
+              <btn class="show-replies-btn" id="show-replies-btn-{{ comment.id }}" style="display: none" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies ({{ comment.get_replies()|length }})</btn>
             {% endif %}
 
           </div>

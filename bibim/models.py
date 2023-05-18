@@ -132,8 +132,9 @@ class Post(db.Model):
             "content": self.content,
             "likes": len(self.likes),
             "likers": [User.query.filter_by(id=like.user_id).first().serialize() for like in self.likes],
-            "comments": [comment.serialize() for comment in self.comments],
+            "comments": [comment.serialize() for comment in self.comments] if len(self.comments) > 0 else None,
         }
+        
         if not current_user.is_anonymous:
             payload["liked"] = True if current_user.has_liked_post(self) else False
         return payload
@@ -179,19 +180,21 @@ class Comment(db.Model):
 
     def level(self):
         return len(self.path) // self._N - 1
-
-
-    def serialize(self):
-        return{
-            "author": self.commenter.username,
-            "content": self.content,
-            "date_posted": self.date_posted,
-            "likes": self.likes,
-        }
     
     def get_replies(self):
         replies = Comment.query.filter(Comment.path.like(self.path + '%'), Comment.id != self.id).all()
         return replies
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "author": self.commenter.username,
+            "content": self.content,
+            "date_posted": post_timestamp(self.date_posted),
+            "likes": self.likes,
+            "replies": [reply.serialize() for reply in self.get_replies()],
+            "likes_count": self.likes_count(),
+        }
 
 class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -200,7 +203,6 @@ class Material(db.Model):
     grade = db.Column(db.Integer, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
-    likes = db.Column(db.Integer, nullable=False, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     tags = db.relationship('Tag', secondary='tags_table', backref=db.backref('tag_materials', lazy='dynamic'), lazy='joined')
