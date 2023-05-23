@@ -187,6 +187,7 @@ function add_post(post) {
 
     const comments = document.createElement('div');
     comments.classList.add('comments');
+    comments.setAttribute('id', `post-comments-${post["id"]}`);
     
     if (post["comments"]) {
         post["comments"].forEach(comment => {

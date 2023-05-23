@@ -42,7 +42,7 @@ function handleSubmit(event) {
             </div>
         </div>
       `;
-      const commentsList = document.querySelector(`post-comments-${postId}`);
+      const commentsList = document.querySelector(`#post-comments-${postId}`);
       commentsList.appendChild(commentElement);
       // Clear the content of the comment form
       this.reset();

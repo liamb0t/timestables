@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://kit.fontawesome.com/7c4ca0706d.js" crossorigin="anonymous"></script>
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -65,13 +65,27 @@
                         {% set new_messages = current_user.new_messages() %}
                         {% if new_messages %}
                           <span id="message_count" class="badge" data-count="{{ new_messages }}">{{ new_messages }}</span>
+                        {% else %}
+                          <span id="message_count" class="badge" data-count="{{ new_messages }}" style="display: none;">{{ new_messages }}</span>
                         {% endif %}
                       {% endif %}
                       </i>
                     </a>
                   </li>
-                  <li><a href="#"><i class="fa fa-bell"></i></i>Notifications</a></li>
-                  <li><a href="#"><i class="fa fa-chalkboard-user"></i>Teaching Advice</a></li>
+                  <li>
+                    <a href="#" class="notifications-link">
+                      <i class="fa fa-bell"></i>
+                      Notifications
+                      {% if not current_user.is_anonymous %}
+                        {% set new_notifications = current_user.new_notifications() %}
+                        {% if new_notifications %}
+                          <span id="notifications_count" class="badge" data-count="{{ new_notifications }}">{{ new_notifications }}</span>
+                        {% endif %}
+                      {% endif %}
+                    </a>
+                    <div class="notifications" style="display: none;"></div>
+                  </li>
+                  <li><a href="{{ url_for('materials.load_materials', level='teaching') }}"><i class="fa fa-chalkboard-user"></i>Teaching Advice</a></li>
                   <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i>Hall of Fame</a></li>
                   <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-briefcase"></i>Meetings</a></li>
                 </ul> 

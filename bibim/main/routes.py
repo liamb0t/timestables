@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, render_template, flash, url_for, request, send_file, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
-from bibim.models import Post, User, Material, File, Comment
+from bibim.models import Post, User, Material, File, Comment, Notification
 from bibim.main.forms import LoginForm, RegistrationForm, SearchForm
 from bibim.posts.forms import PostForm
 from bibim import bcrpyt, db, app
@@ -76,7 +76,6 @@ def logout():
  
 @main.route("/", methods=["POST", "GET"])
 def home():
-    #posts =  Post.query.order_by(Post.date_posted.desc()).limit(10).all()
     post_form = PostForm()
     placeholder =  choice(prompts)
     if not current_user.is_anonymous:
@@ -129,3 +128,12 @@ def like_comment(comment_id):
     return jsonify({
         'liked': current_user.has_liked_comment(comment)
     })
+
+@main.route("/open_notification/<int:id>")
+@login_required
+def open_notification(id):
+    notification = Notification.query.filter_by(id=id).first_or_404()
+    notification.read = True
+    db.session.commit()
+    url = notification.get_redirect_url()
+    return redirect(url_for(url))    

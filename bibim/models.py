@@ -49,6 +49,7 @@ class User(db.Model, UserMixin):
     def like_post(self, post):
         like = Like(user_id=self.id, post_id=post.id)
         db.session.add(like)
+        return like
 
     def unlike_post(self, post):
         Like.query.filter_by(
@@ -89,15 +90,17 @@ class User(db.Model, UserMixin):
             Like.comment_id == comment.id).count() > 0    
     
     def new_messages(self):
-        print([msg.id for msg in Message.query.filter_by(recipient=self).filter(
-            Message.read == False).all()])
         return Message.query.filter_by(recipient=self).filter(
             Message.read == False).count()
     
+    def new_notifications(self):
+        return Notification.query.filter_by(user_id=self.id).filter(
+            Notification.read == False, Notification.name != 'unread_message_count').count()
+    
     def add_notification(self, name, data):
-        self.notifications.filter_by(name=name).delete()
         n = Notification(name=name, payload_json = json.dumps(data), user=self)
         db.session.add(n)
+        db.session.commit()
         return n
     
     def serialize(self):
@@ -145,6 +148,13 @@ class Like(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
     comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def serialize(self):
+        return {
+            'liker': self.user.username,
+            'date': self.date_created,
+        }
 
 class Comment(db.Model):
     _N = 6
@@ -259,7 +269,50 @@ class Notification(db.Model):
     name = db.Column(db.String(128), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.Float, index=True, default=time)
+    read = db.Column(db.Boolean, nullable=False, default=False)
     payload_json = db.Column(db.Text)
+
+    def get_redirect_url(self):
+        if 'post' in self.name:
+            return 'main.home'
 
     def get_data(self):
         return json.loads(str(self.payload_json))
+    
+    def new_notifications(self):
+        return Notification.query.filter_by(user_id=current_user).filter(
+            Notification.read == False).count()
+    
+    def serialize(self):
+        data = self.get_data()
+
+        if self.name == 'comment_post':
+
+            comment = Comment.query.filter_by(id=data).first()
+            post = comment.post
+
+            return {
+                'id': self.id,
+                'type': self.name,
+                'sent_data': comment.serialize(),
+                'user_data': post.serialize(),
+                'timestamp': self.timestamp,
+            }
+        
+        elif self.name == 'post_like':
+
+            like = Like.query.filter_by(id=data).first()
+            post = like.post
+
+            return {
+                'id': self.id,
+                'type': self.name,
+                'sent_data': like.serialize(),
+                'user_data': post.serialize(),
+                'timestamp': self.timestamp,
+            }
+        
+        
+        
+
+        

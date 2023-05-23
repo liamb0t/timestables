@@ -22,10 +22,17 @@ def like_post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
     if current_user.has_liked_post(post):
         current_user.unlike_post(post)
+        if post.author != current_user:
+            post.author.karma -= 1
         db.session.commit()
     else:
-        current_user.like_post(post)
+        like = current_user.like_post(post)
+       
+        if post.author != current_user:
+            post.author.karma += 1
         db.session.commit()
+        post.author.add_notification('post_like', like.id)
+
     return jsonify({
         'liked': current_user.has_liked_post(post)
     })
@@ -37,12 +44,15 @@ def post_comment(post_id):
     content = data["textAreaData"]
     parent_id = data["parent_id"]
     post = Post.query.get(post_id)
+    user = post.author
     comment = Comment(content=content, post=post, commenter=current_user)
     if parent_id:
         parent_comment = Comment.query.filter_by(id=parent_id).first()
         if parent_comment:
             comment.parent = parent_comment
     comment.save()
+    if user != current_user:
+        user.add_notification('comment_post', comment.id)
     return jsonify({
         'content': comment.content,
         'date_posted': comment.date_posted.strftime('%Y-%m-%d'),
@@ -66,6 +76,9 @@ def send_message(recipient):
         flash(('Your message has been sent.'))
         return redirect(url_for('users.user_profile', username=recipient))
     return render_template('send_message.html', form=form, recipient=recipient)
+
+
+
 
 
 @posts.route("/read_message/<int:message_id>")
@@ -104,8 +117,8 @@ def notifications():
     since = request.args.get('since', 0.0, type=float)
     notifications = current_user.notifications.filter(
         Notification.timestamp > since).order_by(Notification.timestamp.asc())
-    return jsonify([{
-        'name': n.name,
-        'data': n.get_data(),
-        'timestamp': n.timestamp
-    } for n in notifications])
+    
+    return jsonify({
+        'notifications': [n.serialize() for n in notifications if n.name != 'unread_message_count'],
+        'unread_message_count': current_user.new_messages(),
+    })
