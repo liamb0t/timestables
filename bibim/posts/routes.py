@@ -31,7 +31,8 @@ def like_post(post_id):
         if post.author != current_user:
             post.author.karma += 1
         db.session.commit()
-        post.author.add_notification('post_like', like.id)
+        if post.author != current_user:
+            post.author.add_notification('post_like', like.id)
 
     return jsonify({
         'liked': current_user.has_liked_post(post)
@@ -52,7 +53,7 @@ def post_comment(post_id):
             comment.parent = parent_comment
     comment.save()
     if user != current_user:
-        user.add_notification('comment_post', comment.id)
+        user.add_notification('post_comment', comment.id)
     return jsonify({
         'content': comment.content,
         'date_posted': comment.date_posted.strftime('%Y-%m-%d'),
@@ -76,9 +77,6 @@ def send_message(recipient):
         flash(('Your message has been sent.'))
         return redirect(url_for('users.user_profile', username=recipient))
     return render_template('send_message.html', form=form, recipient=recipient)
-
-
-
 
 
 @posts.route("/read_message/<int:message_id>")

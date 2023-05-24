@@ -71,6 +71,8 @@ def material_comment(material_id):
         if parent_comment:
             comment.parent = parent_comment
     comment.save()
+    if material.creator != current_user:
+        material.creator.add_notification('material_comment', comment.id)
     return jsonify({
         'content': comment.content,
         'date_posted': post_timestamp(comment.date_posted),
@@ -112,8 +114,10 @@ def like_material(material_id):
         current_user.unlike_material(material)  
         db.session.commit()
     else:
-        current_user.like_material(material)
+        like = current_user.like_material(material)
         db.session.commit()
+        if material.creator != current_user:
+            material.author.add_notification('material_like', like.id)
     return jsonify({
         'liked': current_user.has_liked_material(material)
     })

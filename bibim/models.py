@@ -152,7 +152,7 @@ class Like(db.Model):
 
     def serialize(self):
         return {
-            'liker': self.user.username,
+            'author': self.user.username,
             'date': self.date_created,
         }
 
@@ -219,6 +219,15 @@ class Material(db.Model):
     comments = db.relationship('Comment', backref='material')
     files = db.relationship('File', backref='files_material', lazy=True)
     likes = db.relationship('Like', backref='material')
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'author': self.creator.username,
+            'title': self.title,
+            'content': self.content,
+            'timestamp': post_timestamp(self.date_posted),
+        }
     
     def likes_count(self):
         return len([likes for likes in self.likes])
@@ -272,7 +281,7 @@ class Notification(db.Model):
     read = db.Column(db.Boolean, nullable=False, default=False)
     payload_json = db.Column(db.Text)
 
-    def get_redirect_url(self):
+    def get_redirect_url(self, id):
         if 'post' in self.name:
             return 'main.home'
 
@@ -286,7 +295,7 @@ class Notification(db.Model):
     def serialize(self):
         data = self.get_data()
 
-        if self.name == 'comment_post':
+        if self.name == 'post_comment':
 
             comment = Comment.query.filter_by(id=data).first()
             post = comment.post
@@ -297,6 +306,7 @@ class Notification(db.Model):
                 'sent_data': comment.serialize(),
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
+                'html': 'commented on your post!'
             }
         
         elif self.name == 'post_like':
@@ -310,6 +320,63 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
+                'html': 'liked your post!'
+            }
+        
+        elif self.name == 'comment_like':
+
+            like = Like.query.filter_by(id=data).first()
+            comment = like.comment
+
+            return {
+                'id': self.id,
+                'type': self.name,
+                'sent_data': like.serialize(),
+                'user_data': comment.serialize(),
+                'timestamp': self.timestamp,
+                'html': 'liked your comment!'
+            }
+        
+        elif self.name == 'comment_reply':
+
+            reply = Comment.query.filter_by(id=data).first()
+            comment = reply.comment
+
+            return {
+                'id': self.id,
+                'type': self.name,
+                'sent_data': like.serialize(),
+                'user_data': post.serialize(),
+                'timestamp': self.timestamp,
+                'html': 'replied to your comment!'
+            }
+        
+        elif self.name == 'material_like':
+
+            like = Like.query.filter_by(id=data).first()
+            post = like.post
+
+            return {
+                'id': self.id,
+                'type': self.name,
+                'sent_data': like.serialize(),
+                'user_data': post.serialize(),
+                'timestamp': self.timestamp,
+                'html': 'liked your post!'
+            }
+        
+        elif self.name == 'material_comment':
+
+            comment = Comment.query.filter_by(id=data).first()
+            material = comment.material
+
+            return {
+                'id': self.id,
+                'type': self.name,
+                'sent_data': comment.serialize(),
+                'user_data': material.serialize(),
+                'timestamp': self.timestamp,
+                'html': 'commented on your post!'
             }
         
         

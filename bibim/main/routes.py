@@ -123,8 +123,9 @@ def like_comment(comment_id):
         current_user.unlike_comment(comment)  
         db.session.commit()
     else:
-        current_user.like_comment(comment)
+        like = current_user.like_comment(comment)
         db.session.commit()
+        comment.author.add_notification('comment_like', like.id)
     return jsonify({
         'liked': current_user.has_liked_comment(comment)
     })

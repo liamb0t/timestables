@@ -62,7 +62,6 @@ function display_notification(data) {
   notiContainer.insertAdjacentElement('afterbegin', url);
 }
 
-
 const notificationsBtn = document.querySelector('.notifications-link');
 
 notificationsBtn.addEventListener('click', function() {
@@ -74,13 +73,11 @@ function notificationHTML(data) {
   const type = data['type']
   const user_data = data['user_data'];
   const sent_data = data['sent_data'];
-  if (type === 'comment_post') {
-    return `${sent_data['author']} commented on your post. ${sent_data['content']}`
-  }
-  else if (type === 'post_like') {
-    return `${sent_data['liker']} liked your post! ${user_data['content']}`
+
+  if (type === 'post_comment' || type === 'material_comment' || type === 'comment_reply') {
+    return `${sent_data['author']} ${data['html']}: ${sent_data['content']}`
   }
   else {
-    return null
+    return `${sent_data['author']} ${data['html']} ${user_data['content']}`
   }
 }
