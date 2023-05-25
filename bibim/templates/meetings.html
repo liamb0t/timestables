@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Meetings</h1>
+
+    <a href="{{ url_for('meetings.create_meeting', level=level) }}">Create</a>
+
+    <div class="material-posts">
+        {% for meeting in meetings %}
+            <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id)}}">
+                <div class="material-post-container">
+                <img class="material-post-profile-picture" src="/static/pics/default.jpg" alt="Profile Picture">
+                <div>
+                    <div class="material-post-header">
+                        <div class="material-post-title">{{ meeting.title }}</div>
+                    </div>
+                    <div class="material-post-footer">
+                        <div class="material-post-user-info">
+                            <span class="material-post-author">{{ meeting.organizer.username }}</span>s
+                            <span>&bull;</span>
+                            <span class="material-post-date">{{ post_timestamp(meeting.date_posted) }}</span>
+                        </div>
+                        <div class="material-post-comment-info">
+                            <i class="fa-regular fa-heart"></i>
+                            <span class="material-post-likes">{{ meeting.likes_count() }}</span>
+                            <i class="fa-regular fa-comment"></i>
+                            <span class="material-post-comments">{{ meeting.comments_count() }}</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    {% for page_num in meetings.iter_pages() %}
+        {% if page_num %}
+            <a class="btn btn-info mb4" href="{{ url_for('meetings.load_meetings', level=level, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}    
+    
+{% endblock content %}
+

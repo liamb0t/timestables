@@ -70,9 +70,12 @@ def material_comment(material_id):
         parent_comment = Comment.query.filter_by(id=parent_id).first()
         if parent_comment:
             comment.parent = parent_comment
+
     comment.save()
-    if material.creator != current_user:
+    if material.creator != current_user and not comment.parent:
         material.creator.add_notification('material_comment', comment.id)
+    elif material.creator != current_user and comment.parent:
+        material.creator.add_notification('comment_reply', comment.id)
     return jsonify({
         'content': comment.content,
         'date_posted': post_timestamp(comment.date_posted),
@@ -100,7 +103,7 @@ def create_material(level):
         if form.files.data:
             for file in form.files.data:
                 if file.filename != '':
-                    save_file(file, material)
+                    save_file(file, material, 'material')
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('materials.material', material_id=material.id))

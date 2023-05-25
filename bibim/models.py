@@ -31,6 +31,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='commenter', lazy=True)
     materials = db.relationship('Material', backref='creator')
+    meetings = db.relationship('Meeting', backref='organizer')
     notifications = db.relationship('Notification', backref='user',
                                     lazy='dynamic')
     followers = db.relationship('User', secondary='follower', 
@@ -147,6 +148,7 @@ class Like(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
     comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
@@ -248,7 +250,9 @@ class File(db.Model):
     filename = db.Column(db.String(255), nullable=False)
     filetype = db.Column(db.String(50), nullable=False)
     filepath = db.Column(db.String(255), nullable=False)
-    material_id = db.Column(db.Integer, db.ForeignKey('material.id'), nullable=False)
+
+    material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
 
     def __repr__(self):
         return f"File('{self.filename}', '{self.file_type}')"
@@ -258,9 +262,22 @@ class Meeting(db.Model):
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
-    likes = db.Column(db.Integer, nullable=False, default=0)
+    time = db.Column(db.DateTime, nullable=False)
+    fee = db.Column(db.Integer, nullable=False, default=0)
+    capacity = db.Column(db.Integer, nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    tag = db.Column(db.String(50), nullable=False)
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     comments = db.relationship('Comment', backref='meeting')
+    files = db.relationship('File', backref='files_meeting', lazy=True)
+    likes = db.relationship('Like', backref='meeting')
+
+    def likes_count(self):
+        return len([likes for likes in self.likes])
+
+    def comments_count(self):
+        return len([comment for comment in self.comments])
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -306,7 +323,7 @@ class Notification(db.Model):
                 'sent_data': comment.serialize(),
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'commented on your post!'
+                'html': 'commented on your post'
             }
         
         elif self.name == 'post_like':
@@ -320,7 +337,7 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your post!'
+                'html': 'liked your post'
             }
         
         elif self.name == 'comment_like':
@@ -334,21 +351,21 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': comment.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your comment!'
+                'html': 'liked your comment'
             }
         
         elif self.name == 'comment_reply':
 
             reply = Comment.query.filter_by(id=data).first()
-            comment = reply.comment
+            comment = reply.parent
 
             return {
                 'id': self.id,
                 'type': self.name,
-                'sent_data': like.serialize(),
-                'user_data': post.serialize(),
+                'sent_data': reply.serialize(),
+                'user_data': comment.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'replied to your comment!'
+                'html': 'replied to your comment'
             }
         
         elif self.name == 'material_like':
@@ -362,7 +379,7 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your post!'
+                'html': 'liked your post'
             }
         
         elif self.name == 'material_comment':
@@ -376,7 +393,7 @@ class Notification(db.Model):
                 'sent_data': comment.serialize(),
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'commented on your post!'
+                'html': 'commented on your post'
             }
         
         

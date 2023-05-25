@@ -13,13 +13,16 @@ def get_file_size(file_path):
 
     return (int(gb), "GB") if mb > 1000 else (int(mb), "MB") if kb > 1000 else (int(kb), "KB")
 
-def save_file(form_file, material):
+def save_file(form_file, post, post_type):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_file.filename)
     fn = random_hex + f_ext
     path = os.path.join(current_app.root_path, 'uploads', fn)
     form_file.save(path)
-    upload = File(filename=fn, filepath=path, filetype=f_ext, files_material=material)
+    if post_type == 'material':
+        upload = File(filename=fn, filepath=path, filetype=f_ext, files_material=post)
+    elif post_type == 'meeting':
+        upload = File(filename=fn, filepath=path, filetype=f_ext, files_meeting=post)
     db.session.add(upload)
 
 def get_publishers(level):
