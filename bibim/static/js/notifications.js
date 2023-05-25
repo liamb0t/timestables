@@ -78,6 +78,7 @@ function notificationHTML(data) {
     return `${sent_data['author']} ${data['html']}: ${sent_data['content']}`
   }
   else {
+    console.log(user_data)
     return `${sent_data['author']} ${data['html']} ${user_data['content']}`
   }
 }

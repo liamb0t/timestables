@@ -120,7 +120,7 @@ def like_material(material_id):
         like = current_user.like_material(material)
         db.session.commit()
         if material.creator != current_user:
-            material.author.add_notification('material_like', like.id)
+            material.creator.add_notification('material_like', like.id)
     return jsonify({
         'liked': current_user.has_liked_material(material)
     })

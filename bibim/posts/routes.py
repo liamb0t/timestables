@@ -27,7 +27,6 @@ def like_post(post_id):
         db.session.commit()
     else:
         like = current_user.like_post(post)
-       
         if post.author != current_user:
             post.author.karma += 1
         db.session.commit()

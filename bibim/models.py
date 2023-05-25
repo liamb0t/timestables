@@ -53,6 +53,10 @@ class User(db.Model, UserMixin):
         return like
 
     def unlike_post(self, post):
+        Notification.query.filter_by(
+            name='post_like',
+            user_id=post.user_id,
+            id=self.id).delete()
         Like.query.filter_by(
             user_id=self.id,
             post_id=post.id).delete()
@@ -65,8 +69,12 @@ class User(db.Model, UserMixin):
     def like_material(self, material):
         like = Like(user_id=self.id, material_id=material.id)
         db.session.add(like)
+        return like
 
     def unlike_material(self, material):
+        Notification.query.filter_by(
+            user_id=self.id,
+            id=self.id).delete()
         Like.query.filter_by(
             user_id=self.id,
             material_id=material.id).delete()
@@ -81,6 +89,9 @@ class User(db.Model, UserMixin):
         db.session.add(like)
 
     def unlike_comment(self, comment):
+        Notification.query.filter_by(
+            user_id=self.id,
+            id=self.id).delete()
         Like.query.filter_by(
             user_id=self.id,
             comment_id=comment.id).delete()
@@ -327,7 +338,6 @@ class Notification(db.Model):
             }
         
         elif self.name == 'post_like':
-
             like = Like.query.filter_by(id=data).first()
             post = like.post
 
@@ -371,13 +381,13 @@ class Notification(db.Model):
         elif self.name == 'material_like':
 
             like = Like.query.filter_by(id=data).first()
-            post = like.post
+            material = Material.query.filter_by(id=like.material_id).first()
 
             return {
                 'id': self.id,
                 'type': self.name,
                 'sent_data': like.serialize(),
-                'user_data': post.serialize(),
+                'user_data': material.serialize(),
                 'timestamp': self.timestamp,
                 'html': 'liked your post'
             }
