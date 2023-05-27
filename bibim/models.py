@@ -99,7 +99,24 @@ class User(db.Model, UserMixin):
     def has_liked_comment(self, comment):
         return Like.query.filter(
             Like.user_id == self.id,
-            Like.comment_id == comment.id).count() > 0    
+            Like.comment_id == comment.id).count() > 0
+
+    def like_meeting(self, meeting):
+        like = Like(user_id=self.id, meeting_id=meeting.id)
+        db.session.add(like)
+
+    def unlike_meeting(self, meeting):
+        Notification.query.filter_by(
+            user_id=self.id,
+            id=self.id).delete()
+        Like.query.filter_by(
+            user_id=self.id,
+            meeting_id=meeting.id).delete()
+
+    def has_liked_meeting(self, meeting):
+        return Like.query.filter(
+            Like.user_id == self.id,
+            Like.meeting_id == meeting.id).count() > 0       
     
     def new_messages(self):
         return Message.query.filter_by(recipient=self).filter(

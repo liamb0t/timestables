@@ -79,7 +79,7 @@
                       {% if not current_user.is_anonymous %}
                         {% set new_notifications = current_user.new_notifications() %}
                         {% if new_notifications %}
-                          <span id="notifications_count" class="badge" data-count="{{ new_notifications }}">{{ new_notifications }}</span>
+                          <span id="notifications_count" class="badge" data-count="0"></span>
                         {% endif %}
                       {% endif %}
                     </a>

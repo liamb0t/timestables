@@ -41,7 +41,15 @@ def user_profile(username):
     followers_count = len(user.followers.all())
     following_count = len(user.following.all())
     member_time = date_member_since(user.date_joined)
-    return render_template('user_profile.html', user=user, form=form, followers_count=followers_count, following_count=following_count, member_time=member_time, followers=followers, following=following)
+    return render_template('user_profile.html', user=user, form=form, followers_count=followers_count, 
+                           following_count=following_count, member_time=member_time, 
+                           followers=followers, following=following)
+
+@users.route("/users/<string:username>")
+def edit_profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('edit_profile.html', user=user)
+
 
 @users.route("/users/<string:username>/<string:contents>")
 def user_contents(username, contents):

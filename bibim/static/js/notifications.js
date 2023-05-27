@@ -2,7 +2,10 @@ const messageCounter = document.querySelector('#message_count');
 const count = messageCounter.dataset.count;
 
 document.addEventListener('DOMContentLoaded', function() {
-  get_notifications();
+  get_notifications()
+  .then(since => {
+    poller(since)
+  })
 });
 
 // change notification badge if new messages
@@ -15,28 +18,48 @@ function update_message_counter(count) {
     messageCounter.style.display = 'none'
   }
 }
-  
-function get_notifications() {
-  let since = 0;
-  let timer = 10000;
-  setInterval(function() {
-    fetch(`/notifications?since=${since}`)  
-    .then(response => response.json())
-    .then(data => {
-      update_message_counter(data['unread_message_count']);
-      if (data['notifications']) {
-        if (since > 0) {
-          const counter = document.querySelector('#notifications_count');
-          const count = parseInt(counter.dataset.count);
-          const new_count = count + data['notifications'].length;
-          counter.innerHTML = new_count;
-          counter.dataset.count = new_count;
+
+function get_notifications(timestamp) {
+  return new Promise((resolve, reject) => {
+    let since = timestamp;
+    fetch(`/notifications?since=${since}`)
+      .then(response => response.json())
+      .then(data => {
+        update_message_counter(data['unread_message_count']);
+        if (data['notifications']) {
+          updateNotifCount(data['notifications'].length)
+
+          data['notifications'].forEach(notification => {
+            if (notification) {
+              since = notification['timestamp'];
+              display_notification(notification);
+            }
+          });
         }
-        data['notifications'].forEach(notification => {
-          since = notification['timestamp'];
-          display_notification(notification);
-        });
-      }
+        resolve(since); // Resolve the Promise with the updated value of `since`
+      })
+      .catch(error => {
+        reject(error); // Reject the Promise if there's an error
+      });
+  });
+}
+
+function updateNotifCount(value) {
+  const counter = document.querySelector('#notifications_count');
+  let count = parseInt(counter.dataset.count);
+  count += value;
+  counter.dataset.count = count;
+  counter.innerHTML = counter.dataset.count;
+}
+
+
+function poller(timestamp) {
+  let timer = 60000; 
+  let since = timestamp;
+  setInterval(function() {
+    get_notifications(since)
+    .then(updatedSince => {
+      since = updatedSince;
     })
   }, timer);
 };

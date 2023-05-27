@@ -30,7 +30,7 @@ def meeting_comment(meeting_id):
     data = request.get_json()
     content = data["textAreaData"]
     parent_id = data["parent_id"]
-    meeting = meeting.query.get(meeting_id)
+    meeting = Meeting.query.get(meeting_id)
     comment = Comment(content=content, meeting=meeting, commenter=current_user)
     if parent_id:
         parent_comment = Comment.query.filter_by(id=parent_id).first()
@@ -38,10 +38,10 @@ def meeting_comment(meeting_id):
             comment.parent = parent_comment
 
     comment.save()
-    if meeting.creator != current_user and not comment.parent:
-        meeting.creator.add_notification('meeting_comment', comment.id)
-    elif meeting.creator != current_user and comment.parent:
-        meeting.creator.add_notification('comment_reply', comment.id)
+    if meeting.organizer != current_user and not comment.parent:
+        meeting.organizer.add_notification('meeting_comment', comment.id)
+    elif meeting.organizer != current_user and comment.parent:
+        meeting.organizer.add_notification('comment_reply', comment.id)
     return jsonify({
         'content': comment.content,
         'date_posted': post_timestamp(comment.date_posted),
@@ -79,8 +79,8 @@ def like_meeting(meeting_id):
     else:
         like = current_user.like_meeting(meeting)
         db.session.commit()
-        if meeting.creator != current_user:
-            meeting.author.add_notification('meeting_like', like.id)
+        if meeting.organizer != current_user:
+            meeting.organizer.add_notification('meeting_like', like.id)
     return jsonify({
         'liked': current_user.has_liked_meeting(meeting)
     })
