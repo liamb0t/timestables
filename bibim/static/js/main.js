@@ -43,7 +43,8 @@ function handleSubmit(event) {
         </div>
       `;
       const commentsList = document.querySelector(`#post-comments-${postId}`);
-      commentsList.appendChild(commentElement);
+      const lastElement = commentsList.lastElementChild;
+      commentsList.insertBefore(commentElement, lastElement);
       // Clear the content of the comment form
       this.reset();
   });

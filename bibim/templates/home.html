@@ -9,7 +9,7 @@
                 <img class="post-form-img" src="static/pics/default.jpg">
                 <form method="POST" action="">
                     {{ post_form.hidden_tag() }}
-                    <div class="form-group">      
+                    <div>      
                         {% if post_form.content.errors %}
                             {{post_form.content(class="form-control form-control-lg is-invalid")}}
                             <div class="invalid-feedback">

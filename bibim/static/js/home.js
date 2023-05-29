@@ -286,17 +286,35 @@ function add_post(post) {
     commentTextArea.placeholder = 'Add a comment...';
     commentTextArea.setAttribute('name', 'myTextarea');
     commentTextArea.setAttribute('id', `post-textarea-${post.id}`);
+    commentTextArea.setAttribute('class', 'lounge-comment-field');
 
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
-    submitBtn.textContent = 'Submit';
+    submitBtn.textContent = 'Post';
+    submitBtn.style.display = 'none';
+    submitBtn.setAttribute('class', 'post-comments-button')
+
+    commentTextArea.addEventListener('input', function() {
+        const value = this.value.trim();
+
+        if (value === '') {
+            submitBtn.style.display = 'none';
+        }
+        else {
+            submitBtn.style.display = 'block';
+        }
+    })
+
+   
     
     // Append the submit button to the form
     commentForm.appendChild(commentTextArea);
     commentForm.appendChild(submitBtn);
+   
     
     // Append the form element to the comment container element
     comments.appendChild(commentForm);
+
     
     // Append the header, content, likes, and footer elements to the new post element
     newPost.appendChild(header);
