@@ -101,7 +101,11 @@ a:hover i {
   color: #333;
   font-size: 16px;
   text-decoration: none;
-  margin-top: 20px;
+  margin-right: 10px;
+}
+
+.navbar input {
+  margin-right: 10px;
 }
 
 #navbar-home {
@@ -192,7 +196,7 @@ a:hover i {
 
 /* main content styling */
 .main-content {
-  margin-left: 400px;
+  margin-left: 26%;
   flex: 1;
   padding: 15px;
 }
@@ -498,6 +502,8 @@ body {
 
 .post-form-header {
   display: flex;
+  padding-left: 10px;
+  padding-top: 10px;
 }
 
 .post-form-footer {
@@ -517,8 +523,6 @@ body {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  margin-left: 20px;
-  margin-top: 10px  ;
 
 }
 
@@ -537,7 +541,7 @@ body {
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  padding: 10px;
+  padding-left: 10px;
   width: 520px;
   resize: none;
   outline: none;
@@ -849,8 +853,6 @@ body {
   display: flex;
   align-items: center;
 }
-
-
 
 .materials-nav a {
   color: #757575;
