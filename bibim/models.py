@@ -73,6 +73,7 @@ class User(db.Model, UserMixin):
 
     def unlike_material(self, material):
         Notification.query.filter_by(
+            name='material_like',
             user_id=self.id,
             id=self.id).delete()
         Like.query.filter_by(
@@ -87,9 +88,11 @@ class User(db.Model, UserMixin):
     def like_comment(self, comment):
         like = Like(user_id=self.id, comment_id=comment.id)
         db.session.add(like)
+        return like
 
     def unlike_comment(self, comment):
         Notification.query.filter_by(
+            name='comment_like',
             user_id=self.id,
             id=self.id).delete()
         Like.query.filter_by(
@@ -107,6 +110,7 @@ class User(db.Model, UserMixin):
 
     def unlike_meeting(self, meeting):
         Notification.query.filter_by(
+            name='meeting_like',
             user_id=self.id,
             id=self.id).delete()
         Like.query.filter_by(
@@ -190,7 +194,7 @@ class Comment(db.Model):
     _N = 6
 
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(280))
+    content = db.Column(db.String(280), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     path = db.Column(db.Text, index=True)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
@@ -398,7 +402,7 @@ class Notification(db.Model):
         elif self.name == 'material_like':
 
             like = Like.query.filter_by(id=data).first()
-            material = Material.query.filter_by(id=like.material_id).first()
+            material = like.material
 
             return {
                 'id': self.id,

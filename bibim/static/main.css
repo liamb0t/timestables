@@ -1,3 +1,22 @@
+.flash-messages {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  color: #333;
+}
+
+
+.flash-messages .message {
+  margin-bottom: 5px;
+}
+
+
 /* create a post styling */
 
 .creator-container {
@@ -489,15 +508,18 @@ body {
 }
 
 .post-form-container {
+  height: auto;
+  overflow-y: auto;
+  max-height: 500px;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   margin-bottom: 20px;
-  overflow: hidden;
   width: 600px;
   resize: none;
+  
 }
 
 .post-form-header {
@@ -638,7 +660,6 @@ body {
   color: blue;
   cursor: pointer;
   font-weight: bold;
-  text-transform: uppercase;
   outline: none; /* Remove outline on click or focus */
 }
 

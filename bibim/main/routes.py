@@ -37,6 +37,10 @@ def search():
                               Material.content.ilike(f'%{search_query}%'))).all()
     return render_template('search.html', posts=posts)
 
+@main.route("/")
+def landing():
+    return render_template('landing_page.html')
+
 @main.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -46,11 +50,13 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrpyt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
+            nextpage = request.args.get('next')
             flash('Login succesful', 'success')
-        return redirect(url_for('main.home'))
-    else:
-        print('error')
-        flash('Login unsuccesful. Please check your email and password details.')
+            return redirect(url_for(nextpage)) if nextpage else redirect(url_for('main.home'))
+        else:
+            flash('Login unsuccesful. Please check your email and password details.')
+       
+   
     return render_template('login.html', form=form)
 
 
@@ -72,9 +78,9 @@ def register():
 @main.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('main.home'))
+    return redirect(url_for('main.landing'))
  
-@main.route("/", methods=["POST", "GET"])
+@main.route("/home", methods=["POST", "GET"])
 def home():
     post_form = PostForm()
     placeholder =  choice(prompts)
@@ -125,7 +131,7 @@ def like_comment(comment_id):
     else:
         like = current_user.like_comment(comment)
         db.session.commit()
-        comment.author.add_notification('comment_like', like.id)
+        comment.commenter.add_notification('comment_like', like.id)
     return jsonify({
         'liked': current_user.has_liked_comment(comment)
     })
