@@ -81,6 +81,7 @@ def logout():
     return redirect(url_for('main.landing'))
  
 @main.route("/home", methods=["POST", "GET"])
+@login_required
 def home():
     post_form = PostForm()
     placeholder =  choice(prompts)

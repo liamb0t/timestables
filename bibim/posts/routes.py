@@ -73,7 +73,7 @@ def send_message(recipient):
                       body=form.body.data)
         db.session.add(msg)
         db.session.commit()
-        flash(('Your message has been sent.'))
+        flash(('Your message has been sent.'), 'success')
         return redirect(url_for('users.user_profile', username=recipient))
     return render_template('send_message.html', form=form, recipient=recipient)
 

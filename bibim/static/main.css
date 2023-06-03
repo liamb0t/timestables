@@ -3,12 +3,6 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f8f8f8;
-  color: #333;
 }
 
 
@@ -607,8 +601,6 @@ body {
 
 .post-footer {
   border-top: 1px solid rgb(216, 216, 216);
-  display: flex;
-  justify-content: space-between;
   padding-left: 10px;
   padding-top: 10px;
 }
@@ -616,6 +608,10 @@ body {
 .post-likes {
   padding-left: 10px;
   font-size: 0.8rem;
+}
+
+.comment-form {
+  display: flex;
 }
 
 .posts icon:hover {

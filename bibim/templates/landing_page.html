@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Landing Page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-logo">Bibim School</div>
+        <ul class="navbar-links">
+            <li><a href="{{ url_for('main.login') }}">Login</a></li>
+            <li><a href="{{ url_for('main.register') }}">Register</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Help</a></li>
+        </ul>
+    </nav>
+    <!-- Your landing page content goes here -->
+</body>
+</html>

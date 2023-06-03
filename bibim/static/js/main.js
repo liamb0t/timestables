@@ -12,20 +12,21 @@ function handleSubmit(event) {
       parent_id: parentId
   };
 
-  // Send a POST request to the route using AJAX
-  fetch(`/post/${postId}/comment`, {
-      method: 'POST',
-      headers: {
-      'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-  })
-  .then(response => response.json())
-  .then(comment => {
-      // Create a new comment element and add it to the comments list
-      const commentElement = document.createElement('div');
-      commentElement.classList.add('comment-container');
-      commentElement.innerHTML = `
+  if (textareaValue != '') {
+    // Send a POST request to the route using AJAX
+    fetch(`/post/${postId}/comment`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(comment => {
+        // Create a new comment element and add it to the comments list
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment-container');
+        commentElement.innerHTML = `
         <div>
             <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
         </div>
@@ -41,11 +42,14 @@ function handleSubmit(event) {
                 <div class="reply-btn" data-comment-id="${comment["id"]}" data-author="${comment["author"]}" data-post-id="${postId}">Reply</div>
             </div>
         </div>
-      `;
-      const commentsList = document.querySelector(`#post-comments-${postId}`);
-      const lastElement = commentsList.lastElementChild;
-      commentsList.insertBefore(commentElement, lastElement);
-      // Clear the content of the comment form
-      this.reset();
-  });
-}
+        `;
+        const commentsList = document.querySelector(`#post-comments-${postId}`);
+        const lastElement = commentsList.lastElementChild;
+        commentsList.insertBefore(commentElement, lastElement);
+        // Clear the content of the comment form
+        this.reset();
+    });
+    }
+  }
+
+  
