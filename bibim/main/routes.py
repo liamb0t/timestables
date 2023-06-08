@@ -145,3 +145,11 @@ def open_notification(id):
     db.session.commit()
     url = notification.get_redirect_url()
     return redirect(url_for(url))    
+
+@main.route("/get_messages/<int:user_id>")
+@login_required
+def get_messages(user_id):
+    messages = current_user.get_messages(user_id)
+    return jsonify({
+        'conversation': [m.serialize() for m in messages]
+    })

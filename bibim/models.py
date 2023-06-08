@@ -126,6 +126,11 @@ class User(db.Model, UserMixin):
         return Message.query.filter_by(recipient=self).filter(
             Message.read == False).count()
     
+    def get_messages(self, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return Message.query.filter_by(recipient=self, author=user).order_by(Message.timestamp.asc()).all()
+
+    
     def new_notifications(self):
         return Notification.query.filter_by(user_id=self.id).filter(
             Notification.read == False, Notification.name != 'unread_message_count').count()
@@ -321,6 +326,15 @@ class Message(db.Model):
 
     def __repr__(self):
         return f"Message {self.body}"
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'sender': self.sender_id,
+            'recipient': self.recipient_id,
+            'content': self.body,
+            'date': self.timestamp
+        }
     
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)

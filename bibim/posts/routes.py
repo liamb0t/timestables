@@ -93,8 +93,9 @@ def read_message(message_id):
 @login_required
 def inbox():
     messages = current_user.messages_received
-    conversations = [m.author.username for m in messages]
-    return render_template('inbox.html', messages=messages)
+    conversations = [m.author for m in messages]
+    print(conversations)
+    return render_template('inbox.html', messages=messages, conversations=conversations)
 
 
 @posts.route('/notifications')
