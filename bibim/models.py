@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from bibim import db, login_manager
 from flask_login import UserMixin, current_user
 from datetime import datetime
@@ -128,7 +129,10 @@ class User(db.Model, UserMixin):
     
     def get_messages(self, user_id):
         user = User.query.filter_by(id=user_id).first()
-        return Message.query.filter_by(recipient=self, author=user).order_by(Message.timestamp.asc()).all()
+        return Message.query.filter(or_(
+            (Message.author == user) & (Message.recipient == self),
+            (Message.author == self) & (Message.recipient == user)
+        )).order_by(Message.timestamp.asc()).all()
 
     
     def new_notifications(self):
@@ -329,9 +333,10 @@ class Message(db.Model):
     
     def serialize(self):
         return {
+            'current_user': current_user.username,
             'id': self.id,
-            'sender': self.sender_id,
-            'recipient': self.recipient_id,
+            'sender': self.author.username,
+            'recipient': self.recipient.username,
             'content': self.body,
             'date': self.timestamp
         }
