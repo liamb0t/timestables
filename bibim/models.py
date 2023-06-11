@@ -144,6 +144,9 @@ class User(db.Model, UserMixin):
         db.session.commit()
         return n
     
+    def get_conversations(self):
+        return list(set(m.author for m in current_user.messages_received))
+    
     def serialize(self):
         return({
             "username": self.username,
@@ -337,7 +340,8 @@ class Message(db.Model):
             'sender': self.author.username,
             'recipient': self.recipient.username,
             'content': self.body,
-            'date': self.timestamp
+            'date': self.timestamp,
+            'read': self.read,
         }
     
 class Notification(db.Model):
@@ -347,10 +351,6 @@ class Notification(db.Model):
     timestamp = db.Column(db.Float, index=True, default=time)
     read = db.Column(db.Boolean, nullable=False, default=False)
     payload_json = db.Column(db.Text)
-
-    def get_redirect_url(self, id):
-        if 'post' in self.name:
-            return 'main.home'
 
     def get_data(self):
         return json.loads(str(self.payload_json))
@@ -373,7 +373,9 @@ class Notification(db.Model):
                 'sent_data': comment.serialize(),
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'commented on your post'
+                'html': 'commented on your post',
+                'url': f'/post/{self.id}',
+                'read': self.read,
             }
         
         elif self.name == 'post_like':
@@ -386,7 +388,9 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your post'
+                'html': 'liked your post',
+                'url': f'/post/{self.id}',
+                'read': self.read,
             }
         
         elif self.name == 'comment_like':
@@ -400,7 +404,8 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': comment.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your comment'
+                'html': 'liked your comment',
+                'read': self.read,
             }
         
         elif self.name == 'comment_reply':
@@ -414,7 +419,8 @@ class Notification(db.Model):
                 'sent_data': reply.serialize(),
                 'user_data': comment.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'replied to your comment'
+                'html': 'replied to your comment',
+                'read': self.read,
             }
         
         elif self.name == 'material_like':
@@ -428,7 +434,9 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your post'
+                'html': 'liked your post',
+                'url': '/material/' + str(self.id),
+                'read': self.read,
             }
         
         elif self.name == 'material_comment':
@@ -442,7 +450,9 @@ class Notification(db.Model):
                 'sent_data': comment.serialize(),
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'commented on your post'
+                'html': 'commented on your post',
+                'url': '/material/' + str(self.id),
+                'read': self.read,
             }
         
         

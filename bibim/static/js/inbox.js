@@ -5,10 +5,10 @@ const messageDisplay = document.querySelector('.message-display');
 conversations.forEach(convo => {
     convo.addEventListener('click', function() {
         updateURL(convo)
+
         fetch(`get_messages/${this.dataset.user}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             displayMessages(data['conversation'])
         })
     })
@@ -17,6 +17,7 @@ conversations.forEach(convo => {
 function displayMessages(history) {
     messageDisplay.innerHTML = '';
     history.forEach(msg => {
+        isRead(msg);
         const messageDiv = document.createElement('div');
         messageDiv.innerHTML = msg['sender'] + ':' + msg['content'];
         if (msg['sender'] != msg['current_user']) {
@@ -39,4 +40,16 @@ function updateURL(div) {
 
     // Update the new URL
     history.pushState(null, null, newUrl);
+}
+
+function isRead(message) {
+    if (!message['read']) {
+        console.log(message['read'])
+        fetch(`/message/${message['id']}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                read: true
+            })
+        })
+    }
 }

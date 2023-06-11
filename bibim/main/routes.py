@@ -137,14 +137,15 @@ def like_comment(comment_id):
         'liked': current_user.has_liked_comment(comment)
     })
 
-@main.route("/open_notification/<int:id>")
+@main.route("/open_notification/<int:id>", methods=["POST"])
 @login_required
 def open_notification(id):
     notification = Notification.query.filter_by(id=id).first_or_404()
     notification.read = True
     db.session.commit()
-    url = notification.get_redirect_url()
-    return redirect(url_for(url))    
+    return jsonify({
+        'success': 'nice'
+    }) 
 
 @main.route("/get_messages/<int:user_id>")
 @login_required

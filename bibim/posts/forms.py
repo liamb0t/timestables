@@ -14,5 +14,5 @@ class FollowForm(FlaskForm):
     submit = SubmitField('Follow')
 
 class MessageForm(FlaskForm):
-    body = TextAreaField('Message', validators=[DataRequired(), Length(min=0, max=140)])
+    body = TextAreaField('Message', validators=[DataRequired(), Length(min=0, max=140)], render_kw={"placeholder": 'Message...'})
     submit = SubmitField('Send message')

@@ -61,28 +61,12 @@ def post_comment(post_id):
     })
 
 
-@posts.route("/send_message/<string:recipient>", methods=["GET", "POST"])
-@login_required
-def send_message(recipient):
-    user = User.query.filter_by(username=recipient).first_or_404()
-    form = MessageForm()
-    if form.validate_on_submit():
-        new_messages_count = user.new_messages()
-        user.add_notification('unread_message_count', new_messages_count + 1)
-        msg = Message(author=current_user, recipient=user,
-                      body=form.body.data)
-        db.session.add(msg)
-        db.session.commit()
-        flash(('Your message has been sent.'), 'success')
-        return redirect(url_for('users.user_profile', username=recipient))
-    return render_template('send_message.html', form=form, recipient=recipient)
-
 @posts.route("/inbox", methods=["GET", "POST"])
 @login_required
 def inbox():
     form = MessageForm()
     user_id = request.args.get('user')
-    conversations = [m.author for m in current_user.messages_received]
+    conversations = current_user.get_conversations()
 
     if user_id:
         user = User.query.filter_by(id=user_id).first_or_404()
@@ -117,3 +101,17 @@ def notifications():
         'notifications': [n.serialize() for n in notifications if n.name != 'unread_message_count'],
         'unread_message_count': current_user.new_messages(),
     })
+
+@posts.route('/message/<int:msg_id>', methods=["POST"])
+@login_required
+def message(msg_id):
+    message = Message.query.filter_by(id=msg_id).first()
+    message.read = True
+    db.session.commit()
+    return jsonify({
+        'success': 'message read'
+    })
+
+@posts.route('/post/<int:post_id>')
+def post(post_id):
+    return render_template('post.html')

@@ -57,7 +57,6 @@ function load() {
     .then(data => {
         data['posts'].forEach(post => {
             add_post(post);
-            console.log(post)
         });
     })
 }

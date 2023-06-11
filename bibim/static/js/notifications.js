@@ -27,8 +27,6 @@ function get_notifications(timestamp) {
       .then(data => {
         update_message_counter(data['unread_message_count']);
         if (data['notifications']) {
-          updateNotifCount(data['notifications'].length)
-
           data['notifications'].forEach(notification => {
             if (notification) {
               since = notification['timestamp'];
@@ -44,10 +42,15 @@ function get_notifications(timestamp) {
   });
 }
 
-function updateNotifCount(value) {
+function updateNotifCount(n) {
   const counter = document.querySelector('#notifications_count');
   let count = parseInt(counter.dataset.count);
-  count += value;
+
+  if (!n['read']) {
+    count += 1;
+   
+  }
+
   counter.dataset.count = count;
   counter.innerHTML = counter.dataset.count;
 }
@@ -64,25 +67,22 @@ function poller(timestamp) {
   }, timer);
 };
 
-function load_notifications() {
-  fetch(`/notifications`)
-    .then(response => response.json())
-    .then(data => {
-      data['notifications'].forEach(notification => {
-        display_notification(notification)
-      });
-    })
-}
-
 function display_notification(data) {
-  notiContainer= document.querySelector('.notifications');
+  notiContainer = document.querySelector('.notifications');
   notiDiv = document.createElement('div');
   const url = document.createElement('a');
-  url.setAttribute('href', `/open_notification/${data.id}`);
+  url.setAttribute('href', data['url']);
   url.appendChild(notiDiv)
   const html = notificationHTML(data)
   notiDiv.innerHTML = html;
   notiContainer.insertAdjacentElement('afterbegin', url);
+
+  notiDiv.addEventListener('click', function() {
+    if (!data['read']) {
+      isRead(data['id']);
+    }
+  })
+ 
 }
 
 const notificationsBtn = document.querySelector('.notifications-link');
@@ -101,7 +101,15 @@ function notificationHTML(data) {
     return `${sent_data['author']} ${data['html']}: ${sent_data['content']}`
   }
   else {
-    console.log(user_data)
     return `${sent_data['author']} ${data['html']} ${user_data['content']}`
   }
+}
+
+function isRead(notification_id) {
+  fetch(`/open_notification/${notification_id}`, {
+      method: 'POST',
+      body: JSON.stringify({
+          read: true
+      })
+  })
 }
