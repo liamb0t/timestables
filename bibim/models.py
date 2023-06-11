@@ -134,7 +134,6 @@ class User(db.Model, UserMixin):
             (Message.author == self) & (Message.recipient == user)
         )).order_by(Message.timestamp.asc()).all()
 
-    
     def new_notifications(self):
         return Notification.query.filter_by(user_id=self.id).filter(
             Notification.read == False, Notification.name != 'unread_message_count').count()

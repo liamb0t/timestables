@@ -4,6 +4,7 @@ const messageDisplay = document.querySelector('.message-display');
 
 conversations.forEach(convo => {
     convo.addEventListener('click', function() {
+        updateURL(convo)
         fetch(`get_messages/${this.dataset.user}`)
         .then(response => response.json())
         .then(data => {
@@ -18,7 +19,6 @@ function displayMessages(history) {
     history.forEach(msg => {
         const messageDiv = document.createElement('div');
         messageDiv.innerHTML = msg['sender'] + ':' + msg['content'];
-        console.log(msg)
         if (msg['sender'] != msg['current_user']) {
             messageDiv.setAttribute('class', 'message')
         }
@@ -27,4 +27,16 @@ function displayMessages(history) {
         }
         messageDisplay.appendChild(messageDiv);
     });
+}
+
+function updateURL(div) {
+    const id = div.dataset.user;
+    // Get the current URL
+    const currentUrl = 'http://127.0.0.1:5000/inbox';
+
+    // Add the GET parameter to the URL
+    const newUrl = currentUrl + `?user=${id}`; // Replace 'param' and 'value' with your desired parameter name and value
+
+    // Update the new URL
+    history.pushState(null, null, newUrl);
 }

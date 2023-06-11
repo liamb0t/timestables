@@ -77,25 +77,34 @@ def send_message(recipient):
         return redirect(url_for('users.user_profile', username=recipient))
     return render_template('send_message.html', form=form, recipient=recipient)
 
-
-@posts.route("/read_message/<int:message_id>")
-@login_required
-def read_message(message_id):
-    user = current_user
-    message = Message.query.filter_by(id=message_id).first_or_404()
-    message.read = True
-    current_user.add_notification('unread_message_count', user.new_messages())
-    db.session.commit()
-    return render_template('read_message.html', message=message)
-
-
-@posts.route("/inbox")
+@posts.route("/inbox", methods=["GET", "POST"])
 @login_required
 def inbox():
-    messages = current_user.messages_received
-    conversations = [m.author for m in messages]
-    print(conversations)
-    return render_template('inbox.html', messages=messages, conversations=conversations)
+    form = MessageForm()
+    user_id = request.args.get('user')
+    conversations = [m.author for m in current_user.messages_received]
+
+    if user_id:
+        user = User.query.filter_by(id=user_id).first_or_404()
+        messages = current_user.get_messages(user_id)
+    else:
+        messages = None
+
+    if request.method == 'POST':
+        user_id = request.args.get('user')
+        user = User.query.filter_by(id=user_id).first_or_404()
+
+        if form.validate_on_submit():
+            new_messages_count = user.new_messages()
+            user.add_notification('unread_message_count', new_messages_count + 1)
+            msg = Message(author=current_user, recipient=user,
+                        body=form.body.data)
+            db.session.add(msg)
+            db.session.commit()
+            flash(('Your message has been sent.'), 'success')
+            return redirect(url_for('posts.inbox', user=user_id))
+    
+    return render_template('inbox.html', messages=messages, conversations=conversations, form=form)
 
 
 @posts.route('/notifications')

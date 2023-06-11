@@ -10,7 +10,7 @@
               
                 {% if current_user != user %}
                     <button class="user-page-follow-button">Follow</button>
-                    <a href="{{ url_for('posts.inbox') }}">
+                    <a href="{{ url_for('posts.inbox', user=user.id) }}">
                         <button class="user-page-message-button">Message</button>
                     </a>
                 {% else %}
