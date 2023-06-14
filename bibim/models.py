@@ -182,7 +182,7 @@ class Post(db.Model):
             "content": self.content,
             "likes": len(self.likes),
             "likers": [User.query.filter_by(id=like.user_id).first().serialize() for like in self.likes],
-            "comments": [comment.serialize() for comment in self.comments] if len(self.comments) > 0 else None,
+            "comments": [comment.serialize() for comment in self.comments if not comment.parent] if len(self.comments) > 0 else None,
         }
         
         if not current_user.is_anonymous:
@@ -229,6 +229,9 @@ class Comment(db.Model):
     def likes_count(self):
         return len([likes for likes in self.likes])
     
+    def replies_count(self):
+        return len([r for r in self.replies])
+    
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -252,6 +255,7 @@ class Comment(db.Model):
             "likes": self.likes,
             "replies": [reply.serialize() for reply in self.get_replies()],
             "likes_count": self.likes_count(),
+            "replies_count": self.replies_count()
         }
 
 class Material(db.Model):

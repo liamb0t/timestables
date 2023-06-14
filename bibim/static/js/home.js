@@ -272,16 +272,17 @@ function add_post(post) {
             replies.setAttribute('class', 'comment-replies');
 
             replies.style.display = 'none';
+
             
             if (comment["replies"].length > 0) {
                 const showRepliesDiv = document.createElement('div');
                 showRepliesDiv.innerHTML = `
-                    <btn class="show-replies-btn" id="show-replies-btn-{{ comment.id }}" style="display: block" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies</btn>`
+                    <btn class="show-replies-btn" id="show-replies-btn-${comment['id']}" style="display: block" data-comment-id="${comment['id']}" data-replies-count="${comment['replies_count']}">&mdash;&mdash; View replies(${comment['replies_count']})</btn>`
                 userInfo.append(showRepliesDiv)
 
                 showRepliesDiv.addEventListener('click', function() {
                     replies.style.display = replies.style.display === 'block' ? 'none' : 'block';
-                    this.children[0].innerHTML = replies.style.display === 'block' ? '&mdash;&mdash; Hide replies' : `&mdash;&mdash; View replies`;
+                    this.children[0].innerHTML = replies.style.display === 'block' ? '&mdash;&mdash; Hide replies' : `&mdash;&mdash; View replies(${comment['replies_count']})`;
                 })
 
                 comment["replies"].forEach(reply => {
@@ -303,6 +304,7 @@ function add_post(post) {
                                 <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>
                                 
                                 <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
+                                <div onclick="handleReply({ author: '${reply["author"]}', comment_id: ${reply["id"]}, post_id: ${post["id"]} })" class="reply-btn" data-comment-id="${reply['id']}" data-author="${reply['author']}">Reply</div>
                             </div> 
                         </div>
                         <div class="like-btn">
@@ -334,8 +336,8 @@ function add_post(post) {
     const hiddenField = document.createElement('input');
     hiddenField.setAttribute('id', `post-hidden-${post.id}`);
     hiddenField.type = 'hidden';
-    hiddenField.name = 'secret';
-    hiddenField.value = 'mySecretValue';
+    hiddenField.name = 'parent';
+    hiddenField.value = '';
     commentForm.appendChild(hiddenField);
 
     

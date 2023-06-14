@@ -3,7 +3,8 @@ function handleSubmit(event) {
 
   const formData = new FormData(event.target);
   const textareaValue = formData.get('myTextarea');
-  const parentId = formData.get('parentId');
+  const parentId = formData.get('parent');
+  console.log(parentId)
   const postId = this.dataset.postId;
 
   // Create the payload
@@ -33,7 +34,7 @@ function handleSubmit(event) {
         <div class="user-info">
             <div class="header">
                 <div class="username">${comment["author"]}</div>
-                ${comment.parent ? `<a href="${url_for('users.user_profile', username=comment.parent)}" style="color: rgb(53, 152, 157)">@${comment.parent}</a>` : ''}
+                ${comment.parent ? `<a href="/user/${comment['parent']}" style="color: rgb(53, 152, 157)">@${comment['parent']}</a>` : ''}
                 <div class="comment">${comment["content"]}</div>
             </div>
             <div class="footer">
