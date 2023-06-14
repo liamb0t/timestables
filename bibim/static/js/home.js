@@ -192,41 +192,100 @@ function add_post(post) {
         post["comments"].forEach(comment => {
             const commentContainer = document.createElement('div');
             commentContainer.classList.add('comment-container');
-            const html = `
-            <div>
-                <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
-            </div>
-            <div class="user-info">
-                <div class="header">
-                    <div class="username">${comment["author"]}</div>
-                    ${comment.parent ? `<a href="${url_for('users.user_profile', username=comment.parent)}" style="color: rgb(53, 152, 157)">@${comment.parent}</a>` : ''}
-                    <div class="comment">${comment["content"]}</div>
-                </div>
-                <div class="footer">
-                    <div class="date">${comment["date_posted"]}</div>
-                    ${comment["likes_count"] > 0 ? `<div class="date" id="like-counter-${comment["id"]}" data-count="${comment["likes_count"]}" style="display: block">${comment["likes_count"]} likes_count</div>` : `<div class="date" id="like-counter-${comment["likes_count"]}" data-count="${comment["likes_count"]}" style="display: none;">${comment["likes_count"]} likes</div>`}
-                    <div onclick="handleReply({ author: '${comment["author"]}', comment_id: ${comment["id"]}, post_id: ${post["id"]}})" class="reply-btn">Reply</div>
-                </div>
-            </div>
-            `;
-            commentContainer.innerHTML = html;
+
+
+            const userPic = document.createElement('img');
+            userPic.classList.add('user-pic');
+            userPic.src = "/static/pics/default.jpg";
+            userPic.alt = "User profile picture";
+            commentContainer.appendChild(userPic);
+
+            const userInfo = document.createElement('div');
+            userInfo.classList.add('user-info');
+
+            const header = document.createElement('div');
+            header.classList.add('header');
+
+            const username = document.createElement('div');
+            username.classList.add('username');
+            username.textContent = comment["author"];
+            header.appendChild(username);
+
+            if (comment['parent']) {
+                const parentLink = document.createElement('a');
+                parentLink.href = `user/${comment['parent']}`
+                parentLink.style.color = "rgb(53, 152, 157)";
+                parentLink.textContent = `@${comment['parent']}`;
+                header.appendChild(parentLink);
+            }
+
+            const commentContent = document.createElement('div');
+            commentContent.classList.add('comment');
+            commentContent.textContent = comment["content"];
+            header.appendChild(commentContent);
+
+            userInfo.appendChild(header);
+
+            const footer = document.createElement('div');
+            footer.classList.add('footer');
+
+            const date = document.createElement('div');
+            date.classList.add('date');
+            date.textContent = comment["date_posted"];
+            footer.appendChild(date);
+
+            //likes are not appearing yet cause haven't added like functionality to posts yet
+
+            if (comment["likes_count"] > 0) {
+                const likeCounter = document.createElement('div');
+                likeCounter.classList.add('date');
+                likeCounter.id = `like-counter-${comment["id"]}`;
+                likeCounter.dataset.count = comment["likes_count"];
+                likeCounter.style.display = "block";
+                likeCounter.textContent = `${comment["likes_count"]} likes`;
+                footer.appendChild(likeCounter);
+            } else {
+                const likeCounter = document.createElement('div');
+                likeCounter.classList.add('date');
+                likeCounter.id = `like-counter-${comment["id"]}`;
+                likeCounter.dataset.count = comment["likes_count"];
+                likeCounter.style.display = "none";
+                likeCounter.textContent = `${comment["likes_count"]} likes`;
+                footer.appendChild(likeCounter);
+            }
+
+            const replyBtn = document.createElement('div');
+            replyBtn.classList.add('reply-btn');
+            replyBtn.textContent = "Reply";
+            replyBtn.addEventListener('click', function() {
+                handleReply({ author: comment["author"], comment_id: comment["id"], post_id: post["id"] });
+            });
+            footer.appendChild(replyBtn);
+
+            userInfo.appendChild(footer);
+    
+            commentContainer.appendChild(userInfo);
+
             comments.appendChild(commentContainer);
 
-            const replyContainer = document.createElement('div');
             const replies = document.createElement('div');
-            const replyBtn = document.createElement('button');
+            replies.setAttribute('class', 'comment-replies');
 
             replies.style.display = 'none';
-            replyBtn.innerHTML = 'Reply';
-            replyContainer.appendChild(replyBtn);
-            replyContainer.appendChild(replies)
-            
             
             if (comment["replies"].length > 0) {
-                const replyDiv = document.createElement('div');
-               
+                const showRepliesDiv = document.createElement('div');
+                showRepliesDiv.innerHTML = `
+                    <btn class="show-replies-btn" id="show-replies-btn-{{ comment.id }}" style="display: block" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies</btn>`
+                userInfo.append(showRepliesDiv)
+
+                showRepliesDiv.addEventListener('click', function() {
+                    replies.style.display = replies.style.display === 'block' ? 'none' : 'block';
+                    this.children[0].innerHTML = replies.style.display === 'block' ? '&mdash;&mdash; Hide replies' : `&mdash;&mdash; View replies`;
+                })
+
                 comment["replies"].forEach(reply => {
-                    
+                    const replyDiv = document.createElement('div');
                     const html = `
                         <div class="comment-container">
                         <div>
@@ -238,17 +297,17 @@ function add_post(post) {
                             
                             <div class="comment">${reply["content"]}</div>
                             </div>
-                            <div class="footer">
-                            <div class="date">${reply["date_posted"]}</div>
-                            
-                            <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>
-                             
-                            <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
+                                <div class="footer">
+                                <div class="date">${reply["date_posted"]}</div>
+                                
+                                <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>
+                                
+                                <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
                             </div> 
                         </div>
                         <div class="like-btn">
                             <div class="like-icon">
-                            <i id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-plrey-id="${comment.id}"></i>
+                            <i id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-reply-id="${reply['id']}"></i>
                             </div>
                         </div>
                         </div>    
@@ -256,9 +315,9 @@ function add_post(post) {
                     replyDiv.innerHTML = html;
                     replies.appendChild(replyDiv);
                 });
-                commentContainer.appendChild(replyContainer);
+                userInfo.appendChild(replies)
             }
-             
+
             });
         }
     

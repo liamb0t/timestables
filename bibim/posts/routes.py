@@ -3,7 +3,9 @@ from flask_login import current_user, login_required
 from bibim import db
 from bibim.posts.forms import PostForm, MessageForm
 from bibim.models import Post, Comment, User, Message, Notification
+from bibim.materials.forms import CommentForm
 import datetime
+from bibim.posts.utils import post_timestamp
 
 posts = Blueprint('posts', __name__)
 
@@ -112,6 +114,11 @@ def message(msg_id):
         'success': 'message read'
     })
 
-@posts.route('/post/<int:post_id>')
+@posts.route('/post/<int:post_id>', methods=["POST", "GET"])
 def post(post_id):
-    return render_template('post.html')
+    form = CommentForm()
+    post = Post.query.filter_by(id=post_id).first_or_404()
+    if post:
+        comments = Comment.query.filter_by(post_id=post.id).filter_by(parent=None).order_by(Comment.date_posted.asc())
+    return render_template('post.html', post=post, comments=comments, post_timestamp=post_timestamp,
+                           form=form)

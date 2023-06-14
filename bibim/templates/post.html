@@ -1,1 +1,104 @@
-<h1>HELLO</h1>
+{% extends "layout.html" %}
+{% block content %}
+  <div class="material-container">
+    <div class="header">
+      <img src="/static/pics/default.jpg" alt="Profile Picture" class="profile-picture">
+      <div class="username">{{ post.author.username }}</div>
+      <div class="date">{{ post_timestamp(post.date_posted) }}</div>
+    </div>
+
+    <div class="content">
+      <p>{{ post.content }}</p>
+    </div>
+
+    <div class="like-button">
+      <i id="material-like-button" class="fa-regular fa-heart" data-post-id="{{ post.id}}"></i>
+      <span id="material-like-count" class="like-count" data-post-likes="{{ post.likes_count() }}">{{ post.likes_count() }} likes</span>
+    </div>
+
+
+    <div class="footer">
+      <div class="comments">
+        {% for comment in comments %}
+        <div class="comment-container">
+          <div>
+            <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+          </div>
+          <div class="user-info" id="user-info-{{ comment.id }}">
+            <div class="header">
+              <div class="username">{{ comment.commenter.username }}</div>
+              {% if comment.parent %}
+                <a href="{{url_for('users.user_profile', username=comment.parent.commenter.username) }}" style="color: rgb(53, 152, 157)">@{{ comment.parent.commenter.username }}</a>
+              {% endif %}
+              <div class="comment">{{ comment.content }}</div>
+            </div>
+            <div class="footer">
+              <div class="date">{{ post_timestamp(comment.date_posted) }}</div>
+              {% if comment.likes_count() > 0 %}
+                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes_count() }}" style="display: block">{{ comment.likes_count() }} likes</div>
+                {% else %}
+                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes_count() }}" style="display: none;">{{ comment.likes_count() }} likes</div>
+              {% endif %}
+              <div class="reply-btn" data-comment-id="{{ comment.id }}" data-author="{{ comment.commenter.username }}">Reply</div>
+            </div>  
+            
+            {% if comment.get_replies() %}
+              <btn class="show-replies-btn" id="show-replies-btn-{{ comment.id }}" style="display: block" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies ({{ comment.get_replies()|length }})</btn>
+              <div class="comments-replies" id="comment-reply-{{ comment.id }}" style="display: none">
+                {% for reply in comment.get_replies() %}
+                  <div class="comment-container">
+                    <div>
+                      <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+                    </div>
+                    <div class="user-info">
+                      <div class="header">
+                        <div class="username">{{ reply.commenter.username }}</div>
+                      
+                        <div class="comment">{{ reply.content }}</div>
+                      </div>
+                      <div class="footer">
+                        <div class="date">{{ post_timestamp(reply.date_posted) }}</div>
+                        {% if reply.likes_count() > 0 %}
+                          <div class="date" id="like-counter-{{ reply.id }}" data-count="{{ reply.likes_count() }}" style="display: block">{{ reply.likes_count() }} likes</div>
+                          {% else %}
+                          <div class="date" id="like-counter-{{ reply.id }}" data-count="{{ reply.likes_count() }}" style="display: none;">{{ reply.likes_count() }} likes</div>
+                        {% endif %}
+                        <div class="reply-btn" data-comment-id="{{ reply.id }}" data-author="{{ reply.commenter.username }}">Reply</div>
+                      </div> 
+                    </div>
+                    <div class="like-btn">
+                      <div class="like-icon">
+                        <i id="material-comment-like-icon-{{ reply.id}}" class="fa-regular fa-heart" data-comment-id="{{ reply.id }}"></i>
+                      </div>
+                    </div>
+                  </div>    
+                {% endfor %}
+              </div>
+            {% else %}
+              <btn class="show-replies-btn" id="show-replies-btn-{{ comment.id }}" style="display: none" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies ({{ comment.get_replies()|length }})</btn>
+            {% endif %}
+
+          </div>
+          <div class="like-btn">
+            <div class="like-icon">
+              <i id="material-comment-like-icon-{{ comment.id}}" class="fa-regular fa-heart" data-comment-id="{{ comment.id }}"></i>
+            </div>
+          </div>
+        </div>    
+        {% endfor %}
+      </div>
+    </div>
+
+    <form class="material-comment-form" method="POST" action="" data-postid="{{ post.id }}">
+      <div class="material-comment-field">
+        <img src="/static/pics/default.jpg" alt="User Profile Pic" class="material-comment-field-profile-pic">
+        {{ form.hidden_tag() }}
+        {{ form.content(class="material-comment-field-input") }}
+        {{ form.submit(class="material-comment-field-submit") }}
+      </div>
+    </form>
+    
+  </div>
+  <script src="{{ url_for('static', filename='js/material.js') }}"></script>
+{% endblock content %}
+

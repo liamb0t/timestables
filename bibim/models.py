@@ -170,6 +170,9 @@ class Post(db.Model):
     def __repr__(self):
         return f"Post('{self.id}', '{self.date_posted}')"
     
+    def likes_count(self):
+        return len([likes for likes in self.likes])
+    
     def serialize(self):
         payload = {
             "id": self.id,
@@ -374,7 +377,7 @@ class Notification(db.Model):
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
                 'html': 'commented on your post',
-                'url': f'/post/{self.id}',
+                'url': f'/post/{post.id}',
                 'read': self.read,
             }
         
