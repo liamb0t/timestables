@@ -358,6 +358,12 @@ body {
   padding: 10px;
 }
 
+.paginate-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .comment-container .user-pic {
   width: 40px;
   height: 40px;
@@ -390,8 +396,6 @@ body {
   margin-right: 5px;
 }
 
-
-
 .comment-container .date {
   font-size: 12px;
   color: #999;
@@ -402,6 +406,10 @@ body {
   font-size: 12px;
   color: #999;
   margin-right: 10px;
+}
+
+.comment-container-hidden {
+  display: none;
 }
 
 .comments-replies {

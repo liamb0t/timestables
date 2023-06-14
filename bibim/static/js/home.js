@@ -4,6 +4,14 @@ const submitPostBtn = document.querySelector('#submit');
 const overlay = document.querySelector('.overlay');
 const popupContainer = document.querySelector('.likes-popup');
 
+function paginate(id, btn) {
+    const comments = document.querySelectorAll(`#post-comments-${id} .comment-container-hidden`)
+    comments.forEach(comment => {
+        comment.classList.toggle('comment-container')
+    });
+    btn.style.display = 'none';
+}   
+
 function handleReply(data) {
     const commentId = data["comment_id"];
     const author = data["author"];
@@ -189,11 +197,30 @@ function add_post(post) {
     comments.setAttribute('id', `post-comments-${post["id"]}`);
     
     if (post["comments"]) {
+        let count = 0;
+        let paginated = false;
         post["comments"].forEach(comment => {
+            count += 1;
             const commentContainer = document.createElement('div');
             commentContainer.classList.add('comment-container');
-
-
+            if (count > 5) {
+                commentContainer.setAttribute('class', 'comment-container-hidden');
+                if (!paginated) {
+                    paginated = true;
+                    const container = document.createElement('div');
+                    container.setAttribute('class', 'paginate-icon-container')
+                    const paginateBtn = document.createElement('icon');
+                    paginateBtn.setAttribute('class', "fa-regular fa-plus")
+                    container.appendChild(paginateBtn)
+                    comments.appendChild(container);
+                    paginateBtn.addEventListener('click', function() {
+                        paginate(post['id'], this);
+                    })
+                }
+                
+            }   
+            
+                
             const userPic = document.createElement('img');
             userPic.classList.add('user-pic');
             userPic.src = "/static/pics/default.jpg";
