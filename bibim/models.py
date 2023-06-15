@@ -252,7 +252,7 @@ class Comment(db.Model):
             "author": self.commenter.username,
             "content": self.content,
             "date_posted": post_timestamp(self.date_posted),
-            "likes": self.likes,
+            "likes": [like.serialize() for like in self.likes],
             "replies": [reply.serialize() for reply in self.get_replies()],
             "likes_count": self.likes_count(),
             "replies_count": self.replies_count()
@@ -386,6 +386,7 @@ class Notification(db.Model):
             }
         
         elif self.name == 'post_like':
+
             like = Like.query.filter_by(id=data).first()
             post = like.post
 
@@ -396,7 +397,7 @@ class Notification(db.Model):
                 'user_data': post.serialize(),
                 'timestamp': self.timestamp,
                 'html': 'liked your post',
-                'url': f'/post/{self.id}',
+                'url': f'/post/{post.id}',
                 'read': self.read,
             }
         
@@ -442,7 +443,7 @@ class Notification(db.Model):
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
                 'html': 'liked your post',
-                'url': '/material/' + str(self.id),
+                'url': f'/material/{material.id}',
                 'read': self.read,
             }
         
@@ -458,7 +459,7 @@ class Notification(db.Model):
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
                 'html': 'commented on your post',
-                'url': '/material/' + str(self.id),
+                'url': f'/material/{material.id}',
                 'read': self.read,
             }
         

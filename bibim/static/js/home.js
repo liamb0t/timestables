@@ -199,17 +199,20 @@ function add_post(post) {
     if (post["comments"]) {
         let count = 0;
         let paginated = false;
+        const limit = 5;
+
         post["comments"].forEach(comment => {
             count += 1;
             const commentContainer = document.createElement('div');
             commentContainer.classList.add('comment-container');
-            if (count > 5) {
+
+            if (count > limit) {
                 commentContainer.setAttribute('class', 'comment-container-hidden');
                 if (!paginated) {
                     paginated = true;
                     const container = document.createElement('div');
                     container.setAttribute('class', 'paginate-icon-container')
-                    const paginateBtn = document.createElement('icon');
+                    const paginateBtn = document.createElement('btn');
                     paginateBtn.setAttribute('class', "fa-regular fa-plus")
                     container.appendChild(paginateBtn)
                     comments.appendChild(container);
@@ -217,10 +220,8 @@ function add_post(post) {
                         paginate(post['id'], this);
                     })
                 }
-                
             }   
-            
-                
+              
             const userPic = document.createElement('img');
             userPic.classList.add('user-pic');
             userPic.src = "/static/pics/default.jpg";
@@ -304,12 +305,12 @@ function add_post(post) {
             if (comment["replies"].length > 0) {
                 const showRepliesDiv = document.createElement('div');
                 showRepliesDiv.innerHTML = `
-                    <btn class="show-replies-btn" id="show-replies-btn-${comment['id']}" style="display: block" data-comment-id="${comment['id']}" data-replies-count="${comment['replies_count']}">&mdash;&mdash; View replies(${comment['replies_count']})</btn>`
+                    <btn class="show-replies-btn" id="show-replies-btn-${comment['id']}" style="display: block" data-comment-id="${comment['id']}" data-replies-count="${comment['replies_count']}">&mdash;&mdash; View replies (${comment['replies_count']})</btn>`
                 userInfo.append(showRepliesDiv)
 
                 showRepliesDiv.addEventListener('click', function() {
                     replies.style.display = replies.style.display === 'block' ? 'none' : 'block';
-                    this.children[0].innerHTML = replies.style.display === 'block' ? '&mdash;&mdash; Hide replies' : `&mdash;&mdash; View replies(${comment['replies_count']})`;
+                    this.children[0].innerHTML = replies.style.display === 'block' ? '&mdash;&mdash; Hide replies' : `&mdash;&mdash; View replies (${comment['replies_count']})`;
                 })
 
                 comment["replies"].forEach(reply => {
