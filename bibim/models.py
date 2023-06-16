@@ -225,6 +225,9 @@ class Comment(db.Model):
 
     def __repr__(self):
         return f"Comment('{self.id}', '{self.commenter.username}', '{self.parent}')"
+    
+    def get_post(self):
+        return (self.post_id, 'post') if self.post_id else (self.material_id, 'material')
 
     def likes_count(self):
         return len([likes for likes in self.likes])
@@ -405,6 +408,7 @@ class Notification(db.Model):
 
             like = Like.query.filter_by(id=data).first()
             comment = like.comment
+            post_id, link = comment.get_post()
 
             return {
                 'id': self.id,
@@ -413,6 +417,7 @@ class Notification(db.Model):
                 'user_data': comment.serialize(),
                 'timestamp': self.timestamp,
                 'html': 'liked your comment',
+                'url': f'/{link}/{post_id}',
                 'read': self.read,
             }
         
@@ -420,6 +425,7 @@ class Notification(db.Model):
 
             reply = Comment.query.filter_by(id=data).first()
             comment = reply.parent
+            post_id, link = comment.get_post()
 
             return {
                 'id': self.id,
@@ -428,6 +434,7 @@ class Notification(db.Model):
                 'user_data': comment.serialize(),
                 'timestamp': self.timestamp,
                 'html': 'replied to your comment',
+                'url': f'/{link}/{post_id}',
                 'read': self.read,
             }
         
