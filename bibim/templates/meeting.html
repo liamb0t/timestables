@@ -2,7 +2,7 @@
 {% block content %}
   <div class="material-container">
     <div class="header">
-      <img src="/static/pics/default.jpg" alt="Profile Picture" class="profile-picture">
+      <img src="{{ url_for('static', filename='pics/' + meeting.organizer.image_file)}}" alt="Profile Picture" class="profile-picture">
       <div class="username">{{ meeting.organizer.username }}</div>
       <div class="date">{{ post_timestamp(meeting.date_posted) }}</div>
     </div>

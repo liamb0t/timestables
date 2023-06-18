@@ -59,7 +59,8 @@ def post_comment(post_id):
         'content': comment.content,
         'date_posted': comment.date_posted.strftime('%Y-%m-%d'),
         'author': current_user.username,
-        'parent': parent_comment.commenter.username if parent_id else None
+        'parent': parent_comment.commenter.username if parent_id else None,
+        'pic': current_user.image_file,
     })
 
 

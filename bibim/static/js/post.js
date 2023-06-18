@@ -1,13 +1,12 @@
-const addCommentBtn = document.getElementById('submit');
+const likeBtn = document.querySelector('#material-like-button')
 const commentForm = document.querySelector('.material-comment-form');
-const postID = commentForm.dataset.postid;
-const mainLikeIcon = document.getElementById(`material-like-button`);
+const likeCounter = document.querySelector('#material-like-count')
+const replyBtns = document.querySelectorAll('.reply-btn');
+const commentLikeIcons = document.querySelectorAll('.like-icon i')
 const commentField = document.querySelector('.material-comment-field-input');
 const commentFieldHidden = document.querySelector('#reply_id');
-const replyBtns = document.querySelectorAll('.reply-btn');
+const postID = commentForm.dataset.postid;
 const showReplyBtns = document.querySelectorAll('.show-replies-btn');
-
-commentForm.addEventListener('submit', handleSubmit);   
 
 showReplyBtns.forEach(btn => {  
     btn.addEventListener('click', function() {
@@ -19,8 +18,9 @@ showReplyBtns.forEach(btn => {
     })
 });
 
-const commentLikeIcons = document.querySelectorAll('.like-icon i')
-console.log(commentLikeIcons)
+likeBtn.addEventListener('click', handleLikes)
+
+commentForm.addEventListener('submit', handleSubmit); 
 
 commentLikeIcons.forEach(icon => {
     icon.addEventListener('click', handleLikesComment)
@@ -30,7 +30,54 @@ replyBtns.forEach(btn => {
     btn.addEventListener('click', handleReply);
 });
 
-mainLikeIcon.addEventListener('click', handleLikesMaterial)
+function handleLikes() {
+    const post_id = this.dataset.postId;
+    let count = parseInt(likeCounter.dataset.postLikes);
+  
+    fetch(`/like-post/${post_id}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data['liked']) {
+            likeCounter.innerHTML = `${count + 1} likes`;
+            likeCounter.dataset.postLikes = count + 1;
+            likeBtn.setAttribute('class', 'fa-solid fa-heart');
+            likeBtn.style.color = 'red'
+        }
+        else {
+            likeCounter.innerHTML = `${count - 1} likes`;
+            likeCounter.dataset.postLikes = count - 1;
+            likeBtn.setAttribute('class', 'fa-regular fa-heart');
+            likeBtn.style.color = 'black'
+        }
+    })
+}
+
+function handleLikesComment() {
+    const comment_id = this.dataset.commentId;
+    const counter = document.getElementById(`like-counter-${comment_id}`);
+    let count = parseInt(counter.dataset.count);
+
+    fetch(`/like-comment/${comment_id}`)  
+    .then(response => response.json())
+    .then(data => {
+        if (data['liked']) {
+            counter.innerHTML = `${count + 1} likes`;
+            counter.dataset.count = count + 1;
+            this.setAttribute('class', 'fa-solid fa-heart');
+            this.style.color = 'red';
+            counter.style.display = 'block';
+        }
+        else {
+            counter.innerHTML = `${count - 1} likes`;
+            counter.dataset.count = count - 1;
+            if (counter.dataset.count == 0) {
+                counter.style.display = 'none';
+            }
+            this.setAttribute('class', 'fa-regular fa-heart');
+            this.style.color = 'black';
+        }
+    })
+}
 
 function handleReply() {
     commentField.value = '';
@@ -54,7 +101,7 @@ function handleSubmit(event) {
     };
   
     // Send a POST request to the route using AJAX
-    fetch(`/material/${postID}/comment`, {
+    fetch(`/post/${postID}/comment`, {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
@@ -68,12 +115,12 @@ function handleSubmit(event) {
         commentElement.classList.add('comment-container');    
         commentElement.innerHTML = `
             <div>
-                <img class="user-pic" src="/static/pics/${comment["pic"]}.jpg" alt="User profile picture">
+                <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
             </div>
             <div class="user-info">
                 <div class="header">
                     <div class="username">${comment["author"]}</div>
-                        ${comment["parent"] ? `<a href="url_for('users.user_profile', username=comment.parent)}" style="color: rgb(53, 152, 157)">@${comment['parent']}</a>` : ''}
+                        ${comment.parent ? `<a href="url_for('users.user_profile', username=comment.parent)}" style="color: rgb(53, 152, 157)">@${comment.parent}</a>` : ''}
                     <div class="comment">${comment["content"]}</div>
                 </div>
                 <div class="footer">
@@ -103,54 +150,3 @@ function handleSubmit(event) {
         this.reset();
     });
   }
-
-function handleLikesMaterial() {
-    const material_id = this.dataset.materialId;
-    const counter = document.getElementById(`material-like-count`);
-    let count = parseInt(counter.dataset.materialLikes);
-
-    fetch(`/like-material/${material_id}`)  
-    .then(response => response.json())
-    .then(data => {
-        if (data['liked']) {
-            counter.innerHTML = `${count + 1} likes`;
-            counter.dataset.materialLikes = count + 1;
-            mainLikeIcon.setAttribute('class', 'fa-solid fa-heart');
-            mainLikeIcon.style.color = 'red'
-        }
-        else {
-            counter.innerHTML = `${count - 1} likes`;
-            counter.dataset.materialLikes = count - 1;
-            mainLikeIcon.setAttribute('class', 'fa-regular fa-heart');
-            mainLikeIcon.style.color = 'black'
-        }
-    })
-}
-
-function handleLikesComment() {
-    console.log('test')
-    const comment_id = this.dataset.commentId;
-    const counter = document.getElementById(`like-counter-${comment_id}`);
-    let count = parseInt(counter.dataset.count);
-
-    fetch(`/like-comment/${comment_id}`)  
-    .then(response => response.json())
-    .then(data => {
-        if (data['liked']) {
-            counter.innerHTML = `${count + 1} likes`;
-            counter.dataset.count = count + 1;
-            this.setAttribute('class', 'fa-solid fa-heart');
-            this.style.color = 'red';
-            counter.style.display = 'block';
-        }
-        else {
-            counter.innerHTML = `${count - 1} likes`;
-            counter.dataset.count = count - 1;
-            if (counter.dataset.count == 0) {
-                counter.style.display = 'none';
-            }
-            this.setAttribute('class', 'fa-regular fa-heart');
-            this.style.color = 'black';
-        }
-    })
-}

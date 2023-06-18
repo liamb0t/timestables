@@ -4,11 +4,13 @@ from wtforms import (StringField, TextAreaField, SubmitField,
 from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError
 from bibim.models import User
 from flask_login import current_user
+from flask_wtf.file import FileField, FileAllowed
 
 class UpdateAccountForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     about = TextAreaField('About')
+    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Update Account')
 
     def validate_username(self, username):

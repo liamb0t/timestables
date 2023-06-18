@@ -4,7 +4,7 @@ from bibim import db
 from bibim.users.forms import UpdateAccountForm
 from bibim.posts.forms import FollowForm
 from bibim.models import User, Post, Material, Comment
-from bibim.users.utils import date_member_since
+from bibim.users.utils import date_member_since, save_picture
 
 users = Blueprint('users', __name__)
 
@@ -94,6 +94,9 @@ def account():
         current_user.username = form.username.data
         current_user.email = form.email.data
         current_user.about = form.about.data
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('users.user_profile', username=current_user.username))

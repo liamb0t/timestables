@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from bibim import db
 from bibim.materials.forms import CommentForm
 from bibim.materials.forms import MaterialForm, SelectForm
-from bibim.models import Material, File, Tag, Comment
+from bibim.models import Material, File, Tag, Comment, Post
 from werkzeug.utils import secure_filename
 from bibim.materials.utils import textbooks_elem, get_publishers, get_grades, save_file, get_file_size
 from bibim.posts.utils import post_timestamp
@@ -70,7 +70,6 @@ def material_comment(material_id):
         parent_comment = Comment.query.filter_by(id=parent_id).first()
         if parent_comment:
             comment.parent = parent_comment
-
     comment.save()
     if material.creator != current_user and not comment.parent:
         material.creator.add_notification('material_comment', comment.id)

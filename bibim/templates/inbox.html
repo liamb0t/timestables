@@ -6,7 +6,7 @@
         {% for user in conversations %}
        
             <div class="conversation" data-user="{{ user.id }}">
-                <img src="profile1.jpg">
+                <img src="static/pics/{{ user.image_file }}">
                 {{ user.username }}
             </div> 
        

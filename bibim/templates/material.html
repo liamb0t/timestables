@@ -2,7 +2,7 @@
 {% block content %}
   <div class="material-container">
     <div class="header">
-      <img src="/static/pics/default.jpg" alt="Profile Picture" class="profile-picture">
+      <img src="{{ url_for('static', filename='pics/' + material.creator.image_file)}}" alt="Profile Picture" class="profile-picture">
       <div class="username">{{ material.creator.username }}</div>
       <div class="date">{{ post_timestamp(material.date_posted) }}</div>
     </div>
@@ -57,7 +57,7 @@
         {% for comment in comments %}
         <div class="comment-container">
           <div>
-            <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+            <img class="user-pic" src="{{ url_for('static', filename='pics/' + comment.commenter.image_file)}}" alt="User profile picture">
           </div>
           <div class="user-info" id="user-info-{{ comment.id }}">
             <div class="header">

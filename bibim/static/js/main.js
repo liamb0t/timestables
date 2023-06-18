@@ -29,7 +29,7 @@ function handleSubmit(event) {
         commentElement.classList.add('comment-container');
         commentElement.innerHTML = `
         <div>
-            <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+            <img class="user-pic" src="/static/pics/${comment['pic']}" alt="User profile picture">
         </div>
         <div class="user-info">
             <div class="header">

@@ -98,7 +98,7 @@
         {% for material in materials %}
             <a href="{{ url_for('materials.material', material_id=material.id)}}">
                 <div class="material-post-container">
-                <img class="material-post-profile-picture" src="/static/pics/default.jpg" alt="Profile Picture">
+                <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + material.creator.image_file)}}" alt="Profile Picture">
                 <div>
                     <div class="material-post-header">
                         <div class="material-post-grade">Grade {{ material.grade }}</div>

@@ -150,7 +150,7 @@ class User(db.Model, UserMixin):
     def serialize(self):
         return({
             "username": self.username,
-            "profile_pic": self.image_file,
+            "pic": self.image_file,
             "followed": True if current_user in self.followers else False
         })
 
@@ -177,7 +177,7 @@ class Post(db.Model):
         payload = {
             "id": self.id,
             "author": self.author.username,
-            "profile_pic": self.author.image_file,
+            "pic": self.author.image_file,
             "date_posted": post_timestamp(self.date_posted),
             "content": self.content,
             "likes": len(self.likes),
@@ -258,7 +258,8 @@ class Comment(db.Model):
             "likes": [like.serialize() for like in self.likes],
             "replies": [reply.serialize() for reply in self.get_replies()],
             "likes_count": self.likes_count(),
-            "replies_count": self.replies_count()
+            "replies_count": self.replies_count(),
+            "pic": self.commenter.image_file,
         }
 
 class Material(db.Model):

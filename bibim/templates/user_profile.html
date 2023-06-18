@@ -3,7 +3,7 @@
     
 <div class="user-page-container">
     <div class="user-page-profile-header">
-        <img class="user-page-profile-image" src="/static/pics/default.jpg" alt="Profile Image">
+        <img class="user-page-profile-image" src="{{ url_for('static', filename='pics/' + user.image_file)}}" alt="Profile Image">
         <div class="user-page-profile-info">
             <div class="user-page-user-bar">
                 <h2 class="user-page-username">{{ user.username }}</h2>

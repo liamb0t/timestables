@@ -108,7 +108,7 @@ function add_post(post) {
 
     // Create the profile picture element
     const profilePic = document.createElement('img');
-    profilePic.src = `static/pics/${post['profile_pic']}`;
+    profilePic.src = `static/pics/${post['pic']}`;
     profilePic.classList.add('post-profile-pic');
     
     header.insertBefore(profilePic, header.firstChild);
@@ -224,7 +224,7 @@ function add_post(post) {
               
             const userPic = document.createElement('img');
             userPic.classList.add('user-pic');
-            userPic.src = "/static/pics/default.jpg";
+            userPic.src = `/static/pics/${comment['pic']}`;
             userPic.alt = "User profile picture";
             commentContainer.appendChild(userPic);
 
