@@ -2,8 +2,12 @@
 {% block content %}
   <div class="material-container">
     <div class="header">
-      <img src="{{ url_for('static', filename='pics/' + material.creator.image_file)}}" alt="Profile Picture" class="profile-picture">
-      <div class="username">{{ material.creator.username }}</div>
+      <a href="{{ url_for('users.user_profile', username=material.creator.username) }}">
+        <img src="{{ url_for('static', filename='pics/' + material.creator.image_file)}}" alt="Profile Picture" class="profile-picture">
+      </a>
+      <a href="{{ url_for('users.user_profile', username=material.creator.username) }}">
+        <div class="username">{{ material.creator.username }}</div>
+      </a>
       <div class="date">{{ post_timestamp(material.date_posted) }}</div>
     </div>
     <h1 class="title">{{ material.title }}</h1>

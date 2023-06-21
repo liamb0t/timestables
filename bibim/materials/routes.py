@@ -79,7 +79,8 @@ def material_comment(material_id):
         'content': comment.content,
         'date_posted': post_timestamp(comment.date_posted),
         'author': current_user.username,
-        'parent': parent_comment.commenter.username if parent_id else None
+        'parent': parent_comment.commenter.username if parent_id else None, 
+        'pic': current_user.image_file,
     })
 
 @materials.route("/materials/new/<string:level>", methods=['GET','POST'])

@@ -57,7 +57,7 @@ def post_comment(post_id):
         user.add_notification('post_comment', comment.id)
     return jsonify({
         'content': comment.content,
-        'date_posted': comment.date_posted.strftime('%Y-%m-%d'),
+        'date_posted': post_timestamp(comment.date_posted),
         'author': current_user.username,
         'parent': parent_comment.commenter.username if parent_id else None,
         'pic': current_user.image_file,

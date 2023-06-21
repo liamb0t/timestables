@@ -106,12 +106,17 @@ function add_post(post) {
     const header = document.createElement('div');
     header.classList.add('post-header');
 
+    // Create the profile pic link and profile pic element
+    const picLink = document.createElement('a');
+    picLink.href = `/users/${post['author']}`;
+
     // Create the profile picture element
     const profilePic = document.createElement('img');
     profilePic.src = `static/pics/${post['pic']}`;
     profilePic.classList.add('post-profile-pic');
-    
-    header.insertBefore(profilePic, header.firstChild);
+
+    picLink.appendChild(profilePic)
+    header.insertBefore(picLink, header.firstChild);
     
     // Create the author link and username element
     const authorLink = document.createElement('a');
@@ -220,13 +225,18 @@ function add_post(post) {
                         paginate(post['id'], this);
                     })
                 }
-            }   
-              
+            } 
+
+            const picLink = document.createElement('a');
+            picLink.href = `/users/${comment['author']}`;
+
             const userPic = document.createElement('img');
             userPic.classList.add('user-pic');
             userPic.src = `/static/pics/${comment['pic']}`;
             userPic.alt = "User profile picture";
-            commentContainer.appendChild(userPic);
+
+            picLink.appendChild(userPic)
+            commentContainer.appendChild(picLink);
 
             const userInfo = document.createElement('div');
             userInfo.classList.add('user-info');
@@ -234,10 +244,14 @@ function add_post(post) {
             const header = document.createElement('div');
             header.classList.add('header');
 
+            const nameLink = document.createElement('a');
+            nameLink.href = `/users/${comment['author']}`;
+
             const username = document.createElement('div');
             username.classList.add('username');
             username.textContent = comment["author"];
-            header.appendChild(username);
+            nameLink.appendChild(username)
+            header.appendChild(nameLink);
 
             if (comment['parent']) {
                 const parentLink = document.createElement('a');
@@ -318,15 +332,19 @@ function add_post(post) {
                     const html = `
                         <div class="comment-container">
                         <div>
-                            <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+                            <a href="/users/${reply['author']}">
+                                <img class="user-pic" src="/static/pics/${reply['pic']}" alt="User profile picture">
+                            </a> 
                         </div>
                         <div class="user-info">
                             <div class="header">
-                            <div class="username">${reply["author"]}</div>
-                            
-                            <div class="comment">${reply["content"]}</div>
+                                <a href="/users/${reply['author']}">
+                                    <div class="username">${reply["author"]}</div>
+                                </a>
+                                
+                                <div class="comment">${reply["content"]}</div>
                             </div>
-                                <div class="footer">
+                            <div class="footer">
                                 <div class="date">${reply["date_posted"]}</div>
                                 
                                 <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>

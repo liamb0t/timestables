@@ -28,3 +28,23 @@ body {
     text-decoration: none;
     color: #333;
 }
+
+.image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.text {
+    width: 30vw;
+    height: 30vh;
+    position: absolute;
+    z-index: 1;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}

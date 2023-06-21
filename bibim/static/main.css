@@ -192,20 +192,19 @@ a:hover i {
   font-size: 16px;
   padding: 5px 10px;
   text-decoration: none;
-}
-
-.sidebar ul li a {
-  display: block;
   padding: 10px;
   border-radius: 10px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar ul li a.active{
+  font-weight: bold;
 }
 
 .sidebar ul li a:hover {
   background-color: rgba(154, 154, 154, 0.138);
   color: #161616;
 }
-
 
 /* main content styling */
 .main-content {
@@ -355,7 +354,7 @@ body {
 .comments .comment-container {
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding: 6px;
 }
 
 .paginate-icon-container {
@@ -420,6 +419,7 @@ body {
   font-size: 12px;
   color: #676767;
   margin-right: 0;
+  margin-bottom: 5px;
 }
 
 .show-replies-btn:hover {
@@ -636,6 +636,11 @@ body {
   cursor: pointer;
   transform: scale(1.5);
   margin-bottom: 10px;
+  margin-right: 2px;
+}
+
+.material-post-comment-info .fa-regular {
+  transform: scale(1);
 }
 
 .fa-regular:hover {
@@ -797,12 +802,7 @@ body {
   text-decoration: none;
 }
 
-.announcement-bar ul li a {
-  display: block;
-  padding: 10px;
-  border-radius: 10px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+
 
 .announcement-bar ul li a:hover {
   background-color: rgba(154, 154, 154, 0.138);
@@ -893,8 +893,12 @@ body {
 }
 
 .material-posts {
-  max-width: 800px;
+  max-width: 900px;
   margin-bottom: 50px;
+}
+
+.materials-filters {
+  margin-bottom: 20px;
 }
 
 .material-post-container {
@@ -938,32 +942,26 @@ body {
 }
 
 .material-post-profile-picture {
-  width: 50px; /* Adjust the size as needed */
-  height: 50px; /* Adjust the size as needed */
+  width: 40px; /* Adjust the size as needed */
+  height: 40px; /* Adjust the size as needed */
   border-radius: 50%;
   margin-right: 10px;
 }
 
 .material-post-grade {
-  color: #ffffff;
-  background-color: #a4a4a4;
-  font-weight: bold;
   margin-right: 10px;
 }
 
 .material-post-title {
+  font-weight: bold;
   margin-right: 10px;
 }
 
 .material-post-footer {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   margin-top: 5px;
 }
-
-
 
 .material-post-date {
   font-size: 12px;
@@ -979,6 +977,7 @@ body {
 .material-post-comments {
   font-size: 12px;
   color: gray;
+  margin-right: 5px;
 }
 
 

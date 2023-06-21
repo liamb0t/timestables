@@ -1,3 +1,29 @@
+const links = document.querySelectorAll('.sidebar ul li a');
+
+links.forEach((link) => {
+  link.addEventListener('click', (event) => {
+    // Remove the 'active' class from all links
+    links.forEach((link) => {
+      link.classList.remove('active');
+    });
+
+    // Add the 'active' class to the clicked link
+    link.classList.add('active');
+
+    // Store the active link information in localStorage
+    localStorage.setItem('activeLink', link.getAttribute('href'));
+  });
+});
+
+// Check if there is an active link in localStorage
+const activeLink = localStorage.getItem('activeLink');
+if (activeLink) {
+  const link = document.querySelector(`.sidebar ul li a[href="${activeLink}"]`);
+  if (link) {
+    link.classList.add('active');
+  }
+}
+
 function handleSubmit(event) {
   event.preventDefault();
 
@@ -45,8 +71,8 @@ function handleSubmit(event) {
         </div>
         `;
         const commentsList = document.querySelector(`#post-comments-${postId}`);
-        const lastElement = commentsList.lastElementChild;
-        commentsList.insertBefore(commentElement, lastElement);
+        const firstElement = commentsList.firstChild;
+        commentsList.insertBefore(commentElement, firstElement);
         // Clear the content of the comment form
         this.reset();
     });
