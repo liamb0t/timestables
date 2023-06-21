@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, request, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from bibim import db
-from bibim.users.forms import UpdateAccountForm
+from bibim.users.forms import UpdateAccountForm, RequestResetForm, ResetPasswordForm
 from bibim.posts.forms import FollowForm
 from bibim.models import User, Post, Material, Comment
-from bibim.users.utils import date_member_since, save_picture
+from bibim.users.utils import date_member_since, save_picture, send_reset_email
 
 users = Blueprint('users', __name__)
 

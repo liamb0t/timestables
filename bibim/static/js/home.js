@@ -443,7 +443,7 @@ function createLikesPopup(user) {
 
   // Create the user profile picture
   const userProfileImg = document.createElement('img');
-  userProfileImg.src =  `static/pics/${user['profile_pic']}`;
+  userProfileImg.src =  `static/pics/${user['pic']}`;
   userProfileImg.alt = 'User Profile Picture';
 
   // Create the username span

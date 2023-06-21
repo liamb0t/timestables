@@ -1,7 +1,8 @@
 from flask import Blueprint, redirect, render_template, flash, url_for, request, send_file, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from bibim.models import Post, User, Material, File, Comment, Notification
-from bibim.main.forms import LoginForm, RegistrationForm, SearchForm
+from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
+from bibim.main.utils import send_reset_email
 from bibim.posts.forms import PostForm
 from bibim import bcrpyt, db, app
 import datetime
@@ -73,6 +74,36 @@ def register():
         flash(f'Account successfully created for {form.username.data}!', 'success')
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
+
+@main.route("/reset_password", methods=['GET','POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('Email has been sent with instructions to reset your password', 'info')
+        return redirect(url_for('main.login'))
+    return render_template('reset_request.html', title='Reset Password', form=form)
+
+@main.route("/reset_password/<token>", methods=['GET','POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('main.reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_pw = bcrpyt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_pw
+        db.session.commit()
+        flash(f'Your password has been reset!', 'success')
+        return redirect(url_for('main.login'))
+    return render_template('reset_token.html', title='Reset Password', form=form)
+
 
 
 @main.route("/logout")

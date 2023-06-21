@@ -25,7 +25,7 @@
         {{ form.password.label }}
         {{ form.password(class="login-input")}}
         <label><input type="checkbox" name="remember"> Remember me</label>
-        <a href="#">Forgot password?</a>
+        <a href="{{ url_for('main.reset_request')}}">Forgot password?</a>
         <a href="{{ url_for('main.register')}}">Need an account? Register here.</a>
         {{ form.submit(class="login-button")}}
     </form>    

@@ -1,10 +1,12 @@
 from sqlalchemy import or_
 from bibim import db, login_manager
 from flask_login import UserMixin, current_user
+from flask import current_app
 from datetime import datetime
 from bibim.posts.utils import post_timestamp
 import json
 from time import time
+from itsdangerous import URLSafeTimedSerializer as Serializer
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -47,6 +49,22 @@ class User(db.Model, UserMixin):
                                         foreign_keys='Message.recipient_id',
                                         backref='recipient', lazy='dynamic')
     liked = db.relationship('Like', foreign_keys='Like.user_id', backref='user', lazy='dynamic')
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}, salt='reset-password-salt')
+    
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+           user_id = s.loads(token, salt='reset-password-salt')['user_id']
+        except:
+           return None
+        return User.query.get(user_id)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
     def like_post(self, post):
         like = Like(user_id=self.id, post_id=post.id)
