@@ -4,10 +4,14 @@
     <div class="users-list">
         {% for user in users.items %}
         <div class="user">
-            <img src="static/pics/{{ user.image_file }}" alt="Profile Picture">
+            <a href="{{ url_for('users.user_profile', username=user.username )}}">
+                <img src="static/pics/{{ user.image_file }}" alt="Profile Picture">
+            </a>
             <div class="user-info">
                 <div>
-                    <h2>{{ user.username }}</h2>
+                    <a href="{{ url_for('users.user_profile', username=user.username )}}">
+                        <h2>{{ user.username }}</h2>
+                    </a>
                     <p>{{ datemember(user.date_joined)}}</p>
                     <p>Karma: {{ user.karma }}</p>
                 </div>

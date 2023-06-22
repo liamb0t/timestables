@@ -48,7 +48,6 @@
                   </div>
               </form>
               {% if current_user.is_authenticated %}
-                <a href="{{ url_for('users.user_profile', username=current_user.username) }}">Account</a>
                 <a href="{{ url_for('main.logout') }}">Logout</a>
               {% else %}
                 <a href="{{ url_for('main.login') }}">Login</a>
@@ -62,13 +61,11 @@
             <div class="sidebar">
                 <ul>
                   <li><a href="{{ url_for('main.home') }}"><i class="fa fa-house"></i>Home</a></li>
-                  <li><a href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa fa-school"></i>Elementary school</a></li>
-                  <li><a href="{{ url_for('materials.load_materials', level='middle') }}">Middle school</a></li>
-                  <li><a href="{{ url_for('materials.load_materials', level='high') }}">High school</a></li>
-                  <li><a href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-campground"></i>Camp</a></li>
-                  <li>
-                    <a href="{{ url_for('materials.load_materials', level='templates') }}"><i class="fa fa-gamepad"></i>Games & templates</a>
-                  </li>
+                  <li><a id="materials-link" href="#"><i class="fa fa-file"></i>Material Library</a></li>
+                  
+                  <li><a href="{{ url_for('materials.load_materials', level='teaching') }}"><i class="fa fa-chalkboard-user"></i>Teaching Advice</a></li>
+                  <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i>Hall of Fame</a></li>
+                  <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-briefcase"></i>Meetings</a></li>
                   <li>
                     <a href="{{ url_for('posts.inbox') }}">
                       <i class="fa-regular fa-paper-plane"></i>
@@ -97,10 +94,22 @@
                     </a>
                     <div class="notifications" style="display: none;"></div>
                   </li>
-                  <li><a href="{{ url_for('materials.load_materials', level='teaching') }}"><i class="fa fa-chalkboard-user"></i>Teaching Advice</a></li>
-                  <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i>Hall of Fame</a></li>
-                  <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-briefcase"></i>Meetings</a></li>
+                  <li>
+                    <a href="{{ url_for('users.user_profile', username=current_user.username) }}">
+                      <img class="sidebar-img" src="{{ url_for('static', filename='pics/' + current_user.image_file) }}"></img>Profile
+                    </a>
+                  </li>
                 </ul> 
+            </div>
+
+            <div class="sub-sidebar"> 
+              <li><a href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa fa-school"></i>Elementary school</a></li>
+              <li><a href="{{ url_for('materials.load_materials', level='middle') }}">Middle school</a></li>
+              <li><a href="{{ url_for('materials.load_materials', level='high') }}">High school</a></li>
+              <li><a href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-campground"></i>Camp</a></li>
+              <li>
+                <a href="{{ url_for('materials.load_materials', level='templates') }}"><i class="fa fa-gamepad"></i>Games & templates</a>
+              </li>
             </div>
             
             <div class="main-content">

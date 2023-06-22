@@ -84,7 +84,8 @@
 /* navbar styling */
 
 body {
-  background-color: #f6f6f6;;
+  padding-top: 0;
+  background-color: #ffffff;;
 }
 
 i {
@@ -96,6 +97,10 @@ i {
 
 a:hover i {
   transform: scale(1.6);
+}
+
+.navbar {
+  padding: 0;
 }
 
 .navbar-container {
@@ -122,8 +127,8 @@ a:hover i {
 }
 
 #navbar-home {
-  width: 20%;
-  height: 20%;
+  width: 15%;
+  height: 15%;
 }
 
 .notification {
@@ -167,12 +172,14 @@ a:hover i {
 
 /* sidebar styling */
 .sidebar {
+  background-color: white;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   position: fixed;
   left: 0;
-  width: 300px;
+  width: 250px;
   height: 100%;
-  padding: 55px 20px 20px 10px; /* added padding here */
+  padding: 92px 20px 20px 16px; /* added padding here */
+  border-right: 1px solid rgba(0, 0, 0, 0.085);
 }
 
 .sidebar ul {
@@ -183,7 +190,7 @@ a:hover i {
 
 .sidebar li {
   margin-bottom: 5x;
-  margin-top: 5px;
+  margin-top: 13px;
 }
 
 .sidebar a {
@@ -206,18 +213,16 @@ a:hover i {
   color: #161616;
 }
 
+.sub-sidebar {
+  display: none;
+}
+
 /* main content styling */
 .main-content {
   margin-left: 26%;
   flex: 1;
   padding: 15px;
 }
-
-/* add padding for the navbar */
-body {
-  padding-top: 60px; /* adjust this value to suit your navbar height */
-}
-
 
 
 /*** Styling for displaying a material (a single material, not all materials) ***/
@@ -547,7 +552,13 @@ body {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
+}
 
+.sidebar-img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .post {
@@ -834,6 +845,10 @@ body {
   margin: 0;
 }
 
+.user-info h2:hover {
+  color: #0077CC;
+}
+
 .user-info p {
   margin: 5px 0;
   color: gray;
@@ -967,6 +982,11 @@ body {
   font-size: 12px;
   color: gray;
   margin-right: 10px;
+}
+
+.material-post-author {
+  font-size: 12px;
+  color: gray;
 }
 
 .material-post-icon {

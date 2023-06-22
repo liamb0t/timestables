@@ -106,9 +106,9 @@
                     </div>
                     <div class="material-post-footer">
                         <div class="material-post-user-info">
-                            <span class="material-post-author">{{ material.creator.username }}</span>
-                            <span>&bull;</span>
-                            <span class="material-post-date">{{ post_timestamp(material.date_posted) }}</span>
+                            <span class="material-post-author">Posted by {{ material.creator.username }}</span>
+                            
+                            <span class="material-post-date">{{ post_timestamp(material.date_posted) }} ago</span>
                         </div>
                         <div class="material-post-comment-info">
                             <i class="fa-regular fa-heart"></i>
