@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
    
-    <h1>Teachers Lounge</h1>
-   
+    
     <div class="posts">
+        <h1>Teachers Lounge</h1>
         <div class="post-form-container">
             <div class="post-form-header">
                 <img class="post-form-img" src="{{ url_for('static', filename='pics/' + current_user.image_file)}}">

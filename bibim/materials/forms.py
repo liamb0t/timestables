@@ -5,7 +5,7 @@ from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationE
 
 class MaterialForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()], render_kw={'placeholder': 'Title'})
-    grade = SelectField('Grade')
+    grade = SelectField('Grade', validators=[DataRequired()])
     content = TextAreaField('Description', validators=[DataRequired()], render_kw={'placeholder': 'Text'})
     files = MultipleFileField('Attachments')
     publisher = SelectField('Publisher')

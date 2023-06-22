@@ -179,7 +179,6 @@ a:hover i {
   width: 250px;
   height: 100%;
   padding: 92px 20px 20px 16px; /* added padding here */
-  border-right: 1px solid rgba(0, 0, 0, 0.085);
 }
 
 .sidebar ul {
@@ -219,7 +218,9 @@ a:hover i {
 
 /* main content styling */
 .main-content {
-  margin-left: 26%;
+  border-left: 1px solid gainsboro;
+  max-width: 60%;
+  margin-left: 17%;
   flex: 1;
   padding: 15px;
 }
@@ -228,6 +229,32 @@ a:hover i {
 /*** Styling for displaying a material (a single material, not all materials) ***/
 
 /* Main container */
+
+.create-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: rgb(37 99 235);
+  color: #fff;
+  text-decoration: none;
+}
+
+.create-btn:hover {
+  color: #fff;
+  text-decoration: none;
+  background-color: rgb(42, 142, 229);
+}
+
+
+.paginate-btn {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #00000014;
+  background-color: #fff;
+  color: #252525;
+  text-decoration: none;
+}
 
 .material-container {
   background-color: #ffffff;
@@ -505,6 +532,10 @@ a:hover i {
 
 
 /* Styling for displaying posts */
+
+.posts {
+  margin-left: 20%;
+}
 
 .post-container {
   display: flex;
@@ -908,7 +939,6 @@ a:hover i {
 }
 
 .material-posts {
-  max-width: 900px;
   margin-bottom: 50px;
 }
 
@@ -919,9 +949,10 @@ a:hover i {
 .material-post-container {
   display: flex;
   align-items: center;  
-  padding: 10px;
+  padding: 4px;
+  padding-left: 30px;
   background-color: #ffffff;
-  border-bottom: solid 1px rgb(200, 200, 200);
+  border-top: solid 1px rgb(200, 200, 200);
 }
 
 .material-posts a {

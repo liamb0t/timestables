@@ -1,8 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Materials for {{ level }} school</h1>
-
-    <a href="{{ url_for('materials.create_material', level=level) }}">Create</a>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
+        <h2>Materials for {{ level }} school</h1>
+        <div>
+            <i class="fa-solid fa-pencil"></i>
+            <a class="create-btn" href="{{ url_for('materials.create_material', level=level) }}">Create</a>
+        </div>
+        
+    </div>
 
     <nav class="materials-nav">
         <a href="{{ url_for('materials.load_materials', level=level) }}">All</a>
@@ -103,6 +108,7 @@
                     <div class="material-post-header">
                         <div class="material-post-grade">Grade {{ material.grade }}</div>
                         <div class="material-post-title">{{ material.title }}</div>
+                        
                     </div>
                     <div class="material-post-footer">
                         <div class="material-post-user-info">
@@ -110,6 +116,7 @@
                             
                             <span class="material-post-date">{{ post_timestamp(material.date_posted) }} ago</span>
                         </div>
+                      
                         <div class="material-post-comment-info">
                             <i class="fa-regular fa-heart"></i>
                             <span class="material-post-likes">{{ material.likes_count() }}</span>
@@ -124,7 +131,7 @@
     </div>
     {% for page_num in materials.iter_pages() %}
         {% if page_num %}
-            <a class="btn btn-info mb4" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
+            <a class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
         {% else %}
             ...
         {% endif %}
