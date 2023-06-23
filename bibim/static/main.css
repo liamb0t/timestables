@@ -83,7 +83,7 @@
 }
 
 .login-button {
-  background-color: #4CAF50;
+  background-color: #337fb5;
   color: white;
   border: none;
   cursor: pointer;
@@ -237,7 +237,6 @@ a:hover i {
   max-width: 60%;
   margin-left: 17%;
   flex: 1;
-  padding: 15px;
 }
 
 
@@ -958,6 +957,7 @@ a:hover i {
 }
 
 .materials-filters {
+  padding-left: 15px;
   margin-bottom: 20px;
 }
 
