@@ -4,7 +4,7 @@ const options = document.getElementById("selectOptions");
 customSelectBtn.addEventListener('click', toggleOptions)
 
 function toggleOptions() {
-    if (options.style.display === "none") {
+    if (options.style.display === "none" || options.style.display === "") {
       options.style.display = "block";
       document.addEventListener("click", handleOutsideClick);
     } else {

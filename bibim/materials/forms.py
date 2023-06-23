@@ -30,7 +30,6 @@ class SelectForm(FlaskForm):
                                                                               'Reading game', 'Review game', 'Intro PPT',
                                                                               'Words in songs', 'Non-tech game'
                                                                             ]])
-    filters = SelectField('Additional Filters', choices=[('0', 'More')])
     submit = SubmitField('Filter')
 
 class CommentForm(FlaskForm):

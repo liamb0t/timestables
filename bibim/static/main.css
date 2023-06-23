@@ -202,11 +202,6 @@ a:hover i {
   padding: 0;
 }
 
-.sidebar li {
-  margin-bottom: 5x;
-  margin-top: 13px;
-}
-
 .sidebar a {
   color: #4f4f4f;
   display: block;
@@ -218,6 +213,20 @@ a:hover i {
   transition: background-color 0.3s ease;
 }
 
+.sidebar i {
+  margin: 0;
+  width: 34px;
+}
+
+
+
+
+
+.sidebar .sidebar-option {
+  margin-left: 10px;
+  display: none;
+}
+
 .sidebar ul li a.active{
   font-weight: bold;
 }
@@ -227,9 +236,8 @@ a:hover i {
   color: #161616;
 }
 
-.sub-sidebar {
-  display: none;
-}
+
+
 
 /* main content styling */
 .main-content {

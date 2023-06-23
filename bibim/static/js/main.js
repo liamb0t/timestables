@@ -15,17 +15,18 @@ links.forEach((link) => {
   });
 });
 
-const subSideBar = document.querySelector('.sub-sidebar');
+const sidebarOptions = document.querySelectorAll('.sidebar-option');
 const materialsLink = document.getElementById('materials-link');
 
 materialsLink.addEventListener('click', function() {
-  if (subSideBar.style.display === 'none') {
-    subSideBar.style.display = 'block';
-  }
-  else {
-    subSideBar.style.display = 'none';
-  }
-  
+  sidebarOptions.forEach(elem => {
+    if (elem.style.display === 'none' || elem.style.display === '') {
+      elem.style.display = 'block';
+    }
+    else {
+      elem.style.display = 'none';
+    }
+  });
 })
 
 // Check if there is an active link in localStorage

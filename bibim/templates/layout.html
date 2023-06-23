@@ -64,6 +64,10 @@
                 <ul>
                   <li><a href="{{ url_for('main.home') }}"><i class="fa fa-house"></i>Home</a></li>
                   <li><a id="materials-link" href="#"><i class="fa fa-file"></i>Material Library</a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa fa-file"></i>Elementary</a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='middle') }}"><i class="fa fa-file"></i>Middle school</a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='high') }}"><i class="fa fa-file"></i>High school</a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-file"></i>Camp</a></li>
                   
                   <li><a href="{{ url_for('materials.load_materials', level='teaching') }}"><i class="fa fa-chalkboard-user"></i>Teaching Advice</a></li>
                   <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i>Hall of Fame</a></li>
@@ -102,16 +106,6 @@
                     </a>
                   </li>
                 </ul> 
-            </div>
-
-            <div class="sub-sidebar"> 
-              <li><a href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa fa-school"></i>Elementary school</a></li>
-              <li><a href="{{ url_for('materials.load_materials', level='middle') }}">Middle school</a></li>
-              <li><a href="{{ url_for('materials.load_materials', level='high') }}">High school</a></li>
-              <li><a href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-campground"></i>Camp</a></li>
-              <li>
-                <a href="{{ url_for('materials.load_materials', level='templates') }}"><i class="fa fa-gamepad"></i>Games & templates</a>
-              </li>
             </div>
             
             <div class="main-content">
