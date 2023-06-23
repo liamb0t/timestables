@@ -4,10 +4,10 @@ from flask_login import current_user, login_required
 from bibim import db
 from bibim.materials.forms import CommentForm
 from bibim.materials.forms import MaterialForm, SelectForm
-from bibim.models import Material, File, Tag, Comment, Post
-from werkzeug.utils import secure_filename
+from bibim.models import Material, Tag, Comment, Like
 from bibim.materials.utils import textbooks_elem, get_publishers, get_grades, save_file, get_file_size
 from bibim.posts.utils import post_timestamp
+from sqlalchemy import func
 
 materials = Blueprint('materials', __name__)
 
@@ -24,15 +24,32 @@ def get_lesson_choices(level, grade, publisher):
 @materials.route("/materials/<string:level>", methods=['GET', 'POST'])
 def load_materials(level):
     page = request.args.get('page', 1, type=int)
-    grade = request.args.get('grade', type=int)
+    filter = request.args.get('f', 1, type=str)
     materials = Material.query.filter_by(level=level)
-    if grade:
-        materials = materials.filter_by(grade=grade)
+    if filter:
+        if filter == 'new':
+            materials = materials.order_by(Material.date_posted.desc())
+        elif filter == 'old':
+            materials = materials.order_by(Material.date_posted.asc())
+        elif filter == 'comms':
+            materials = materials.join(Material.comments, isouter=True)\
+                        .group_by(Material)\
+                        .order_by(func.count(Comment.id).desc())
+        elif filter == 'likes':
+            materials = materials.join(Material.likes, isouter=True)\
+                        .group_by(Material)\
+                        .order_by(func.count(Like.id).desc())
+
     form = SelectForm()
     if form.validate_on_submit():
+        grade = form.grade.data
         publisher = form.publisher.data
         lesson = form.lesson.data
         material_type = form.type.data
+        if grade != 'All':
+            materials = materials.filter_by(grade=grade)
+        else:
+            materials = Material.query.filter_by(level=level)
         if publisher != 'All':
             tag = Tag.query.filter_by(tagname=publisher).first()
             if tag:

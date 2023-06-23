@@ -10,18 +10,7 @@
     </div>
 
     <nav class="materials-nav">
-        <a href="{{ url_for('materials.load_materials', level=level) }}">All</a>
         {% if level == 'elementary' %}
-            <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">Kindergarten</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">1st grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=2) }}">2nd grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=3) }}">3rd grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=4) }}">4th grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=5) }}">5th grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">6th grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Afterschool</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Phonics</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Themed lessons</a>
         
         {% elif level == 'middle' %}
             <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">1st grade</a>
@@ -59,6 +48,27 @@
             {% if level == 'camp' %}
                
             {% else %}
+
+                <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
+ 
+                <div class="select-options" id="selectOptions">
+                    <a href="{{ url_for('materials.load_materials', level=level, f='new')}}">Newest</a>
+                    <a href="{{ url_for('materials.load_materials', level=level, f='old')}}">Oldest</a>
+                    <a href="{{ url_for('materials.load_materials', level=level, f='likes')}}">Liked</a>
+                    <a href="{{ url_for('materials.load_materials', level=level, f='comms')}}">Comments</a>
+                </div>
+               
+
+                {% if form.grade.errors %}
+                {{form.grade(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.grade.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {{ form.grade(class="filter-select")}}
+                {% endif %}
     
                 {% if form.publisher.errors %}
                     {{form.publisher(class="form-control form-control-lg is-invalid")}}
@@ -136,6 +146,6 @@
             ...
         {% endif %}
     {% endfor %}    
-    
+    <script src="{{ url_for('static', filename='js/customSelectBtn.js') }}"></script>
 {% endblock content %}
 

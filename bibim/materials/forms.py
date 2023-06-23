@@ -18,14 +18,19 @@ class MaterialForm(FlaskForm):
     submit = SubmitField('Create Material') 
 
 class SelectForm(FlaskForm):
-    publisher = SelectField('Publisher', choices=[(x, x) for x in ['All', 'YBM Choi 2015', 'YBM Kim 2015',
+    grade = SelectField('Grade', choices=[('0', 'Grade'), ('All', 'All'), ('1', 'Grade 1'), ('2', 'Grade 2'), ('3', 'Grade 3'), ('4', 'Grade 4'),
+                                          ('5', 'Grade 5'), ('6', 'Grade 6'), ('Kindergarten', '7'), 
+                                          ('Afterschool', '1'), ('Phonics', '1'), ('Themed Lessons', '1'),])
+    
+    publisher = SelectField('Publisher', choices=[(x, x) for x in ['Textbook', 'All', 'YBM Choi ', 'YBM Kim ',
                                                                               'Cheonjae', 'Daegyo', 'Donga',
                                                                             ]])
-    lesson = SelectField('Lesson', choices=['All'])
-    type = SelectField('Type of Material', choices=[(x, x) for x in ['Any', 'Bomb game', 'Writing game',
+    lesson = SelectField('Lesson', choices=['Lesson', 'All'])
+    type = SelectField('Type of Material', choices=[(x, x) for x in ['Material Type', 'Any', 'Bomb game', 'Writing game',
                                                                               'Reading game', 'Review game', 'Intro PPT',
                                                                               'Words in songs', 'Non-tech game'
                                                                             ]])
+    filters = SelectField('Additional Filters', choices=[('0', 'More')])
     submit = SubmitField('Filter')
 
 class CommentForm(FlaskForm):

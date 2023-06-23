@@ -6,6 +6,11 @@ const commentField = document.querySelector('.material-comment-field-input');
 const commentFieldHidden = document.querySelector('#reply_id');
 const replyBtns = document.querySelectorAll('.reply-btn');
 const showReplyBtns = document.querySelectorAll('.show-replies-btn');
+const customSelectBtn = document.querySelector('#fa-solid fa-ellipsis-vertical');
+
+console.log(customSelectBtn)
+
+customSelectBtn.addEventListener('click', toggleOptions());
 
 commentForm.addEventListener('submit', handleSubmit);   
 
@@ -154,3 +159,15 @@ function handleLikesComment() {
         }
     })
 }
+
+function toggleOptions() {
+    console.log('esiojoij')
+    const options = document.getElementById("selectOptions");
+    if (options.style.display === "none") {
+      options.style.display = "block";
+    } else {
+      options.style.display = "none";
+    }
+  }
+  
+  
