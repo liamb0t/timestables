@@ -2,11 +2,12 @@ from flask_wtf import FlaskForm
 from wtforms import (StringField, TextAreaField, SubmitField,
                      BooleanField, PasswordField, MultipleFileField, SelectField, HiddenField)
 from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError
+from flask_ckeditor import CKEditorField
 
 class MaterialForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()], render_kw={'placeholder': 'Title'})
     grade = SelectField('Grade', validators=[DataRequired()])
-    content = TextAreaField('Description', validators=[DataRequired()], render_kw={'placeholder': 'Text'})
+    content = CKEditorField('Content', render_kw={'placeholder': 'Text'})
     files = MultipleFileField('Attachments')
     publisher = SelectField('Publisher')
     level = HiddenField()

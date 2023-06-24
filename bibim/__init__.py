@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_mail import Mail
+from flask_ckeditor import CKEditor
 
 app = Flask(__name__)
 
@@ -14,6 +15,8 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'liammcl33@gmail.com'
 app.config['MAIL_PASSWORD'] = 'wxdbkdnaiwiayopi'
+
+
     
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -21,6 +24,7 @@ bcrpyt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'main.login'
 login_manager.login_message_category = 'info'
+ckeditor = CKEditor(app)
 
 mail = Mail(app)
 
