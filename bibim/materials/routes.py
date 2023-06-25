@@ -24,24 +24,11 @@ def get_lesson_choices(level, grade, publisher):
 @materials.route("/materials/<string:level>", methods=['GET', 'POST'])
 def load_materials(level):
     page = request.args.get('page', 1, type=int)
-    filter = request.args.get('f', 1, type=str)
+   
     materials = Material.query.filter_by(level=level)
-    if filter:
-        if filter == 'new':
-            materials = materials.order_by(Material.date_posted.desc())
-        elif filter == 'old':
-            materials = materials.order_by(Material.date_posted.asc())
-        elif filter == 'comms':
-            materials = materials.join(Material.comments, isouter=True)\
-                        .group_by(Material)\
-                        .order_by(func.count(Comment.id).desc())
-        elif filter == 'likes':
-            materials = materials.join(Material.likes, isouter=True)\
-                        .group_by(Material)\
-                        .order_by(func.count(Like.id).desc())
-
     form = SelectForm()
     if form.validate_on_submit():
+        filter = request.args.get('f', 1, type=str)
         grade = form.grade.data
         publisher = form.publisher.data
         lesson = form.lesson.data
@@ -60,6 +47,20 @@ def load_materials(level):
             tag = Tag.query.filter_by(tagname=material_type).first()
             if tag:
                 materials = materials.filter(Material.material_tag.contains(tag))
+        if filter:
+            if filter == 'new':
+                materials = materials.order_by(Material.date_posted.desc())
+            elif filter == 'old':
+                materials = materials.order_by(Material.date_posted.asc())
+            elif filter == 'comments':
+                materials = materials.join(Material.comments, isouter=True)\
+                            .group_by(Material)\
+                            .order_by(func.count(Comment.id).desc())
+            elif filter == 'likes':
+                materials = materials.join(Material.likes, isouter=True)\
+                            .group_by(Material)\
+                            .order_by(func.count(Like.id).desc())
+
     materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('materials.html', materials=materials, level=level, form=form, post_timestamp=post_timestamp)
 

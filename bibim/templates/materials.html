@@ -43,7 +43,7 @@
     </nav>
 
     <div class="materials-filters">
-        <form method="POST" action="">
+        <form method="POST" action="" id="filter-submit">
             {{ form.hidden_tag() }}
             {% if level == 'camp' %}
                
@@ -52,10 +52,10 @@
                 <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
  
                 <div class="select-options" id="selectOptions">
-                    <a href="{{ url_for('materials.load_materials', level=level, f='new')}}">Newest</a>
-                    <a href="{{ url_for('materials.load_materials', level=level, f='old')}}">Oldest</a>
-                    <a href="{{ url_for('materials.load_materials', level=level, f='likes')}}">Liked</a>
-                    <a href="{{ url_for('materials.load_materials', level=level, f='comms')}}">Comments</a>
+                   <div class="adv-filter" data-para="new">Latest</div>
+                   <div class="adv-filter" data-para="old">Oldest</div>
+                   <div class="adv-filter" data-para="likes">Likes</div>
+                   <div class="adv-filter" data-para="comments">Comments</div>
                 </div>
                
 
@@ -103,7 +103,7 @@
                         {{ form.type(class="filter-select")}}
                 {% endif %}
 
-                {{ form.submit}}
+           
                
             {% endif %}
         </form>
