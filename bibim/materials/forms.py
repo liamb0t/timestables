@@ -12,7 +12,7 @@ class MaterialForm(FlaskForm):
     publisher = SelectField('Publisher')
     level = HiddenField()
     lesson = SelectField('Lesson', choices=[], validate_choice=False)
-    material_type = SelectField('Type of Material', choices=[(x, x) for x in ['Select a tag', 'Bomb game', 'Writing game',
+    material_type = SelectField('Type of Material', validators=[DataRequired()], choices=[(x, x) for x in ['Select a tag', 'Bomb game', 'Writing game',
                                                                               'Reading game', 'Review game', 'Intro PPT',
                                                                               'Words in songs', 'Non-tech game'
                                                                             ]])

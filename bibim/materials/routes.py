@@ -24,7 +24,6 @@ def get_lesson_choices(level, grade, publisher):
 @materials.route("/materials/<string:level>", methods=['GET', 'POST'])
 def load_materials(level):
     page = request.args.get('page', 1, type=int)
-   
     materials = Material.query.filter_by(level=level)
     form = SelectForm()
     if form.validate_on_submit():
@@ -33,17 +32,18 @@ def load_materials(level):
         publisher = form.publisher.data
         lesson = form.lesson.data
         material_type = form.type.data
-        if grade != 'All':
+
+        if grade != 'All' and grade != '0':
             materials = materials.filter_by(grade=grade)
-        if publisher != 'All':
+        if publisher != 'All' and publisher != 'Textbook':
             tag = Tag.query.filter_by(tagname=publisher).first()
             if tag:
                 materials = materials.filter(Material.material_tag.contains(tag))
-        if lesson != 'All':
+        if lesson != 'All' and lesson != 'Lesson':
             tag = Tag.query.filter_by(tagname=lesson).first()
             if tag:
                 materials = materials.filter(Material.material_tag.contains(tag))
-        if material_type != 'Any':
+        if material_type != 'Any' and material_type != 'Material Type':
             tag = Tag.query.filter_by(tagname=material_type).first()
             if tag:
                 materials = materials.filter(Material.material_tag.contains(tag))
@@ -60,7 +60,7 @@ def load_materials(level):
                 materials = materials.join(Material.likes, isouter=True)\
                             .group_by(Material)\
                             .order_by(func.count(Like.id).desc())
-
+               
     materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('materials.html', materials=materials, level=level, form=form, post_timestamp=post_timestamp)
 

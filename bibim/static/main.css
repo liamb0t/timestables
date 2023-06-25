@@ -1011,6 +1011,10 @@ a:hover i {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+#lesson {
+  display: none;
+}
+
 
 .filter-select:focus {
   outline: none;

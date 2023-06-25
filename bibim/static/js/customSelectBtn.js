@@ -3,6 +3,20 @@ const options = document.getElementById("selectOptions");
 
 customSelectBtn.addEventListener('click', toggleOptions)
 
+const lessonFilter = document.querySelector('#lesson')
+const textBookFilter = document.querySelector('#publisher')
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const publisher = textBookFilter.value;
+  console.log(publisher)
+  if (publisher != 'Textbook' && publisher != 'All' ) {
+    console.log('ding')
+    lessonFilter.style.display = 'inline'
+  }
+})
+  
+
 function toggleOptions() {
     if (options.style.display === "none" || options.style.display === "") {
       options.style.display = "block";
