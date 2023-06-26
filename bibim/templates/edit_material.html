@@ -20,12 +20,7 @@
                 </div>
 
                 <div>
-                    
-                    
-                </div>
-                   
-                <div>
-                    {{ ckeditor.create(value='Text') }}
+                    {{ ckeditor.create(value=material.content) }}
                 </div>
                 <div> {% if form.grade.errors %}
                     {{form.grade(class="form-control form-control-lg is-invalid")}}

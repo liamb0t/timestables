@@ -1,10 +1,9 @@
-import os 
-from flask import Blueprint, url_for, redirect, render_template, flash, request, jsonify
+from flask import Blueprint, url_for, redirect, render_template, flash, request, jsonify, abort
 from flask_login import current_user, login_required
 from bibim import db
 from bibim.materials.forms import CommentForm
 from bibim.materials.forms import MaterialForm, SelectForm
-from bibim.models import Material, Tag, Comment, Like
+from bibim.models import Material, Tag, Comment, Like, tags_table
 from bibim.materials.utils import textbooks_elem, get_publishers, get_grades, save_file, get_file_size
 from bibim.posts.utils import post_timestamp
 from sqlalchemy import func
@@ -60,7 +59,6 @@ def load_materials(level):
                 materials = materials.join(Material.likes, isouter=True)\
                             .group_by(Material)\
                             .order_by(func.count(Like.id).desc())
-               
     materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('materials.html', materials=materials, level=level, form=form, post_timestamp=post_timestamp)
 
@@ -126,6 +124,45 @@ def create_material(level):
         return redirect(url_for('materials.material', material_id=material.id))
     return render_template('create_material.html', title='New Material', form=form, level=level, legend=level)
 
+@materials.route("/materials/new/<string:level>/<int:material_id>", methods=['GET','POST'])
+@login_required
+def edit_material(level, material_id):
+    material = Material.query.filter_by(id=material_id).first()
+    if material.creator != current_user:
+        abort(403)
+    form = MaterialForm(obj=material)
+    if form.validate_on_submit():
+        tagnames = [form.publisher.data, form.lesson.data, form.material_type.data]
+        material.title = form.title.data
+        material.content = request.form.get('ckeditor')
+        for tagname in tagnames:
+            if tagname is not None:
+                tag = Tag.query.filter_by(tagname=tagname).first()
+                if not tag:
+                    tag = Tag(tagname=tagname)
+                material.tags.append(tag)
+        if form.files.data:
+            for file in form.files.data:
+                if file.filename != '':
+                    save_file(file, material, 'material')
+        db.session.commit()
+        flash('Your post has been succesfully updated!', 'success')
+        return redirect(url_for('materials.material', material_id=material.id))
+    elif request.method == 'GET':
+        print('isdfjs', [m.tagname for m in material.tags])
+        form.publisher.choices = get_publishers(level)
+        form.grade.choices = get_grades(level)
+        
+        for t in material.tags:
+            print(t.tagname)
+            if t.tagname in ['Daegyo', 'Cheonjae']:
+                form.publisher.data = t.tagname
+            elif t.tagname in ['Lesson1 ']:
+                form.lesson.data = t.tagname
+            elif t.tagname in ['Writing game', 'Bomb Game', 'Reading game']:
+                form.material_type.data = t.tagname
+    return render_template('edit_material.html', title='Edit Material', form=form, level=level, legend=level, material=material)
+
 @materials.route("/like-material/<int:material_id>")
 @login_required
 def like_material(material_id):
@@ -141,3 +178,14 @@ def like_material(material_id):
     return jsonify({
         'liked': current_user.has_liked_material(material)
     })
+
+@materials.route("/material/<int:material_id>/delete", methods=['POST', 'GET'])
+@login_required
+def delete_material(material_id):
+    material = Material.query.get_or_404(material_id)
+    if material.creator != current_user:
+        abort(403)
+    db.session.delete(material)
+    db.session.commit()
+    flash('Your material has been deleted!', 'success')
+    return redirect(url_for('main.home'))

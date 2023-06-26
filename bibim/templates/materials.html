@@ -110,6 +110,10 @@
     </div>
 
     <div class="material-posts">
+        {% if materials.total == 0 %}
+            <h3>Hm...it seems like there are no results with those attributes. 🙅</h3>
+            <p>Try using a different filter or use the searchbar above.</p>
+        {% endif %}
         {% for material in materials %}
             <a href="{{ url_for('materials.material', material_id=material.id)}}">
                 <div class="material-post-container">
@@ -139,9 +143,13 @@
             </a>
         {% endfor %}
     </div>
-    {% for page_num in materials.iter_pages() %}
+    {% for page_num in materials.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
         {% if page_num %}
-            <a class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
+            {% if materials.page == page_num %}
+                <a style="background-color: rgba(244, 130, 37, 1); color: white;" class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
         {% else %}
             ...
         {% endif %}

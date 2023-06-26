@@ -9,6 +9,10 @@
         <div class="username">{{ material.creator.username }}</div>
       </a>
       <div class="date">{{ post_timestamp(material.date_posted) }}</div>
+      <a href="{{ url_for('materials.edit_material', level=material.level, material_id=material.id) }}">
+        <i class="fa fa-ellipsis"></i>
+      </a>
+    
     </div>
     <h1 class="title">{{ material.title }}</h1>
 

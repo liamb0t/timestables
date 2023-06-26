@@ -3,6 +3,7 @@ const postField = document.querySelector('#content');
 const submitPostBtn = document.querySelector('#submit');
 const overlay = document.querySelector('.overlay');
 const popupContainer = document.querySelector('.likes-popup');
+const optionsDiv = document.querySelector('.options-popup');
 
 function paginate(id, btn) {
     const comments = document.querySelectorAll(`#post-comments-${id} .comment-container-hidden`)
@@ -27,6 +28,7 @@ function handleReply(data) {
 overlay.addEventListener('click', function() {
     overlay.style.display = 'none';
     popupContainer.style.display = 'none';
+    optionsDiv.style.display = 'none';
     document.body.classList.remove("body-no-scroll");
 })
 
@@ -140,7 +142,18 @@ function add_post(post) {
     datePosted.classList.add('post-date');
     datePosted.textContent = post['date_posted'];
     header.appendChild(datePosted);
-    
+
+    const tabIcon = document.createElement('i')
+    tabIcon.setAttribute('class', 'fa fa-ellipsis')
+    tabIcon.style.display = 'flex'
+    tabIcon.style.marginLeft = 'auto'
+    header.appendChild(tabIcon)
+    tabIcon.addEventListener('click', function() {
+       optionsDiv.style.display = 'block'
+       overlay.style.display = 'block'
+       document.body.classList.add("body-no-scroll");
+    })
+        
     // Create the content element
     const content = document.createElement('div');
     content.classList.add('post-content');
@@ -158,7 +171,6 @@ function add_post(post) {
 
     // Displays the pop up for likers of a post 
     likesText.addEventListener('click', function() {
-        const overlay = document.querySelector('.overlay');
         popupContainer.innerHTML = '';
         const header = document.createElement('h3');
         header.innerHTML = 'Likes';

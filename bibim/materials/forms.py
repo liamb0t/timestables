@@ -20,8 +20,8 @@ class MaterialForm(FlaskForm):
 
 class SelectForm(FlaskForm):
     grade = SelectField('Grade', choices=[('0', 'Grade'), ('All', 'All'), ('1', 'Grade 1'), ('2', 'Grade 2'), ('3', 'Grade 3'), ('4', 'Grade 4'),
-                                          ('5', 'Grade 5'), ('6', 'Grade 6'), ('Kindergarten', '7'), 
-                                          ('Afterschool', '1'), ('Phonics', '1'), ('Themed Lessons', '1'),])
+                                          ('5', 'Grade 5'), ('6', 'Grade 6'), ('7', 'Kindergarten'), 
+                                          ('1', 'Afterschool'), ('1', 'Phonics'),])
     
     publisher = SelectField('Publisher', choices=[(x, x) for x in ['Textbook', 'All', 'YBM Choi ', 'YBM Kim ',
                                                                               'Cheonjae', 'Daegyo', 'Donga',

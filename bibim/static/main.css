@@ -278,6 +278,11 @@ a:hover i {
   text-decoration: none;
 }
 
+.paginate-btn:hover {
+  background-color: #49494944;
+  text-decoration: none;
+}
+
 .material-container {
   background-color: #ffffff;
   padding: 20px;
@@ -758,9 +763,14 @@ a:hover i {
   cursor: pointer;
 }
 
+.fa-ellipsis {
+  margin-left: auto;
+  cursor: pointer;
+}
+
 /* likes pop up style */
 
-.likes-popup {
+.likes-popup, .options-popup {
   display: none;
   position: fixed;
   top: 50%;
