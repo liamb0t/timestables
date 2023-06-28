@@ -193,6 +193,7 @@ class Post(db.Model):
     
     def serialize(self):
         payload = {
+            "current_user": current_user.username,
             "id": self.id,
             "author": self.author.username,
             "pic": self.author.image_file,

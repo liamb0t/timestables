@@ -770,7 +770,7 @@ a:hover i {
 
 /* likes pop up style */
 
-.likes-popup, .options-popup {
+.likes-popup, .options-popup, .post-editor, .options-popup-secondary{
   display: none;
   position: fixed;
   top: 50%;

@@ -124,9 +124,9 @@ def create_material(level):
         return redirect(url_for('materials.material', material_id=material.id))
     return render_template('create_material.html', title='New Material', form=form, level=level, legend=level)
 
-@materials.route("/materials/new/<string:level>/<int:material_id>", methods=['GET','POST'])
+@materials.route("/material/edit/<int:material_id>", methods=['GET','POST'])
 @login_required
-def edit_material(level, material_id):
+def edit_material(material_id):
     material = Material.query.filter_by(id=material_id).first()
     if material.creator != current_user:
         abort(403)
@@ -149,9 +149,8 @@ def edit_material(level, material_id):
         flash('Your post has been succesfully updated!', 'success')
         return redirect(url_for('materials.material', material_id=material.id))
     elif request.method == 'GET':
-        print('isdfjs', [m.tagname for m in material.tags])
-        form.publisher.choices = get_publishers(level)
-        form.grade.choices = get_grades(level)
+        form.publisher.choices = get_publishers(material.level)
+        form.grade.choices = get_grades(material.level)
         
         for t in material.tags:
             print(t.tagname)
@@ -161,7 +160,7 @@ def edit_material(level, material_id):
                 form.lesson.data = t.tagname
             elif t.tagname in ['Writing game', 'Bomb Game', 'Reading game']:
                 form.material_type.data = t.tagname
-    return render_template('edit_material.html', title='Edit Material', form=form, level=level, legend=level, material=material)
+    return render_template('edit_material.html', title='Edit Material', form=form, level=material.level, legend=material.level, material=material)
 
 @materials.route("/like-material/<int:material_id>")
 @login_required
@@ -188,4 +187,4 @@ def delete_material(material_id):
     db.session.delete(material)
     db.session.commit()
     flash('Your material has been deleted!', 'success')
-    return redirect(url_for('main.home'))
+    return redirect(url_for('materials.load_materials, level=material.level'))

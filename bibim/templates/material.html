@@ -1,5 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
+  <div class="options-popup-secondary">
+    {% if current_user == material.creator %}
+      <button type="button" class="delete-btn" data-toggle="modal" data-target="#deleteModal">Delete</button>
+      <a href="{{ url_for('materials.edit_material', material_id=material.id) }}">
+        <div class="options-editBtn">Edit</div>
+      </a>
+    {% endif %}
+    <div>Report</div>
+    <div>Cancel</div>
+  </div>
   <div class="material-container">
     <div class="header">
       <a href="{{ url_for('users.user_profile', username=material.creator.username) }}">
@@ -9,9 +19,7 @@
         <div class="username">{{ material.creator.username }}</div>
       </a>
       <div class="date">{{ post_timestamp(material.date_posted) }}</div>
-      <a href="{{ url_for('materials.edit_material', level=material.level, material_id=material.id) }}">
-        <i class="fa fa-ellipsis"></i>
-      </a>
+      <i class="fa fa-ellipsis" id="ellipsis-icon"></i>
     
     </div>
     <h1 class="title">{{ material.title }}</h1>
@@ -140,8 +148,28 @@
         {{ comment_form.submit(class="material-comment-field-submit") }}
       </div>
     </form>
-    
+  </div>
+  <!--Modal-->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
+          <p>Are you sure you want to delete this post?</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form class="delete-form" action="{{ url_for('materials.delete_material', material_id=material.id)}}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
   <script src="{{ url_for('static', filename='js/material.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/edits.js') }}"></script>
 {% endblock content %}
 

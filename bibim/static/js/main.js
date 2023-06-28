@@ -93,4 +93,14 @@ function handleSubmit(event) {
     }
   }
 
-  
+
+
+function updatePost() {
+  fetch(`/post/${postId}/edit`, {
+    method: 'GET',
+})
+  .then(response => response.json())
+  .then(data => {
+    document.querySelector(`#post-content-${data['id']}`).innerHTML = data['content'];
+  })
+}

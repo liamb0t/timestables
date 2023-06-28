@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from bibim.models import Post, User, Material, File, Comment, Notification
 from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
 from bibim.main.utils import send_reset_email
-from bibim.posts.forms import PostForm
+from bibim.posts.forms import PostForm, EditForm
 from bibim import bcrpyt, db, app
 import datetime
 from sqlalchemy import or_
@@ -115,6 +115,7 @@ def logout():
 @login_required
 def home():
     post_form = PostForm()
+    edit_form = EditForm()
     placeholder =  choice(prompts)
     if not current_user.is_anonymous:
         post_form.content.render_kw['placeholder'] = f"{current_user.username}, {placeholder[0].lower()}{placeholder[1:]}"
@@ -128,7 +129,7 @@ def home():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('main.home'))
-    return render_template('home.html', post_form=post_form, popular_posts=popular_posts)
+    return render_template('home.html', post_form=post_form, edit_form=edit_form, popular_posts=popular_posts)
 
 @main.route("/download/<int:file_id>", methods=["GET"])
 @login_required

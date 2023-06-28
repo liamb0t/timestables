@@ -4,6 +4,7 @@ const submitPostBtn = document.querySelector('#submit');
 const overlay = document.querySelector('.overlay');
 const popupContainer = document.querySelector('.likes-popup');
 const optionsDiv = document.querySelector('.options-popup');
+const editor = document.querySelector('.post-editor')
 
 function paginate(id, btn) {
     const comments = document.querySelectorAll(`#post-comments-${id} .comment-container-hidden`)
@@ -29,6 +30,7 @@ overlay.addEventListener('click', function() {
     overlay.style.display = 'none';
     popupContainer.style.display = 'none';
     optionsDiv.style.display = 'none';
+    editor.style.display = 'none'
     document.body.classList.remove("body-no-scroll");
 })
 
@@ -149,9 +151,20 @@ function add_post(post) {
     tabIcon.style.marginLeft = 'auto'
     header.appendChild(tabIcon)
     tabIcon.addEventListener('click', function() {
-       optionsDiv.style.display = 'block'
-       overlay.style.display = 'block'
-       document.body.classList.add("body-no-scroll");
+        if (post['author'] != post['current_user']) {
+            document.querySelector('.options-editBtn').style.display = 'none'
+            document.querySelector('.delete-btn').style.display = 'none'
+        }
+        else {
+            document.querySelector('.options-editBtn').style.display = 'block'
+            document.querySelector('.delete-btn').style.display = 'block'
+        }
+        document.querySelector('.edit-form').action = `/post/${post['id']}/edit`
+        document.querySelector('.delete-form').action = `/post/${post['id']}/delete`
+        handleEdit(post['id'])
+        optionsDiv.style.display = 'block'
+        overlay.style.display = 'block'
+        document.body.classList.add("body-no-scroll");
     })
         
     // Create the content element
@@ -161,6 +174,7 @@ function add_post(post) {
     const contentText = document.createElement('p');
     contentText.textContent = post['content'];
     content.appendChild(contentText);
+    contentText.setAttribute('id', `post-content-${post['id']}`)
 
     
     // Create likes elements
@@ -501,3 +515,25 @@ function createLikesPopup(user) {
 }
 
 // Call the function to create the likes popup
+
+function handleEdit(id) {
+    document.querySelector('.options-editBtn').addEventListener('click', function() {
+        const postHTML = document.querySelector(`#post-content-${id}`).innerHTML
+        overlay.style.display = 'block';
+        optionsDiv.style.display = 'none';
+        editor.style.display = 'block'
+        document.querySelector('#editor_content').value = postHTML;
+    })
+}
+
+function handleDelete(id) {
+    document.querySelector('.options-editBtn').addEventListener('click', function() {
+        const postHTML = document.querySelector(`#post-content-${id}`).innerHTML
+        overlay.style.display = 'block';
+        optionsDiv.style.display = 'none';
+        editor.style.display = 'block'
+        document.querySelector('#editor_content').value = postHTML;
+    })
+}
+
+

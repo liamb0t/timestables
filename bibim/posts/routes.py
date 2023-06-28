@@ -1,7 +1,7 @@
-from flask import Blueprint, url_for, redirect, request, jsonify, flash, render_template
+from flask import Blueprint, url_for, redirect, request, jsonify, flash, render_template, abort
 from flask_login import current_user, login_required
 from bibim import db
-from bibim.posts.forms import PostForm, MessageForm
+from bibim.posts.forms import PostForm, MessageForm, EditForm
 from bibim.models import Post, Comment, User, Message, Notification
 from bibim.materials.forms import CommentForm
 import datetime
@@ -123,3 +123,25 @@ def post(post_id):
         comments = Comment.query.filter_by(post_id=post.id).filter_by(parent=None).order_by(Comment.date_posted.asc())
     return render_template('post.html', post=post, comments=comments, post_timestamp=post_timestamp,
                            form=form)
+
+@posts.route('/post/<int:post_id>/edit', methods=["POST", "GET"])
+def edit_post(post_id):
+    post = Post.query.filter_by(id=post_id).first_or_404()
+    if post.author != current_user:
+        abort(403)
+    form = EditForm()
+    if form.validate_on_submit():
+        post.content = form.editor_content.data
+        db.session.commit()
+        flash('Your post has been sucessfully updated!', 'success')
+    return redirect(url_for('main.home'))
+
+@posts.route('/post/<int:post_id>/delete', methods=["POST", "GET"])
+def delete_post(post_id):
+    post = Post.query.filter_by(id=post_id).first_or_404()
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been removed.', 'success')
+    return redirect(url_for('main.home'))

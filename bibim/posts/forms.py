@@ -5,7 +5,6 @@ from wtforms import (StringField, TextAreaField, SubmitField,
 from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError
 import random
 
-
 class PostForm(FlaskForm):
     content = TextAreaField('Content', validators=[DataRequired()], render_kw={"placeholder": None})
     submit = SubmitField('Post')
@@ -16,3 +15,7 @@ class FollowForm(FlaskForm):
 class MessageForm(FlaskForm):
     body = TextAreaField('Message', validators=[DataRequired(), Length(min=0, max=140)], render_kw={"placeholder": 'Message...'})
     submit = SubmitField('Send message')
+
+class EditForm(FlaskForm):
+    editor_content = TextAreaField('Edit Content', validators=[DataRequired()])
+    submit = SubmitField('Make Changes')
