@@ -328,7 +328,12 @@ function add_post(post) {
             replyBtn.addEventListener('click', function() {
                 handleReply({ author: comment["author"], comment_id: comment["id"], post_id: post["id"] });
             });
+
+            const ellipsis = document.createElement('i')
+            ellipsis.setAttribute('class', 'fa fa-ellipsis')
+
             footer.appendChild(replyBtn);
+            footer.appendChild(ellipsis);
 
             userInfo.appendChild(footer);
     
@@ -526,14 +531,5 @@ function handleEdit(id) {
     })
 }
 
-function handleDelete(id) {
-    document.querySelector('.options-editBtn').addEventListener('click', function() {
-        const postHTML = document.querySelector(`#post-content-${id}`).innerHTML
-        overlay.style.display = 'block';
-        optionsDiv.style.display = 'none';
-        editor.style.display = 'block'
-        document.querySelector('#editor_content').value = postHTML;
-    })
-}
 
 

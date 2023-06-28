@@ -56,6 +56,7 @@ def post_comment(post_id):
     if user != current_user:
         user.add_notification('post_comment', comment.id)
     return jsonify({
+        'id': comment.id,
         'content': comment.content,
         'date_posted': post_timestamp(comment.date_posted),
         'author': current_user.username,

@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, flash, url_for, request, send_file, jsonify
+from flask import Blueprint, redirect, render_template, flash, url_for, request, send_file, jsonify, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from bibim.models import Post, User, Material, File, Comment, Notification
 from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
@@ -168,6 +168,18 @@ def like_comment(comment_id):
             comment.commenter.add_notification('comment_like', like.id)
     return jsonify({
         'liked': current_user.has_liked_comment(comment)
+    })
+
+@main.route("/comment/delete/<int:comment_id>", methods=["POST"])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.filter_by(id=comment_id).first_or_404()
+    if comment.commenter != current_user:
+        abort(403)
+    db.session.delete(comment)
+    db.session.commit()
+    return jsonify({
+        'message': 'Your comment has been deleted.'
     })
 
 @main.route("/open_notification/<int:id>", methods=["POST"])

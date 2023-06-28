@@ -67,6 +67,7 @@ function handleSubmit(event) {
         // Create a new comment element and add it to the comments list
         const commentElement = document.createElement('div');
         commentElement.classList.add('comment-container');
+        commentElement.setAttribute('id', `${comment['id']}`)
         commentElement.innerHTML = `
         <div>
             <img class="user-pic" src="/static/pics/${comment['pic']}" alt="User profile picture">
@@ -81,6 +82,7 @@ function handleSubmit(event) {
                 <div class="date">${comment["date_posted"]}</div>
                 ${comment["likes_count"] > 0 ? `<div class="date" id="like-counter-${comment["id"]} data-count="${comment["likes_count"]}" style="display: block">${comment["likes_count"]} likes_count</div>` : `<div class="date" id="like-counter-${comment["likes_count"]}" data-count="${comment["likes_count"]}" style="display: none;">${comment["likes_count"]} likes</div>`}
                 <div class="reply-btn" data-comment-id="${comment["id"]}" data-author="${comment["author"]}" data-post-id="${postId}">Reply</div>
+                <i class="fa fa-ellipsis" id="ellipsis-icon" onclick=displayOverlay(${comment['id']})></i>
             </div>
         </div>
         `;
@@ -93,7 +95,31 @@ function handleSubmit(event) {
     }
   }
 
+function displayOverlay(id) {
+  overlay.style.display = 'block'
+  optionsDiv.style.display = 'block'
+  handleDelete(id)
+}
 
+function handleDelete(id) {
+  document.querySelector('.delete-form').addEventListener('submit', function(event) {
+    event.preventDefault()
+    fetch(`/comment/delete/${id}`, {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json'
+      },
+  })
+      .then(response => response.json())
+      .then(function() {
+        comment.innerHTML = ''
+        document.querySelector('.modal-dialog').style.display = 'none'
+        document.querySelector('overlay').style.display = 'none'
+        document.getElementById('deleteModal').classList.remove('show')
+      })
+  })
+  
+}
 
 function updatePost() {
   fetch(`/post/${postId}/edit`, {
