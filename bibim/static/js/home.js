@@ -331,6 +331,9 @@ function add_post(post) {
 
             const ellipsis = document.createElement('i')
             ellipsis.setAttribute('class', 'fa fa-ellipsis')
+            ellipsis.addEventListener('click', function() {
+                displayOverlay(comment['id'])
+            })
 
             footer.appendChild(replyBtn);
             footer.appendChild(ellipsis);
@@ -531,5 +534,31 @@ function handleEdit(id) {
     })
 }
 
+
+function displayOverlay(id) {
+    overlay.style.display = 'block'
+    optionsDiv.style.display = 'block'
+    handleDelete(id)
+  }
+  
+  function handleDelete(id) {
+    document.querySelector('.delete-form').addEventListener('submit', function(event) {
+      event.preventDefault()
+      fetch(`/comment/delete/${id}`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+    })
+        .then(response => response.json())
+        .then(function() {
+          comment.innerHTML = ''
+          document.querySelector('.modal-dialog').style.display = 'none'
+          document.querySelector('overlay').style.display = 'none'
+          document.getElementById('deleteModal').classList.remove('show')
+        })
+    })
+    
+  }
 
 

@@ -18,6 +18,14 @@ class MaterialForm(FlaskForm):
                                                                             ]])
     submit = SubmitField('Create Material') 
 
+    def validate_grade(self, grade):
+      if grade.data == '0':
+        raise ValidationError('Please select a valid option.')
+      
+    def validate_material_type(self, material_type):
+      if material_type.data == 'Select a tag':
+        raise ValidationError('Please select at least one tag.')
+
 class SelectForm(FlaskForm):
     grade = SelectField('Grade', choices=[('0', 'Grade'), ('All', 'All'), ('1', 'Grade 1'), ('2', 'Grade 2'), ('3', 'Grade 3'), ('4', 'Grade 4'),
                                           ('5', 'Grade 5'), ('6', 'Grade 6'), ('7', 'Kinder'), 
