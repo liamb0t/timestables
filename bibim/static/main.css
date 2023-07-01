@@ -324,7 +324,7 @@ a:hover i {
 }
 
 /* Like button */
-.material-container i {
+.material-container .fa-regular {
   margin: 0;
   padding-right: 5px;
   margin-bottom: 10px;
@@ -410,6 +410,10 @@ a:hover i {
   margin-right: 10px;
 }
 
+.comment-container:hover .fa-ellipsis {
+  display: flex;
+}
+
 .comments .comment-container {
   display: flex;
   flex-direction: row;
@@ -417,9 +421,11 @@ a:hover i {
 }
 
 .paginate-icon-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #999;
+}
+
+.paginate-icon-container:hover {
+  cursor: pointer;
 }
 
 .comment-container .user-pic {
@@ -691,6 +697,10 @@ a:hover i {
   display: flex;
 }
 
+.comment-form textarea::placeholder{
+  color: #999;
+}
+
 .posts icon:hover {
   color: #959494;
 }
@@ -765,7 +775,22 @@ a:hover i {
 
 .fa-ellipsis {
   margin-left: auto;
+  display: flex;
+  align-items: center ;
   cursor: pointer;
+}
+
+.footer .fa-ellipsis {
+  display: none;
+  color: #494949;
+  margin-left: 5px;
+  transform: scale(1.05);
+  align-items: center ;
+  cursor: pointer;
+}
+
+.fa-ellipsis:hover {
+  color: #b0b0b0;
 }
 
 /* likes pop up style */
@@ -778,9 +803,21 @@ a:hover i {
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
   border-radius: 5px;
-  padding: 20px;
+
   z-index: 9999;
   transition: transform 0.3s ease;
+}
+
+.options-popup div {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 90px;
+  padding-right: 90px;
+  border-bottom: 1px solid gainsboro;
+}
+
+.options-popup div:hover {
+  cursor: pointer;
 }
 
 .likes-popup h3 {

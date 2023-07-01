@@ -243,11 +243,10 @@ function add_post(post) {
                     paginated = true;
                     const container = document.createElement('div');
                     container.setAttribute('class', 'paginate-icon-container')
-                    const paginateBtn = document.createElement('btn');
-                    paginateBtn.setAttribute('class', "fa-regular fa-plus")
-                    container.appendChild(paginateBtn)
+                    container.innerHTML = `View more comments (${post["comments"].length - limit})`
+                    
                     comments.appendChild(container);
-                    paginateBtn.addEventListener('click', function() {
+                    container.addEventListener('click', function() {
                         paginate(post['id'], this);
                     })
                 }
@@ -333,6 +332,14 @@ function add_post(post) {
             ellipsis.setAttribute('class', 'fa fa-ellipsis')
             ellipsis.addEventListener('click', function() {
                 displayOverlay(comment['id'])
+                if (comment['author'] != post['current_user']) {
+                    document.querySelector('.options-editBtn').style.display = 'none'
+                    document.querySelector('.delete-btn').style.display = 'none'
+                }
+                else {
+                    document.querySelector('.options-editBtn').style.display = 'none'
+                    document.querySelector('.delete-btn').style.display = 'block'
+                }
             })
 
             footer.appendChild(replyBtn);
@@ -364,7 +371,7 @@ function add_post(post) {
                 comment["replies"].forEach(reply => {
                     const replyDiv = document.createElement('div');
                     const html = `
-                        <div class="comment-container">
+                        <div class="comment-container" style="margin-left: 50px;">
                         <div>
                             <a href="/users/${reply['author']}">
                                 <img class="user-pic" src="/static/pics/${reply['pic']}" alt="User profile picture">
@@ -397,7 +404,7 @@ function add_post(post) {
                     replyDiv.innerHTML = html;
                     replies.appendChild(replyDiv);
                 });
-                userInfo.appendChild(replies)
+                comments.appendChild(replies)
             }
 
             });

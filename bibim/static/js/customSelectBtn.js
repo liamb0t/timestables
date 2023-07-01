@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const publisher = textBookFilter.value;
   console.log(publisher)
   if (publisher != 'Textbook' && publisher != 'All' ) {
-    console.log('ding')
     lessonFilter.style.display = 'inline'
   }
 })
