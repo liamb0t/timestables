@@ -51,21 +51,34 @@
     </div>
     <div class="announcement-container">
         <div class="announcement-bar">
-          <p class='text-muted'>
+            <i class="fa-solid fa-arrow-trend-up"></i>
+            <span class='text-muted'>Popular Posts of the Day
             <ul class="list-group">
-              <li class="list-group-item list-group-item-light">Latest Posts
-                <div>
-                    {% for post in popular_posts %}
-                        {{ post.author.username }}
-                        {{ post.content }}
-                    {% endfor %}
-                </div>
-              </li>
-              <li class="list-group-item list-group-item-light">Announcements</li>
-              <li class="list-group-item list-group-item-light">Calendars</li>
-              <li class="list-group-item list-group-item-light">etc</li>
+                {% for post in popular_posts %}
+                    <li>
+                        <div class="post-announcement">
+                            <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + post.author.image_file) }}">
+                            <a href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.content | truncate(30, True, '')}}</a>
+                            
+                        </div>
+                    </li>
+                {% endfor %}
             </ul>
-          </p>
+            </span>
+            <br>
+            <i class="fa-solid fa-bookmark"></i>
+            <span class='text-muted'>Trending Materials
+            <ul class="list-group">
+                {% for material in popular_materials %}
+                    <li>
+                        <div class="post-announcement">
+                            <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + material.creator.image_file) }}">
+                            <a href="{{ url_for('materials.material', material_id=material.id) }}">{{ material.title | truncate(30, True, '')}}</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            </span>
         </div>
       </div>
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>

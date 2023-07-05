@@ -618,7 +618,19 @@ a:hover i {
   object-fit: cover;
 }
 
+.post-announcement {
+  display: flex;
+  align-items: center;
+}
+
 .sidebar-img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.announcementbar-img {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -647,13 +659,13 @@ a:hover i {
 }
 
 
-.post a {
+.post a, .material-container a {
   text-decoration: none;
   color: #1d2024;
   margin-right: 5px;
 }
 
-.post a:hover {
+.post a:hover, .material-container a:hover {
   color: #96a1b2;
 }
 

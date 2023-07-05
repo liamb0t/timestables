@@ -1,12 +1,12 @@
 from flask import Blueprint, redirect, render_template, flash, url_for, request, send_file, jsonify, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from bibim.models import Post, User, Material, File, Comment, Notification
+from bibim.models import Post, User, Material, File, Comment, Notification, Like
 from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
 from bibim.main.utils import send_reset_email
 from bibim.posts.forms import PostForm, EditForm
 from bibim import bcrpyt, db, app
 import datetime
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from random import choice
 import zipfile
 import io
@@ -123,13 +123,18 @@ def home():
         post_form.content.render_kw['placeholder'] = placeholder
     # code for announcement bar
     today = datetime.date.today()
-    popular_posts = Post.query.filter(db.func.date(Post.date_posted) == today).order_by(Post.date_posted.desc()).limit(5).all()
+    popular_posts = Post.query.join(Post.likes, isouter=True)\
+                            .group_by(Post)\
+                            .order_by(func.count(Like.id).desc()).limit(5)
+    popular_materials = Material.query.join(Material.likes, isouter=True)\
+                            .group_by(Material)\
+                            .order_by(func.count(Like.id).desc()).limit(10)
     if post_form.validate_on_submit():
         post = Post(content=post_form.content.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('main.home'))
-    return render_template('home.html', post_form=post_form, edit_form=edit_form, popular_posts=popular_posts)
+    return render_template('home.html', post_form=post_form, edit_form=edit_form, popular_posts=popular_posts, popular_materials=popular_materials)
 
 @main.route("/download/<int:file_id>", methods=["GET"])
 @login_required
