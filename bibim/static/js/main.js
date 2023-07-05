@@ -68,6 +68,7 @@ function handleSubmit(event) {
         const commentElement = document.createElement('div');
         commentElement.classList.add('comment-container');
         commentElement.setAttribute('id', `${comment['id']}`)
+        const cleanedContent = cleanString(comment['content'])
         commentElement.innerHTML = `
         <div>
             <img class="user-pic" src="/static/pics/${comment['pic']}" alt="User profile picture">
@@ -75,8 +76,8 @@ function handleSubmit(event) {
         <div class="user-info">
             <div class="header">
                 <div class="username">${comment["author"]}</div>
-                ${comment.parent ? `<a href="/user/${comment['parent']}" style="color: rgb(53, 152, 157)">@${comment['parent']}</a>` : ''}
-                <div class="comment">${comment["content"]}</div>
+                ${comment.parent ? `<a href="/users/${comment['parent']}" style="color: #385898">@${comment['parent']}</a>` : ''}
+                <div class="comment">${cleanedContent}</div>
             </div>
             <div class="footer">
                 <div class="date">${comment["date_posted"]}</div>
@@ -85,6 +86,12 @@ function handleSubmit(event) {
                 <i class="fa fa-ellipsis" id="ellipsis-icon" onclick=displayOverlay(${comment['id']})></i>
             </div>
         </div>
+        <div class="like-btn">
+          <div class="like-icon">
+            <i id="material-comment-like-icon-${comment['id']}" class="fa-regular fa-heart" data-comment-id="${comment['id']}"></i>
+          </div>
+        </div>
+      
         `;
         const commentsList = document.querySelector(`#post-comments-${postId}`);
         const firstElement = commentsList.firstChild;
@@ -99,6 +106,16 @@ function displayOverlay(id) {
   overlay.style.display = 'block'
   optionsDiv.style.display = 'block'
   handleDelete(id)
+}
+
+function cleanString(string) {
+  let splitString = string.split(" ")
+
+  if (splitString[0].startsWith("@")) {
+      splitString = splitString.slice(1);
+    }
+
+  return splitString.join(" ")
 }
 
 function handleDelete(id) {

@@ -247,6 +247,10 @@ class Comment(db.Model):
     
     def get_post(self):
         return (self.post_id, 'post') if self.post_id else (self.material_id, 'material')
+    
+    def get_username(self):
+        user = User.query.filter_by(id=self.user_id).first()
+        return user.username if user else None
 
     def likes_count(self):
         return len([likes for likes in self.likes])
@@ -279,6 +283,7 @@ class Comment(db.Model):
             "likes_count": self.likes_count(),
             "replies_count": self.replies_count(),
             "pic": self.commenter.image_file,
+            "parent": self.parent.get_username() if self.parent else None
         }
 
 class Material(db.Model):

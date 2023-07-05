@@ -278,17 +278,12 @@ function add_post(post) {
             nameLink.appendChild(username)
             header.appendChild(nameLink);
 
-            if (comment['parent']) {
-                const parentLink = document.createElement('a');
-                parentLink.href = `user/${comment['parent']}`
-                parentLink.style.color = "rgb(53, 152, 157)";
-                parentLink.textContent = `@${comment['parent']}`;
-                header.appendChild(parentLink);
-            }
-
             const commentContent = document.createElement('div');
             commentContent.classList.add('comment');
-            commentContent.textContent = comment["content"];
+
+            commentContent.textContent = cleanString(comment["content"])
+
+         
             header.appendChild(commentContent);
 
             userInfo.appendChild(header);
@@ -301,7 +296,6 @@ function add_post(post) {
             date.textContent = comment["date_posted"];
             footer.appendChild(date);
 
-            //likes are not appearing yet cause haven't added like functionality to posts yet
 
             if (comment["likes_count"] > 0) {
                 const likeCounter = document.createElement('div');
@@ -349,6 +343,26 @@ function add_post(post) {
     
             commentContainer.appendChild(userInfo);
 
+            const commentId = comment['id'];
+
+            const divContainer = document.createElement('div');
+            divContainer.setAttribute('class', 'like-btn');
+
+            const divIcon = document.createElement('div');
+            divIcon.setAttribute('class', 'like-icon');
+
+            const iElement = document.createElement('i');
+            iElement.setAttribute('id', 'material-comment-like-icon-' + commentId);
+            iElement.setAttribute('class', 'fa-regular fa-heart');
+            iElement.setAttribute('data-comment-id', commentId);
+
+            iElement.addEventListener('click', handleLikesComment)
+
+            divIcon.appendChild(iElement);
+            divContainer.appendChild(divIcon);
+
+            commentContainer.appendChild(divContainer)
+
             comments.appendChild(commentContainer);
 
             const replies = document.createElement('div');
@@ -370,6 +384,7 @@ function add_post(post) {
 
                 comment["replies"].forEach(reply => {
                     const replyDiv = document.createElement('div');
+                    const content = cleanString(reply["content"])
                     const html = `
                         <div class="comment-container" style="margin-left: 50px;">
                         <div>
@@ -382,8 +397,8 @@ function add_post(post) {
                                 <a href="/users/${reply['author']}">
                                     <div class="username">${reply["author"]}</div>
                                 </a>
-                                
-                                <div class="comment">${reply["content"]}</div>
+                                <a style="color: #385898;" href="/users/${reply['parent']}">@${reply['parent']}</a>
+                                <div class="comment">${content}</div>
                             </div>
                             <div class="footer">
                                 <div class="date">${reply["date_posted"]}</div>
@@ -569,3 +584,41 @@ function displayOverlay(id) {
   }
 
 
+function handleLikesComment() {
+    const comment_id = this.dataset.commentId;
+    const counter = document.getElementById(`like-counter-${comment_id}`);
+    let count = parseInt(counter.dataset.count);
+
+    fetch(`/like-comment/${comment_id}`)  
+    .then(response => response.json())
+    .then(data => {
+        if (data['liked']) {
+            counter.innerHTML = `${count + 1} likes`;
+            counter.dataset.count = count + 1;
+            this.setAttribute('class', 'fa-solid fa-heart');
+            this.style.color = 'red';
+            counter.style.display = 'block';
+            this.style.marginRight = '2px'
+        }
+        else {
+            counter.innerHTML = `${count - 1} likes`;
+            counter.dataset.count = count - 1;
+            if (counter.dataset.count == 0) {
+                counter.style.display = 'none';
+            }
+            this.setAttribute('class', 'fa-regular fa-heart');
+            this.style.color = 'black';
+            
+        }
+    })
+}
+
+function cleanString(string) {
+    let splitString = string.split(" ")
+
+    if (splitString[0].startsWith("@")) {
+        splitString = splitString.slice(1);
+      }
+
+    return splitString.slice(1).join(" ")
+}
