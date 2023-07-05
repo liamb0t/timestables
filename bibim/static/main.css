@@ -242,7 +242,6 @@ a:hover i {
 /* main content styling */
 .main-content {
   border-left: 1px solid gainsboro;
-  max-width: 60%;
   margin-left: 17%;
   flex: 1;
 }
@@ -567,7 +566,7 @@ a:hover i {
 /* Styling for displaying posts */
 
 .posts {
-  margin-left: 20%;
+  margin-left: 10%;
 }
 
 .post-container {
@@ -583,12 +582,10 @@ a:hover i {
   overflow-y: auto;
   max-height: 500px;
   background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   margin-bottom: 20px;
-  width: 600px;
+  width: 55%;
   resize: none;
   
 }
@@ -618,10 +615,16 @@ a:hover i {
   object-fit: cover;
 }
 
-.post-announcement {
+.announcement-bar-container {
   display: flex;
   align-items: center;
 }
+
+.post-announcement-header {
+  display: flex;
+}
+
+
 
 .sidebar-img {
   width: 20px;
@@ -639,13 +642,12 @@ a:hover i {
 
 .post {
   background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   margin-bottom: 20px;
   overflow: hidden;
-  width: 600px;
+  width: 55%;
 }
 
 .post-form-container textarea {
@@ -902,7 +904,7 @@ a:hover i {
   position: absolute;
   top: 50px; /* adjust this value to suit your navbar height */
   right: 0;
-  width: 300px;
+  width: 30%;
   padding: 55px 20px 20px 50px;
 }
 
@@ -928,8 +930,7 @@ a:hover i {
 
 
 .announcement-bar ul li a:hover {
-  background-color: rgba(154, 154, 154, 0.138);
-  color: #161616;
+  color: #a0a0a0;
 }
 
 /* styling for hall of fame page */
