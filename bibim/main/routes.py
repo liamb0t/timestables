@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, render_template, flash, url_for, request, send_file, jsonify, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from bibim.models import Post, User, Material, File, Comment, Notification, Like
+from bibim.models import Post, User, Material, File, Comment, Notification, Like, Meeting
 from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
 from bibim.main.utils import send_reset_email
 from bibim.posts.forms import PostForm, EditForm
@@ -33,10 +33,20 @@ def inject():
 
 @main.route("/search", methods=['GET', 'POST'])
 def search():
-    search_query = request.form.get('query')
-    posts = Material.query.filter(or_(Material.title.ilike(f'%{search_query}%'),
-                              Material.content.ilike(f'%{search_query}%'))).all()
-    return render_template('search.html', posts=posts)
+  
+    search_query = f"%{request.form.get('query')}"
+    
+    materials = Material.query.filter(or_(Material.title.ilike(f'%{search_query}%'),
+                            Material.content.ilike(f'%{search_query}%'))).all()
+    posts = Post.query.filter(Post.content.ilike(f'%{search_query}%')).all()
+    comments = Comment.query.filter(Comment.content.ilike(f'%{search_query}%')).all()
+    meetings = Meeting.query.filter(or_(Meeting.title.ilike(f'%{search_query}%'),
+                            Meeting.content.ilike(f'%{search_query}%'))).all()
+    users = User.query.filter(User.username.ilike(f'%{search_query}%')).all()
+    
+    print(materials, posts, comments, meetings, users)
+    return render_template('search.html', posts=posts, meetings=meetings, comments=comments, materials=materials,
+                           users=users)
 
 @main.route("/")
 def landing():

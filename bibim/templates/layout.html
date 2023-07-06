@@ -34,14 +34,16 @@
        
         <nav class="navbar">
             <div class="navbar-container">
-              
-              <a href="{{ url_for('main.home') }}">
-                <img src="{{ url_for('static', filename='pics/logo.png')}}" id="navbar-home" >
-              </a>
-
+              <div>
+                <a href="{{ url_for('main.home') }}">
+                  <img src="{{ url_for('static', filename='pics/logo.png')}}" id="navbar-home" >
+                </a>
+              </div>
+             
+            
               <form method="POST" action="{{ url_for('main.search') }}">
                 {{ search_form.hidden_tag() }}
-                  <div>
+                  <div style="flex-grow: 1;">
                       {% if search_form.query.errors %}
                           {{search_form.query(class="search_form-control search_form-control-lg is-invalid")}}
                           <div class="invalid-feedback">
@@ -54,6 +56,10 @@
                       {% endif %}
                   </div>
               </form>
+          
+            
+            
+             
               {% if current_user.is_authenticated %}
                 <a href="{{ url_for('main.logout') }}">Logout</a>
               {% else %}

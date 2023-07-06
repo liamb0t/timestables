@@ -129,7 +129,6 @@ function handleLikesMaterial() {
 }
 
 function handleLikesComment() {
-    console.log('test')
     const comment_id = this.dataset.commentId;
     const counter = document.getElementById(`like-counter-${comment_id}`);
     let count = parseInt(counter.dataset.count);
