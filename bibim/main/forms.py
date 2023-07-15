@@ -5,11 +5,11 @@ from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationE
 from bibim.models import User
 
 class RegistrationForm(FlaskForm):
-    username = StringField('username', validators=[DataRequired(), Length(min=5, max=20)])
-    email = StringField('email', validators=[Email(), DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired(), Length(min=5, max=20)])
+    email = StringField('Email', validators=[Email(), DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('register') 
+    submit = SubmitField('Sign up') 
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
@@ -22,14 +22,14 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('That email is taken. Please choose another one.')
 
 class LoginForm(FlaskForm):
-    email = StringField('email', validators=[Email(), DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
+    email = StringField('Email', validators=[Email(), DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember me')
-    submit = SubmitField('login')
+    submit = SubmitField('Log in')
 
 class RequestResetForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Request Password Reset')
+    submit = SubmitField('Send recovery email')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()

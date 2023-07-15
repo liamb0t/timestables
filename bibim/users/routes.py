@@ -5,6 +5,7 @@ from bibim.users.forms import UpdateAccountForm
 from bibim.posts.forms import FollowForm
 from bibim.models import User, Post, Material, Comment
 from bibim.users.utils import date_member_since, save_picture
+from datetime import datetime
 
 users = Blueprint('users', __name__)
 
@@ -105,3 +106,10 @@ def account():
         form.email.data = current_user.email
         form.about.data = current_user.about
     return render_template('account.html', form=form)
+
+
+@users.before_request
+def update_last_seen():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()

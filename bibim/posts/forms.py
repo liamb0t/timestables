@@ -13,8 +13,8 @@ class FollowForm(FlaskForm):
     submit = SubmitField('Follow')
 
 class MessageForm(FlaskForm):
-    body = TextAreaField('Message', validators=[DataRequired(), Length(min=0, max=140)], render_kw={"placeholder": 'Message...'})
-    submit = SubmitField('Send message')
+    body = StringField('Message', validators=[DataRequired(), Length(min=0, max=140)], render_kw={"placeholder": 'Message...'})
+    submit = SubmitField('Send')
 
 class EditForm(FlaskForm):
     editor_content = TextAreaField('Edit Content', validators=[DataRequired()])

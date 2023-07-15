@@ -104,7 +104,7 @@ function handleSubmit(event) {
 
 function displayOverlay(id) {
   overlay.style.display = 'block'
-  optionsDiv.style.display = 'block'
+  optionsDiv.style.display = 'flex'
   handleDelete(id)
 }
 

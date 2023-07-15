@@ -1,50 +1,201 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://kit.fontawesome.com/7c4ca0706d.js" crossorigin="anonymous"></script>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-{% block content %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+        <title>Korea English Teacher Community</title>
+    </head>
+    <body>
 
-    <div class="conversations">
-        {% for user in conversations %}
-       
-            <div class="conversation" data-user="{{ user.id }}">
-                <img src="static/pics/{{ user.image_file }}">
-                {{ user.username }}
-            </div> 
-       
-        {% endfor %}
-    </div>
+        <nav class="navbar">
+            <div class="navbar-container">
+              <div>
+                <a href="{{ url_for('main.home') }}">
+                  <img src="{{ url_for('static', filename='pics/logo.png')}}" id="navbar-home" >
+                </a>
+              </div>
+             
+            
+              <form method="POST" action="{{ url_for('main.search') }}">
+                {{ search_form.hidden_tag() }}
+                  <div style="flex-grow: 1;">
+                      {% if search_form.query.errors %}
+                          {{search_form.query(class="search_form-control search_form-control-lg is-invalid")}}
+                          <div class="invalid-feedback">
+                              {% for error in search_form.query.errors %}
+                                  <span>{{ error }}</span>
+                              {% endfor %}
+                          </div>
+                      {% else %}
+                          {{ search_form.query(class="search_form-control search_form-control-lg")}}
+                      {% endif %}
+                  </div>
+              </form>
+          
+            
+            
+             
+              {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.logout') }}">Logout</a>
+              {% else %}
+                <a href="{{ url_for('main.login') }}">Login</a>
+                <a href="{{ url_for('main.register') }}">Register</a>
+              {% endif %}
 
-    <div class="message-display">
-        <!-- Display message history here -->
-        {% if messages %}
-            {% for msg in messages %}
-                {% if msg.author != current_user %}
-                    <div class="message">{{msg.author.username}}: {{ msg.body }}</div>
-                {% else %}
-                    <div class="message-sent">{{msg.author.username}}: {{ msg.body }}</div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    </div>
-        
-    <div class="message-input">
-        <form method="POST" action="">
-            {{ form.hidden_tag() }}
-            <div>      
-                {% if form.body.errors %}
-                    {{form.body(class="form-control form-control-lg is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.body.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
+             
+            </div>
+        </nav>
+
+        <div class="wrapper">
+
+
+            <div class="sidebar">
+                <ul>
+                  <li><a href="{{ url_for('main.home') }}"><i class="fa fa-house"></i></a></li>
+                  <li><a id="materials-link" href="#"><i class="fa fa-book"></i></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa fa-child"></i></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='middle') }}"><i class="fa fa-school"></i></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='high') }}"><i class="fa fa-graduation-cap"></i></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-campground"></i></a></li>
+                  
+                  <li><a href="{{ url_for('materials.load_materials', level='teaching') }}"><i class="fa fa-chalkboard-user"></i></a></li>
+                  <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i></a></li>
+                  <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-briefcase"></i></a></li>
+                  <li>
+                    <a href="{{ url_for('posts.inbox') }}">
+                      <i class="fa-regular fa-paper-plane"></i>
+                      
+                      {% if not current_user.is_anonymous %}
+                        {% set new_messages = current_user.new_messages() %}
+                        {% if new_messages %}
+                          <span id="message_count" class="badge" data-count="{{ new_messages }}">{{ new_messages }}</span>
+                        {% else %}
+                          <span id="message_count" class="badge" data-count="{{ new_messages }}" style="display: none;">{{ new_messages }}</span>
+                        {% endif %}
+                      {% endif %}
+                      </i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="notifications-link">
+                      <i class="fa fa-bell"></i>
+            
+                      {% if not current_user.is_anonymous %}
+                        {% set new_notifications = current_user.new_notifications() %}
+                        {% if new_notifications > 0 %}
+                          <span id="notifications_count" class="badge" data-count="0">{{ new_notifications}}</span>
+                        {% endif %}
+                      {% endif %}
+                    </a>
+                    <div class="notifications" style="display: none;"></div>
+                  </li>
+                  <li>
+                    <a id="sidebar-icon-profile" href="{{ url_for('users.user_profile', username=current_user.username) }}">
+                      <img class="sidebar-img" src="{{ url_for('static', filename='pics/' + current_user.image_file) }}"></img>
+                    </a>
+                  </li>
+                </ul> 
+            </div>
+
+            <div class="conversations">
+                <h5>Messages</h5>
+                {% for user in conversations %}
+                    <div class="conversation" 
+                          data-user="{{ user.id }}" 
+                          data-username="{{ user.username }}" 
+                          data-img="{{ user.image_file }}"
+                          data-lastseen="{{ user.active_since() }}">
+                        <div style="display: flex; align-items: center;">
+                          <img src="static/pics/{{ user.image_file }}">
+                          <div>
+                              <p>{{ user.username }}</p>
+                              <div style="display: flex;">
+                                <p>{{ user.get_last_message().body }}</p>
+                                <span>&bull;</span>
+                                <span>{{ user.get_last_message_time() }}</span>
+                              </div>
+                          </div>
+                        </div>
+                       
+                    </div> 
+                {% endfor %}
+            </div>
+
+            <div style="display: flex; flex-direction: column; flex: auto;">
+
+                {% if user %}
+                  <div class="header" style="display: flex;">
+                    <div class="header-info" style="border-bottom: 1px solid gainsboro; display: flex;">
+                        <a class="header-link" href="{{ url_for('users.user_profile', username=user.username) }}">
+                          <img class="header-img" src="{{ url_for('static', filename='pics/' + user.image_file)}}">
+                        </a>
+                        <div> 
+                          <p class="header-username">{{ user.username }}</p>
+                          <p class="header-lastseen">Active {{ post_timestamp(user.last_seen) }} ago</p>
+                        </div>
                     </div>
+                  </div>
                 {% else %}
-                    {{ form.body}}
+                  <div class="header" style="display: none;">
+                      <div class="header-info" style="border-bottom: 1px solid gainsboro; display: flex;">
+                          <a class="header-link">
+                            <img class="header-img" src="#">
+                          </a>
+                          <div> 
+                            <p class="header-username"></p>
+                            <p class="header-lastseen"></p>
+                          </div>
+                      </div>
+                  </div>
                 {% endif %}
+                <div class="message-display">   
+                    {% if messages %}
+                        {% for msg in messages %}
+                            {% if msg.author != current_user %}
+                                <div class="message-container" style="display: flex; justify-content: flex-start;">
+                                    <div class="message">{{ msg.author.username }}: {{ msg.body }}</div>
+                                </div>
+                            {% else %}
+                            <div class="message-sent-container" style="display: flex; justify-content: flex-end;">
+                                <div class="message-sent">{{ msg.author.username }}: {{ msg.body }}</div>
+                            </div>  
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div style="display: flex; justify-content: center;"> 
+                  <div class="message-input">
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+                        <div style="display: flex;">      
+                            {% if form.body.errors %}
+                                {{form.body}}
+                                <div class="invalid-feedback">
+                                    {% for error in form.body.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.body(class='inbox-input')}}
+                                {{ form.submit(class='inbox-submit') }}
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+                </div>
+               
             </div>
-            <div class="post-form-footer">
-                <div>{{ form.submit }}</div>
-            </div>
-        </form>
-    </div>
-    <script src="{{ url_for('static', filename='js/inbox.js') }}"></script>
-{% endblock content %}
+           
+                
+           
+        </div>
+
+        <script src="{{ url_for('static', filename='js/inbox.js') }}"></script>
+    </body>
+    </html>
+ 

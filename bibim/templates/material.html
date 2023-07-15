@@ -18,12 +18,12 @@
       <a href="{{ url_for('users.user_profile', username=material.creator.username) }}">
         <div class="username">{{ material.creator.username }}</div>
       </a>
+      <span>&bull;</span>
       <div class="date">{{ post_timestamp(material.date_posted) }}</div>
       <i class="fa fa-ellipsis" id="ellipsis-icon"></i>
     
     </div>
     <h1 class="title">{{ material.title }}</h1>
-
     <div class="content">
       <p>{{ material.content | safe }}</p>
     </div>
@@ -106,7 +106,7 @@
           {% for reply in comment.get_replies() %}
             <div class="comment-container" style="margin-left: 50px;">
               <div>
-                <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+                <img class="user-pic" src="{{ url_for('static', filename='pics/' + reply.commenter.image_file)}}" alt="User profile picture">
               </div>
               <div class="user-info">
                 <div class="header">

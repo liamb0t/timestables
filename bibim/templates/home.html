@@ -4,20 +4,20 @@
     
     <div class="posts">
         <div class="post-editor">
-            <form class="edit-form" method="POST" action="">
+            <form class="edit-form" method="POST" action="" style="flex-grow: 1;">
                 {{ edit_form.hidden_tag() }}
-                <div>      
-                    {% if edit_form.editor_content.errors %}
-                        {{edit_form.editor_content(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {% for error in edit_form.editor_content.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ edit_form.editor_content}}
-                    {% endif %}
-                </div>
+                  
+                {% if edit_form.editor_content.errors %}
+                    {{edit_form.editor_content(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in edit_form.editor_content.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ edit_form.editor_content}}
+                {% endif %}
+               
                 <div class="post-form-footer">
                     <div>{{ edit_form.submit }}</div>
                 </div>
@@ -27,7 +27,9 @@
         <h2>Teachers Lounge</h2>
         <div class="post-form-container">
             <div class="post-form-header">
-                <img class="post-form-img" src="{{ url_for('static', filename='pics/' + current_user.image_file)}}">
+                <a href="{{ url_for('users.user_profile', username=current_user.username) }}">
+                    <img class="post-form-img" src="{{ url_for('static', filename='pics/' + current_user.image_file)}}">
+                </a>
                 <form method="POST" action="">
                     {{ post_form.hidden_tag() }}
                     <div>      
@@ -49,44 +51,6 @@
             </div>
         </div>
     </div>
-    <div class="announcement-container">
-        <div class="announcement-bar">
-            <div style="display: flex; align-items: center;">
-                <i class="fa-solid fa-arrow-trend-up"></i>
-                <h5>Popular Posts of the Day</h5>
-            </div>
-            <ul class="list-group">
-                {% for post in popular_posts %}
-                    <li>
-                        <div class="announcement-bar-container">
-                            <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + post.author.image_file) }}">
-                            <div class="announcement-bar-header">
-                                <a href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.content | truncate(30, True, '')}}</a>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-            <br>
-            <div style="display: flex; align-items: center;">
-                <i class="fa-solid fa-bookmark"></i>
-                <h5>Trending Materials</h5>
-            </div>
-           
-            <ul class="list-group">
-                {% for material in popular_materials %}
-                    <li>
-                        <div class="announcement-bar-container">
-                            <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + material.creator.image_file) }}">
-                            <div class="announcement-bar-header">
-                                <a href="{{ url_for('materials.material', material_id=material.id) }}">{{ material.title | truncate(30, True, '')}}</a>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-            </span>
-        </div>
-      </div>
+   
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock content %}

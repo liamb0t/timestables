@@ -1,40 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Landing Page</title>
+    <title>Bibimhak</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 </head>
 <body>
+    <div class="top-line"></div>
     <nav class="navbar">
-        <div class="navbar-logo">Bibim School</div>
+        <div class="navbar-logo">
+            <a href="{{ url_for('main.landing') }}">
+                <img id="logo-header" src="{{ url_for('static', filename='landing_page/logo-name.png') }}" alt="Website Logo" class="login-logo">
+            </a>
+            
+        </div>
         <ul class="navbar-links">
-            <li><a href="{{ url_for('main.login') }}">Login</a></li>
-            <li><a href="{{ url_for('main.register') }}">Register</a></li>
+            <li><a href="{{ url_for('main.login') }}">Log in</a></li>
+            <li><a href="{{ url_for('main.register') }}">Sign up</a></li>
             <li><a href="#">Support</a></li>
             <li><a href="#">Help</a></li>
         </ul>
     </nav>
     <!-- Your landing page content goes here -->
-    <div>
-
-    </div>
+    
     <div class="image-container">
         <div class="text">
-            <h1>South Korea's foremost English Teacher Portal</h1>
-            <p>Bibimhak is a file-sharing and social networking platform for helping new and 
-                existing English teachers in Korea flourish in their new life as teachers. 
-                It enables teachers to share their knowledge and colloborate together. </p>
+            <h1>Where teachers mix and share their experience</h1>
+            <p>Bibimhak is a community-based platform for teachers to find and contribute materials for teaching, 
+                get answers to questions regarding daily life in and outside of school, 
+                and a social network to meet other teachers.</p>
+            <a class="big-sign-up-button" href="{{ url_for('main.register') }}">Join the Community</a>
         </div>
-        <img src="{{ url_for('static', filename='landing_page/1.png')}}">
+        <img src="{{ url_for('static', filename='landing_page/teacher.png')}}">
     </div>
-    <div class="image-container">
-        <img src="{{ url_for('static', filename='landing_page/2.png')}}">
-    </div>
-    <div class="image-container">
-        <img src="{{ url_for('static', filename='landing_page/3.png')}}">
-    </div>
+    <footer>
+        <div class="footer-container">
+          <div class="logo">
+            <img style="width: 220px;" src="{{ url_for('static', filename='landing_page/logo-name.png')}}" alt="Your Logo">
+          </div>
+          <div class="copyright">
+            &copy; 2023 Bibimhak. All rights reserved.
+          </div>
+        </div>
+    </footer>
+    
     
 </body>
 </html>

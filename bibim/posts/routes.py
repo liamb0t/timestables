@@ -71,7 +71,7 @@ def inbox():
     form = MessageForm()
     user_id = request.args.get('user')
     conversations = current_user.get_conversations()
-
+    user = None
     if user_id:
         user = User.query.filter_by(id=user_id).first_or_404()
         messages = current_user.get_messages(user_id)
@@ -92,7 +92,8 @@ def inbox():
             flash(('Your message has been sent.'), 'success')
             return redirect(url_for('posts.inbox', user=user_id))
     
-    return render_template('inbox.html', messages=messages, conversations=conversations, form=form)
+    return render_template('inbox.html', messages=messages, conversations=conversations, form=form, 
+                           user=user if user else None, post_timestamp=post_timestamp)
 
 
 @posts.route('/notifications')

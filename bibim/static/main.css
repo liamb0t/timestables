@@ -1,9 +1,16 @@
+* {
+  box-sizing: border-box;
+}
+
+
 .flash-messages {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
 }
+
+
 
 
 .flash-messages .message {
@@ -33,6 +40,7 @@
 /* login styling */
 
 .login-body {
+  flex-direction: row;
   overflow: hidden;
   padding: 0;
   margin: 0;
@@ -83,21 +91,26 @@
 }
 
 .login-button {
-  background-color: #337fb5;
+  background-color:#ff6600;
   color: white;
   border: none;
   cursor: pointer;
 }
 
 .login-button:hover {
-  background-color: #45a049;
+  background-color:#e65d03;
 }
+
+.login-footer {
+  margin-top: 50px;
+}
+
 
 /* navbar styling */
 
 body {
   padding-top: 0;
-  background-color: #ffffff;;
+  background-color: #ffffff;
 }
 
 i {
@@ -178,13 +191,10 @@ a:hover i {
 
 /* sidebar styling */
 .sidebar {
+  border-right: 1px solid gainsboro;
   background-color: white;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  position: fixed;
-  left: 0;
-  width: 17%;
-  height: 100%;
-  padding: 72px 20px 20px 16px; /* added padding here */
+  padding-left: 20px;
 }
 
 .sidebar ul {
@@ -197,7 +207,6 @@ a:hover i {
   color: #4f4f4f;
   display: block;
   font-size: 16px;
-  padding: 5px 10px;
   text-decoration: none;
   padding: 10px;
   border-radius: 10px;
@@ -209,7 +218,15 @@ a:hover i {
   width: 34px;
 }
 
+.sign-up-info {
+  display: flex;
+  margin-bottom: 20px;
+}
 
+#sidebar-icon-profile {
+  margin-top: 9px;
+  padding: 0;
+}
 
 
 
@@ -230,11 +247,11 @@ a:hover i {
 
 
 
+
 /* main content styling */
 .main-content {
-  border-left: 1px solid gainsboro;
-  margin-left: 17%;
-  flex: 1;
+  overflow-y: scroll;
+  flex: 50%;
 }
 
 
@@ -558,7 +575,7 @@ a:hover i {
 /* Styling for displaying posts */
 
 .posts {
-  margin-left: 10%;
+  max-width: 80%;
 }
 
 .post-container {
@@ -572,12 +589,10 @@ a:hover i {
 .post-form-container {
   height: auto;
   overflow-y: auto;
-  max-height: 500px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   margin-bottom: 20px;
-  width: 55%;
   resize: none;
   
 }
@@ -623,6 +638,11 @@ a:hover i {
   height: 20px;
   border-radius: 50%;
   object-fit: cover;
+  margin-right: 29px;
+}
+
+.sidebar-i-profile {
+  padding: 0;
 }
 
 .announcementbar-img {
@@ -639,15 +659,14 @@ a:hover i {
   margin-top: 20px;
   margin-bottom: 20px;
   overflow: hidden;
-  width: 55%;
 }
 
 .post-form-container textarea {
+  width: 100%;
   border: none;
   border-radius: 5px;
   font-size: 1rem;
   padding-left: 10px;
-  width: 520px;
   resize: none;
   outline: none;
 }
@@ -801,18 +820,43 @@ a:hover i {
 
 /* likes pop up style */
 
-.likes-popup, .options-popup, .post-editor, .options-popup-secondary{
+.post-editor {
   display: none;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
-  border-radius: 5px;
-
+  border-radius: 5px; 
+  width: 33vw;
+  height: 33vh;
   z-index: 9999;
   transition: transform 0.3s ease;
 }
+
+.post-editor textarea {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  resize: none;
+  border: none;
+  border-radius: 5px;
+}
+
+.likes-popup, .options-popup, .options-popup-secondary {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  align-items: center;
+  z-index: 9999;
+  transition: transform 0.3s ease;
+}
+
 
 .options-popup div {
   padding-top: 10px;
@@ -893,11 +937,7 @@ a:hover i {
 
 .announcement-bar {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  position: absolute;
-  top: 50px; /* adjust this value to suit your navbar height */
-  right: 0;
-  width: 30%;
-  padding: 55px 20px 20px 50px;
+  flex: 30%;
 }
 
 .announcement-bar ul {
@@ -1232,31 +1272,54 @@ a:hover i {
 /* Conversations sidebar */
 
 .conversations {
-  width: 200px;
-  padding: 10px;
-  background-color: #f1f1f1;
+  display: flex;
+  border-right: 1px solid gainsboro;
+  flex-direction: column;
+  height: 100vh;
 }
+
 .conversation {
+  display: flex;
+  align-items: center;
   padding: 5px;
-  border-bottom: 1px solid #ccc;
   cursor: pointer;
+  padding-right: 90px;
+  padding-left: 30px;
 }
+
+.conversations h5 {
+  padding-top: 10px;
+  padding-left: 30px;
+}
+
 .conversation:hover {
-  background-color: #eaeaea;
+  background-color: #f5f5f5;
 }
+
 .conversation img {
   vertical-align: middle;
-  width: 30px;
-  height: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.header-img {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-right: 5px;
 }
 
 /* Message display */
 .message-display {
-  float: left;
-  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 60%;
   padding: 10px;
+  overflow-y: scroll;
 }
 .message {
   border-radius: 18px;
@@ -1273,19 +1336,44 @@ a:hover i {
   margin-bottom: 10px;
 }
 
+.message-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.message-sent-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* Message input */
 .message-input {
-  clear: both;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 500px; /* adjust as needed */
+  height: 50px;
+  border-radius: 25px;
+  background-color: #f2f2f2;
   padding: 10px;
 }
-.message-input textarea {
+
+.inbox-input {
   width: 100%;
-  height: 60px;
-  padding: 5px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  border-radius: 25px;
+  padding: 10px;
+  font-size: 16px;
 }
-.message-input button {
-  margin-top: 5px;
+
+.inbox-submit {
+  border: none;
+  background-color: transparent;
 }
+
+
 
 /* Footer for bottom of page containing copyright and other shtuff */
 

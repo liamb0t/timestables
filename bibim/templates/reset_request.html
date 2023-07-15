@@ -5,15 +5,14 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body class="login-body">
-    <div class="login-body">
+    <div class="login-container">
+        <div>
+            Forgot your account’s password? Enter your email address and we’ll send you a recovery link.
+        </div>
         <form method="POST" action="">
             {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Reset Password</legend>
-                
-                <div class="form-group">
-                    {{ form.email.label(class="form-control-label") }}
-                    
+            {{ form.email.label }}
+                <div class="login-form">
                     {% if form.email.errors %}
                     {{form.email(class="form-control form-control-lg is-invalid")}}
                     <div class="invalid-feedback">
@@ -21,15 +20,14 @@
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
-                {% else %}
-                    {{ form.email(class="form-control form-control-lg")}}
-                {% endif %}
-                    
+                    {% else %}
+                        {{ form.email(class="login-input")}}
+                    {% endif %}
+                    {{ form.submit(class="login-button") }}
                 </div>
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
+           
+              
+          
         </form>
     </div>
 </body>

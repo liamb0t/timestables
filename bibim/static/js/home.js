@@ -85,13 +85,11 @@ function handleLikes() {
         if (data['liked']) {
             counter.innerHTML = `${count + 1} likes`;
             counter.dataset.count = count + 1;
-            icon.setAttribute('class', 'fa-solid fa-heart');
-            icon.style.color = 'red'
+            icon.style.color = 'orange'
         }
         else {
             counter.innerHTML = `${count - 1} likes`;
             counter.dataset.count = count - 1;
-            icon.setAttribute('class', 'fa-regular fa-heart');
             icon.style.color = 'black'
         }
     })
@@ -162,7 +160,7 @@ function add_post(post) {
         document.querySelector('.edit-form').action = `/post/${post['id']}/edit`
         document.querySelector('.delete-form').action = `/post/${post['id']}/delete`
         handleEdit(post['id'])
-        optionsDiv.style.display = 'block'
+        optionsDiv.style.display = 'flex'
         overlay.style.display = 'block'
         document.body.classList.add("body-no-scroll");
     })
@@ -192,20 +190,21 @@ function add_post(post) {
         post["likers"].forEach(liker => {
             createLikesPopup(liker); 
         });
-        popupContainer.style.display = 'block';
+        popupContainer.style.display = 'flex';
         overlay.style.display = 'block';
         document.body.classList.add("body-no-scroll");
     });
-
-    likesText.textContent = `${post['likes']} likes`;
+    if (post['likes'] > 0 ) {
+        likesText.textContent = `${post['likes']} likes`;
+    }
+   
    
     const likeButton = document.createElement('i');
     likeButton.setAttribute('class', 'fa-regular fa-heart');
     likeButton.setAttribute('id', `like-counter-icon-${post['id']}`);
     likeButton.dataset.post_id = post['id'];
     if (post['liked']) {
-        likeButton.style.color = 'red';
-        likeButton.setAttribute('class', 'fa-solid fa-heart');
+        likeButton.style.color = 'orange';
     }
 
     likesText.setAttribute('id', `like-counter-${post['id']}`);
@@ -356,7 +355,13 @@ function add_post(post) {
             iElement.setAttribute('class', 'fa-regular fa-heart');
             iElement.setAttribute('data-comment-id', commentId);
 
+            if (comment['liked']) {
+                iElement.style.color = 'orange'
+            }
+
             iElement.addEventListener('click', handleLikesComment)
+
+
 
             divIcon.appendChild(iElement);
             divContainer.appendChild(divIcon);
@@ -403,15 +408,16 @@ function add_post(post) {
                             <div class="footer">
                                 <div class="date">${reply["date_posted"]}</div>
                                 
-                                <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>
+                                ${reply["likes_count"] > 0 ? `<div class="date" id="like-counter-${reply["id"]} data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>` : `<div class="date" id="like-counter-${reply["likes_count"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>`}
                                 
                                 <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
                                 <div onclick="handleReply({ author: '${reply["author"]}', comment_id: ${reply["id"]}, post_id: ${post["id"]} })" class="reply-btn" data-comment-id="${reply['id']}" data-author="${reply['author']}">Reply</div>
+                                <i class="fa fa-ellipsis" onclick="handleEllipsis([${reply['id']}, '${reply['author']}', '${post['current_user']}'])"></i>
                             </div> 
                         </div>
                         <div class="like-btn">
                             <div class="like-icon">
-                            <i id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-reply-id="${reply['id']}"></i>
+                            ${reply["likes_count"] > 0 ? `<i style="color:orange;" id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-reply-id="${reply['id']}" onclick="handleLikesComment(${reply['id']})"></i>` : `<i id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-reply-id="${reply['id']}" onclick="handleLikesComment(${reply['id']})"></i>`}
                             </div>
                         </div>
                         </div>    
@@ -551,7 +557,7 @@ function handleEdit(id) {
         const postHTML = document.querySelector(`#post-content-${id}`).innerHTML
         overlay.style.display = 'block';
         optionsDiv.style.display = 'none';
-        editor.style.display = 'block'
+        editor.style.display = 'flex'
         document.querySelector('#editor_content').value = postHTML;
     })
 }
@@ -559,7 +565,7 @@ function handleEdit(id) {
 
 function displayOverlay(id) {
     overlay.style.display = 'block'
-    optionsDiv.style.display = 'block'
+    optionsDiv.style.display = 'flex'
     handleDelete(id)
   }
   
@@ -584,10 +590,18 @@ function displayOverlay(id) {
   }
 
 
-function handleLikesComment() {
-    const comment_id = this.dataset.commentId;
+function handleLikesComment(reply_id) {
+    let comment_id;
+    if (typeof reply_id === 'number') {
+        comment_id = reply_id;
+    }
+    else {
+        comment_id = this.dataset.commentId;
+    }
+    
     const counter = document.getElementById(`like-counter-${comment_id}`);
     let count = parseInt(counter.dataset.count);
+    const icon = document.querySelector(`#material-comment-like-icon-${comment_id}`)
 
     fetch(`/like-comment/${comment_id}`)  
     .then(response => response.json())
@@ -595,10 +609,9 @@ function handleLikesComment() {
         if (data['liked']) {
             counter.innerHTML = `${count + 1} likes`;
             counter.dataset.count = count + 1;
-            this.setAttribute('class', 'fa-solid fa-heart');
-            this.style.color = 'red';
+            icon.style.color = 'orange';
             counter.style.display = 'block';
-            this.style.marginRight = '2px'
+            icon.style.marginRight = '2px'
         }
         else {
             counter.innerHTML = `${count - 1} likes`;
@@ -606,8 +619,7 @@ function handleLikesComment() {
             if (counter.dataset.count == 0) {
                 counter.style.display = 'none';
             }
-            this.setAttribute('class', 'fa-regular fa-heart');
-            this.style.color = 'black';
+            icon.style.color = 'black';
             
         }
     })
@@ -621,4 +633,20 @@ function cleanString(string) {
       }
 
     return splitString.slice(1).join(" ")
+}
+
+
+function handleEllipsis(data) {
+    const id = data[0]
+    const author = data[1]
+    const currentUser = data[2]
+    displayOverlay(id)
+    if (author != currentUser) {
+        document.querySelector('.options-editBtn').style.display = 'none'
+        document.querySelector('.delete-btn').style.display = 'none'
+    }
+    else {
+        document.querySelector('.options-editBtn').style.display = 'none'
+        document.querySelector('.delete-btn').style.display = 'block'
+    }
 }

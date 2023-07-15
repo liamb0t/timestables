@@ -30,6 +30,7 @@ class User(db.Model, UserMixin):
     karma = db.Column(db.Integer, nullable=False, default=0)
     about = db.Column(db.String(120))
     last_message_read_time = db.Column(db.DateTime)
+    last_seen = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     
     posts = db.relationship('Post', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='commenter', lazy=True)
@@ -162,8 +163,43 @@ class User(db.Model, UserMixin):
         db.session.commit()
         return n
     
+    def active_since(self):
+        return post_timestamp(self.last_seen)
+    
     def get_conversations(self):
-        return list(set(m.author for m in current_user.messages_received))
+        contacts = (
+            User.query
+            .join(Message, or_(User.id == Message.sender_id, User.id == Message.recipient_id))
+            .filter(or_(Message.sender_id == self.id, Message.recipient_id == self.id))
+            .filter(User.id != self.id)  # Exclude the current user
+            .order_by(Message.timestamp.desc())
+            .distinct()
+            .all()
+        )
+        return contacts
+    
+    def get_last_message_time(self):
+        last_message = (
+            Message.query
+            .filter(or_(Message.sender_id == self.id, Message.recipient_id == self.id))
+            .order_by(Message.timestamp.desc())
+            .first()
+        )
+        if last_message:
+            time_ago = post_timestamp(last_message.timestamp)
+            return time_ago
+        else:
+            return None
+        
+    def get_last_message(self):
+        last_message = (
+            Message.query
+            .filter(or_(Message.sender_id == self.id, Message.recipient_id == self.id))
+            .order_by(Message.timestamp.desc())
+            .first()
+        )
+        print('last', last_message)
+        return last_message
     
     def serialize(self):
         return({
@@ -281,6 +317,7 @@ class Comment(db.Model):
             "likes": [like.serialize() for like in self.likes],
             "replies": [reply.serialize() for reply in self.get_replies()],
             "likes_count": self.likes_count(),
+            "liked": True if current_user.has_liked_comment(self) else False,
             "replies_count": self.replies_count(),
             "pic": self.commenter.image_file,
             "parent": self.parent.get_username() if self.parent else None

@@ -1,15 +1,35 @@
 const conversations = document.querySelectorAll('.conversation');
 const messageDisplay = document.querySelector('.message-display');
-
+const header = document.querySelector('.header')
+const headerUsername = document.querySelector('.header-username')
+const headerImg = document.querySelector('.header-img')
+const headerLastSeen =  document.querySelector('.header-lastseen')
+const headerLink =  document.querySelector('.header-link')
 
 conversations.forEach(convo => {
     convo.addEventListener('click', function() {
+        const user = this.dataset.user;
+        headerUsername.innerHTML = this.dataset.username;
+        headerImg.src = `/static/pics/${this.dataset.img}`;
+        const time = this.dataset.lastseen.split(" ")[0]
+        const unit = this.dataset.lastseen.split(" ")[1]
+        
+        if (time < 5 && unit == 'm') {
+            headerLastSeen.innerHTML = 'Active now'
+        }
+        else {
+            headerLastSeen.innerHTML = `Active ${this.dataset.lastseen} ago`;
+        }
+       
+        headerLink.href = `/users/${this.dataset.username}`;
         updateURL(convo)
-
         fetch(`get_messages/${this.dataset.user}`)
         .then(response => response.json())
         .then(data => {
+            console.log(data)
             displayMessages(data['conversation'])
+            header.style.display = 'flex';
+            header.style.borderBottom = '1px solid gainsboro';
         })
     })
 });
@@ -19,14 +39,19 @@ function displayMessages(history) {
     history.forEach(msg => {
         isRead(msg);
         const messageDiv = document.createElement('div');
-        messageDiv.innerHTML = msg['sender'] + ':' + msg['content'];
+        const container = document.createElement('div')
+        messageDiv.innerHTML = msg['sender'] + ': ' + msg['content'];
         if (msg['sender'] != msg['current_user']) {
+            container.setAttribute('class', 'message-container')
             messageDiv.setAttribute('class', 'message')
         }
         else {
+            container.setAttribute('class', 'message-sent-container')
             messageDiv.setAttribute('class', 'message-sent')
+            
         }
-        messageDisplay.appendChild(messageDiv);
+        container.appendChild(messageDiv)
+        messageDisplay.appendChild(container);
     });
 }
 

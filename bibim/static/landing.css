@@ -1,18 +1,31 @@
 body {
     margin: 0;
     padding: 0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
+.top-line {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: rgba(244, 19, 34, 0.505);
+    z-index: 9999;
+  }
+
 .navbar {
-    background-color: #f8f8f8;
-    height: 60px;
+    background-color: #ffffff;
+    height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 2%;
 }
 
 .navbar-logo {
+    width: 7%;
     font-size: 24px;
     font-weight: bold;
 }
@@ -26,7 +39,12 @@ body {
 
 .navbar-links li a {
     text-decoration: none;
-    color: #333;
+    color: #525960;
+    border-bottom: 3px solid transparent;
+}
+
+.navbar-links li a:hover {
+    border-bottom-color: rgba(244, 19, 34, 0.505);
 }
 
 .image-container {
@@ -34,17 +52,66 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
+}
+
+.image-container p {
+   margin-bottom: 30px;
 }
 
 .text {
     width: 30vw;
     height: 30vh;
-    position: absolute;
     z-index: 1;
 }
 
 img {
-    width: 100%;
+    width: 50%;
     height: auto;
+}
+
+.big-sign-up-button {
+    padding: 10px 20px;
+    background-color: orange;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+}
+
+.big-sign-up-button:hover {
+    background-color: rgb(231, 118, 12);
+}
+
+#logo-header {
+    margin-top: 20px;
+    width: 200px;
+}
+
+.spacer {
+    flex: 1;
+}
+
+footer {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: center;
+}
+  
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+  .logo img {
+    width: 50px; /* Adjust the width as needed */
+  }
+  
+  .logo,
+  .copyright {
+    margin: 10px;
+  }
+
+.sign-up-info {
+    display: flex;
 }
