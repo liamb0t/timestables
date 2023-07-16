@@ -8,6 +8,8 @@ const headerLink =  document.querySelector('.header-link')
 
 conversations.forEach(convo => {
     convo.addEventListener('click', function() {
+        messageDisplay.style.alignItems = 'normal';
+        messageDisplay.style.justifyContent = 'flex-end'
         const user = this.dataset.user;
         headerUsername.innerHTML = this.dataset.username;
         headerImg.src = `/static/pics/${this.dataset.img}`;

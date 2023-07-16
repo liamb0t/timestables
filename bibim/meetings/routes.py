@@ -1,18 +1,36 @@
 from flask import Blueprint, url_for, redirect, request, jsonify, render_template, flash
 from flask_login import current_user, login_required
 from bibim import db
-from bibim.models import Post, Comment, Meeting, Tag
-from bibim.meetings.forms import CommentForm, MeetingForm
+from bibim.models import Comment, Meeting, Like
+from bibim.meetings.forms import CommentForm, MeetingForm, SelectForm
 from bibim.posts.utils import post_timestamp
 from bibim.materials.utils import save_file, get_file_size
+from sqlalchemy import func
 
 meetings = Blueprint('meetings', __name__)
 
 @meetings.route("/meetings", methods=['GET', 'POST'])
 def load_meetings():
+    form = SelectForm()
     page = request.args.get('page', 1, type=int)
+    meetings = Meeting.query
+    if form.validate_on_submit():
+        filter = request.args.get('f', 1, type=str)
+        if filter:
+            if filter == 'new':
+                meetings = meetings.order_by(Meeting.date_posted.desc())
+            elif filter == 'old':
+                meetings = meetings.order_by(Meeting.date_posted.asc())
+            elif filter == 'comments':
+                meetings = meetings.join(Meeting.comments, isouter=True)\
+                            .group_by(Meeting)\
+                            .order_by(func.count(Comment.id).desc())
+            elif filter == 'likes':
+                meetings = meetings.join(Meeting.likes, isouter=True)\
+                            .group_by(Meeting)\
+                            .order_by(func.count(Like.id).desc())
     meetings = Meeting.query.order_by(Meeting.date_posted.desc()).paginate(page=page, per_page=15)
-    return render_template('meetings.html', meetings=meetings, post_timestamp=post_timestamp)
+    return render_template('meetings.html', meetings=meetings, post_timestamp=post_timestamp, form=form)
 
 @meetings.route("/meeting/<int:meeting_id>", methods=["POST", "GET"])
 @login_required
@@ -56,7 +74,7 @@ def create_meeting():
     if form.validate_on_submit():
         meeting = Meeting(title=form.title.data, fee=form.fee.data, capacity=form.capacity.data,
                             content=form.content.data, organizer=current_user, location=form.location.data, 
-                            tag=form.tag.data, time=form.time.data)
+                            tag=form.tag.data, start_time=form.start_time.data, start_date=form.start_date.data)
         db.session.add(meeting)
         if form.files.data:
             for file in form.files.data:

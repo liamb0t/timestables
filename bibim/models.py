@@ -225,7 +225,10 @@ class Post(db.Model):
         return f"Post('{self.id}', '{self.date_posted}')"
     
     def likes_count(self):
-        return len([likes for likes in self.likes])
+        return len([like for like in self.likes])
+    
+    def comments_count(self):
+        return len([comment for comment in self.comments])
     
     def serialize(self):
         payload = {
@@ -377,7 +380,10 @@ class Meeting(db.Model):
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
-    time = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    start_date = db.Column(db.DateTime, nullable=False)
+    end_date = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
     fee = db.Column(db.Integer, nullable=False, default=0)
     capacity = db.Column(db.Integer, nullable=False)
     location = db.Column(db.String(100), nullable=False)
@@ -387,6 +393,7 @@ class Meeting(db.Model):
     comments = db.relationship('Comment', backref='meeting')
     files = db.relationship('File', backref='files_meeting', lazy=True)
     likes = db.relationship('Like', backref='meeting')
+    going = db.relationship('User', backref='meeting')
 
     def likes_count(self):
         return len([likes for likes in self.likes])

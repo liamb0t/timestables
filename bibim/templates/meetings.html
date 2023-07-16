@@ -1,43 +1,98 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Meetings</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
+        <div>
+            <h2>Bibim Meetings</h1>
+            <p>Join an existing meeting or create your own and meet other teachers.</p>
+        </div>
+        <div>
+            <i class="fa-solid fa-pencil"></i>
+            <a class="create-btn" href="{{ url_for('meetings.create_meeting') }}">Create new meeting</a>
+        </div>
+        
+    </div>
 
-    <a href="{{ url_for('meetings.create_meeting', level=level) }}">Create</a>
+    <div class="materials-filters">
+        <form method="POST" action="" id="filter-submit">
+            {{ form.hidden_tag() }}
+            <div class="select-options" id="selectOptions">
+                <div class="adv-filter" data-para="new">Latest</div>
+                <div class="adv-filter" data-para="old">Oldest</div>
+                <div class="adv-filter" data-para="likes">Likes</div>
+                <div class="adv-filter" data-para="comments">Comments</div>
+                <div class="adv-filter" data-para="following">Following</div>
+            </div>
+               
 
-    <div class="material-posts">
+            {% if form.grade.errors %}
+            {{form.grade(class="form-control form-control-lg is-invalid")}}
+            <div class="invalid-feedback">
+                {% for error in form.grade.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+                {{ form.grade(class="filter-select")}}
+            {% endif %}
+
+            {% if form.publisher.errors %}
+                {{form.publisher(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.publisher.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {{ form.publisher(class="filter-select")}}
+            {% endif %}
+
+            {% if form.type.errors %}
+                {{form.type(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.type.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {{ form.type(class="filter-select")}}
+            {% endif %}
+
+            <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
+        </form>
+    </div>
+
+    <div class="event-grid">
+        {% if meetings.total == 0 %}
+            <h3>Hm...it seems like there are no results with those attributes. 🙅</h3>
+            <p>Try using a different filter or use the searchbar above.</p>
+        {% endif %}
         {% for meeting in meetings %}
-            <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id)}}">
-                <div class="material-post-container">
-                <img class="material-post-profile-picture" src="/static/pics/default.jpg" alt="Profile Picture">
-                <div>
-                    <div class="material-post-header">
-                        <div class="material-post-title">{{ meeting.title }}</div>
-                    </div>
-                    <div class="material-post-footer">
-                        <div class="material-post-user-info">
-                            <span class="material-post-author">{{ meeting.organizer.username }}</span>s
-                            <span>&bull;</span>
-                            <span class="material-post-date">{{ post_timestamp(meeting.date_posted) }}</span>
-                        </div>
-                        <div class="material-post-comment-info">
-                            <i class="fa-regular fa-heart"></i>
-                            <span class="material-post-likes">{{ meeting.likes_count() }}</span>
-                            <i class="fa-regular fa-comment"></i>
-                            <span class="material-post-comments">{{ meeting.comments_count() }}</span>
-                        </div>
-                    </div>
+                <div class="event">
+                    <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id)}}">
+                        <img src="/static/pics/default.jpg">
+                    </a>
+                    <p>{{ meeting.start_date.strftime('%B %d') }} at {{ meeting.start_time }}</p>
+                    <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id)}}"></a>
+                        <p class="material-post-title">{{ meeting.title }}</p>
+                    </a>
+                    <p>{{ meeting.location }}</p>
+                   
+                    <p>Status: <span class="event-status">Open</span></p>
                 </div>
-                </div>
-            </a>
+           
         {% endfor %}
     </div>
-    {% for page_num in meetings.iter_pages() %}
+    {% for page_num in meetings.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
         {% if page_num %}
-            <a class="btn btn-info mb4" href="{{ url_for('meetings.load_meetings', level=level, page=page_num) }}">{{ page_num }}</a>
+            {% if meetings.page == page_num %}
+                <a style="background-color: rgba(244, 130, 37, 1); color: white;" class="paginate-btn" href="{{ url_for('meetings.load_meetings', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="paginate-btn" href="{{ url_for('meetings.load_meetings', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
         {% else %}
             ...
         {% endif %}
     {% endfor %}    
-    
+    <script src="{{ url_for('static', filename='js/customSelectBtn.js') }}"></script>
 {% endblock content %}
 

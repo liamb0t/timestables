@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, TextAreaField, SubmitField, 
-                     BooleanField, PasswordField, MultipleFileField, SelectField)
+                     BooleanField, PasswordField, MultipleFileField, SelectField, SearchField)
 from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError
 from bibim.models import User
 
@@ -42,5 +42,5 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField('Reset Password')
 
 class SearchForm(FlaskForm):
-    query = StringField('Search', validators=[DataRequired()], render_kw={'placeholder': "Search..."})
+    query = SearchField('Search', validators=[DataRequired()], render_kw={'placeholder': "Search..."})
     submit = SubmitField('Search')

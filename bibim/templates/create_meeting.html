@@ -13,14 +13,64 @@
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
-                {% else %}
-                    {{ form.title(class="form-control form-control-lg")}}
-                {% endif %}
-                    
+                    {% else %}
+                        {{ form.title(class="form-control form-control-lg")}}
+                    {% endif %}
                 </div>
+
+                <div style="display: flex;">
+
+                    {% if form.start_date.errors %}
+                    {{form.start_date(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.start_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.start_date(class="form-control form-control-lg") }}
+                    {% endif %} 
+
+                    {% if form.start_time.errors %}
+                        {{form.start_time(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.start_time.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.start_time(class="form-control form-control-lg") }}
+                    {% endif %} 
+                </div>
+
+                <div class="end-date-container" style="display: none;">
+
+                    {% if form.end_date.errors %}
+                    {{form.end_date(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.end_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.end_date(class="form-control form-control-lg") }}
+                    {% endif %} 
+
+                    {% if form.end_time.errors %}
+                        {{form.end_time(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.end_time.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.end_time(class="form-control form-control-lg") }}
+                    {% endif %} 
+                </div>
+
+                <span class="toggle-btn">+ End date and time</span>
                 
                 <div>
-                    
                     {% if form.tag.errors %}
                         {{form.tag(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
@@ -34,7 +84,6 @@
                 </div>
 
                 <div>
-                    
                     {% if form.fee.errors %}
                         {{form.fee(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
@@ -46,16 +95,7 @@
                         {{ form.fee(class="form-control form-control-lg") }}
                     {% endif %}
 
-                     {% if form.location.errors %}
-                        {{form.location(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {% for error in form.location.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.location(class="form-control form-control-lg") }}
-                    {% endif %}
+                   
 
                     {% if form.capacity.errors %}
                         {{form.capacity(class="form-control form-control-lg is-invalid")}}
@@ -68,16 +108,7 @@
                         {{ form.capacity(class="form-control form-control-lg") }}
                     {% endif %}
 
-                    {% if form.time.errors %}
-                        {{form.time(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {% for error in form.time.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.time(class="form-control form-control-lg") }}
-                    {% endif %}
+               
                 </div>
                    
                 <div>
@@ -112,6 +143,16 @@
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
         </form>
+         <div id="map"></div>
     </div>
-    <script src="{{ url_for('static', filename='js/create_material.js') }}"></script>
+    <script>
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+          key: "AIzaSyACQeQ8SDgA44of8xWmS9YbgH_hBp-QJw8",
+          v: "weekly",
+          // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+          // Add other bootstrap parameters as needed, using camel case.
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/create_meeting.js') }}"></script>
+   
 {% endblock content %}

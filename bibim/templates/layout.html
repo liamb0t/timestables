@@ -40,22 +40,22 @@
                 </a>
               </div>
              
-              <div class="navbar-form-container">
-                <form method="POST" action="{{ url_for('main.search') }}">
-                  {{ search_form.hidden_tag() }}
-                    <div style="flex-grow: 1;">
-                        {% if search_form.query.errors %}
-                            {{search_form.query(class="search_form-control search_form-control-lg is-invalid")}}
-                            <div class="invalid-feedback">
-                                {% for error in search_form.query.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ search_form.query(class="search_form-control search_form-control-lg")}}
-                        {% endif %}
-                    </div>
-                </form>
+              <div class="navbar-form-container" style="flex-grow: 1;">
+                <div style="display: flex;">
+                  <form method="POST" action="{{ url_for('main.search') }}">
+                    {{ search_form.hidden_tag() }}
+                          {% if search_form.query.errors %}
+                              {{search_form.query(class="search_form-control search_form-control-lg is-invalid")}}
+                              <div class="invalid-feedback">
+                                  {% for error in search_form.query.errors %}
+                                      <span>{{ error }}</span>
+                                  {% endfor %}
+                              </div>
+                          {% else %}
+                              {{ search_form.query(class="search_form-control search_form-control-lg")}}
+                          {% endif %}
+                  </form>
+                </div>
               </div>
              
               <div>
@@ -134,7 +134,7 @@
                             <div class="announcement-bar-container">
                                 <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + post.author.image_file) }}">
                                 <div class="announcement-bar-header">
-                                    <a href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.content | truncate(30, True, '')}}</a>
+                                    <a href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.content | truncate(30, True, '')}}</a>                             
                                 </div>
                             </div>
                         </li>
