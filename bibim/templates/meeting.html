@@ -17,9 +17,10 @@
 
     <div class="content">
       <p>{{ meeting.content }}</p>
+      <p>{{ meeting.address }}</p>
     </div>
 
-
+    <div id="map" data-lng="{{ meeting.lng }}" data-lat="{{ meeting.lat }}"></div>
 
     <div class="uploads">
       {% if meeting.files|length != 0 %}
@@ -143,6 +144,8 @@
     </form>
     
   </div>
+ 
+  <script src="{{ url_for('static', filename='js/map.js') }}"></script>
   <script src="{{ url_for('static', filename='js/material.js') }}"></script>
 {% endblock content %}
 

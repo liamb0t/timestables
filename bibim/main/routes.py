@@ -31,6 +31,7 @@ prompts = [
 def inject():
     return dict(search_form=SearchForm())
 
+
 @main.route("/search", methods=['GET', 'POST'])
 def search():
   
@@ -48,9 +49,11 @@ def search():
     return render_template('search.html', posts=posts, meetings=meetings, comments=comments, materials=materials,
                            users=users)
 
+
 @main.route("/")
 def landing():
     return render_template('landing_page.html')
+
 
 @main.route("/login", methods=['GET', 'POST'])
 def login():
@@ -60,7 +63,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrpyt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
+            login_user(user)
             nextpage = request.args.get('next')
             flash('Login succesful', 'success')
             return redirect(url_for(nextpage)) if nextpage else redirect(url_for('main.home'))
@@ -85,6 +88,7 @@ def register():
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
 
+
 @main.route("/reset_password", methods=['GET','POST'])
 def reset_request():
     if current_user.is_authenticated:
@@ -96,6 +100,7 @@ def reset_request():
         flash('Email has been sent with instructions to reset your password', 'info')
         return redirect(url_for('main.login'))
     return render_template('reset_request.html', title='Reset Password', form=form)
+
 
 @main.route("/reset_password/<token>", methods=['GET','POST'])
 def reset_token(token):
@@ -185,6 +190,7 @@ def like_comment(comment_id):
         'liked': current_user.has_liked_comment(comment)
     })
 
+
 @main.route("/comment/delete/<int:comment_id>", methods=["POST"])
 @login_required
 def delete_comment(comment_id):
@@ -197,6 +203,7 @@ def delete_comment(comment_id):
         'message': 'Your comment has been deleted.'
     })
 
+
 @main.route("/open_notification/<int:id>", methods=["POST"])
 @login_required
 def open_notification(id):
@@ -206,6 +213,7 @@ def open_notification(id):
     return jsonify({
         'success': 'nice'
     }) 
+
 
 @main.route("/get_messages/<int:user_id>")
 @login_required

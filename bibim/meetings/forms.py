@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, TextAreaField, SubmitField, 
-                     BooleanField, PasswordField, MultipleFileField, SelectField, HiddenField,
+                     BooleanField, SearchField, MultipleFileField, SelectField, HiddenField,
                      IntegerField, TimeField, FileField)
-from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError
+from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError, Optional
 from wtforms_components import DateField
 from flask_wtf.file import FileAllowed
 
@@ -12,14 +12,17 @@ class MeetingForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()], render_kw={'placeholder': 'Event name'})
     content = TextAreaField('Description', validators=[DataRequired()], render_kw={'placeholder': 'Text'})
     location = StringField('Location', validators=[DataRequired()], render_kw={'placeholder': 'Meeting location'})
-    start_date = DateField()
-    start_time = TimeField()
-    end_date = DateField()
-    end_time = TimeField()
+    start_date = DateField(validators=[DataRequired()])
+    start_time = TimeField(validators=[DataRequired()])
+    end_date = DateField(validators=[Optional()])
+    end_time = TimeField(validators=[Optional()])
     cover_pic = FileField()
+    lat = HiddenField('lat', validators=[Optional()])
+    lng = HiddenField('lng', validators=[Optional()])
+    address = HiddenField('address')
     files = MultipleFileField('Attachments', 
                             validators=[FileAllowed(['jpg', 'png', 'mp4', 'mp3', 'ppt'])])
-    fee = IntegerField('Fee', render_kw={'placeholder': 'Fee'})
+    fee = IntegerField('Fee', validators=[Optional()], render_kw={'placeholder': 'Participation fee in ₩'})
     capacity = IntegerField('Capacity', render_kw={'placeholder': 'Maximum number of attendees'})
     tag = SelectField('Type of Meeting', choices=[(x, x) for x in ['Select a tag', 'Language exchange', 'Music',
                                                                               'Social', 'Sports', 'Band',
@@ -39,15 +42,11 @@ class CommentForm(FlaskForm):
     submit = SubmitField('')
 
 class SelectForm(FlaskForm):
-    grade = SelectField('Location', choices=[('0', 'Location'), ('All', 'All'), ('1', 'Gyeonggi-do'), ('2', 'Gangwon-do'), ('3', 'Chungcheongbuk-do'), ('4', 'Chungnam-do'),
-                                          ('5', 'Gyeongsang-do'), ('6', 'Jeollabuk-do'), ('7', 'Gyeongsangnam-do'), 
-                                          ('1', 'Jeollanam-do'), ('1', 'Jeju-do'),])
-    
-    publisher = SelectField('Publisher', choices=[(x, x) for x in ['City', 'All', 'YBM Choi ', 'YBM Kim ',
-                                                                              'Cheonjae', 'Daegyo', 'Donga',
-                                                                            ]])
     type = SelectField('Type of Meeting', choices=[(x, x) for x in ['Meeting Type', 'All', 'Sports', 'Social',
                                                                               'Outdoors', 'Language', 'Cultural',
                                                                               'Art', 'Hobbies', 'Others'
                                                                             ]])
     submit = SubmitField('Filter')
+
+class SearchForm(FlaskForm):
+    search = SearchField('Search', render_kw={'placeholder': 'City, province...'})
