@@ -20,6 +20,10 @@ tags_table = db.Table('tags_table',
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
     db.Column('material_id', db.Integer, db.ForeignKey('material.id'), primary_key=True))
 
+going_table = db.Table('going_table',
+                    db.Column('meeting_id', db.Integer, db.ForeignKey('meeting.id'), primary_key=True),
+                    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True))
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
@@ -122,25 +126,7 @@ class User(db.Model, UserMixin):
     def has_liked_comment(self, comment):
         return Like.query.filter(
             Like.user_id == self.id,
-            Like.comment_id == comment.id).count() > 0
-
-    def like_meeting(self, meeting):
-        like = Like(user_id=self.id, meeting_id=meeting.id)
-        db.session.add(like)
-
-    def unlike_meeting(self, meeting):
-        Notification.query.filter_by(
-            name='meeting_like',
-            user_id=self.id,
-            id=self.id).delete()
-        Like.query.filter_by(
-            user_id=self.id,
-            meeting_id=meeting.id).delete()
-
-    def has_liked_meeting(self, meeting):
-        return Like.query.filter(
-            Like.user_id == self.id,
-            Like.meeting_id == meeting.id).count() > 0       
+            Like.comment_id == comment.id).count() > 0    
     
     def new_messages(self):
         return Message.query.filter_by(recipient=self).filter(
@@ -152,6 +138,15 @@ class User(db.Model, UserMixin):
             (Message.author == user) & (Message.recipient == self),
             (Message.author == self) & (Message.recipient == user)
         )).order_by(Message.timestamp.asc()).all()
+    
+    def my_meetings(self):
+        current_datetime = datetime.utcnow()
+        going_meetings = Meeting.query.filter(
+        Meeting.going.any(id=self.id),
+        Meeting.start_date >= current_datetime.date(),
+        Meeting.start_time >= current_datetime.time()
+        ).all()
+        return going_meetings
 
     def new_notifications(self):
         return Notification.query.filter_by(user_id=self.id).filter(
@@ -396,13 +391,24 @@ class Meeting(db.Model):
     comments = db.relationship('Comment', backref='meeting')
     files = db.relationship('File', backref='files_meeting', lazy=True)
     likes = db.relationship('Like', backref='meeting')
-    going = db.relationship('User', backref='meeting')
+    going = db.relationship('User', secondary='going_table', backref=db.backref('going', lazy='dynamic'), lazy='joined')
 
     def likes_count(self):
         return len([likes for likes in self.likes])
 
     def comments_count(self):
         return len([comment for comment in self.comments])
+    
+    def add(self, user):
+        if user not in self.going:
+            self.going.append(user)
+
+    def remove(self, user):
+        if user in self.going:
+            self.going.remove(user)
+
+    def is_attending(self, user):
+        return True if user in self.going else False
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)

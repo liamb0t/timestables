@@ -2,7 +2,7 @@ from flask import Blueprint, url_for, redirect, request, jsonify, render_templat
 from flask_login import current_user, login_required
 from bibim import db
 from bibim.models import Comment, Meeting, Like
-from bibim.meetings.forms import CommentForm, MeetingForm, SelectForm, SearchForm
+from bibim.meetings.forms import CommentForm, MeetingForm, FilterForm
 from bibim.posts.utils import post_timestamp
 from bibim.materials.utils import save_file, get_file_size
 from sqlalchemy import func, or_
@@ -11,12 +11,15 @@ meetings = Blueprint('meetings', __name__)
 
 @meetings.route("/meetings", methods=['GET', 'POST'])
 def load_meetings():
-    form = SelectForm()
-    search_form = SearchForm()
+    form = FilterForm()
     page = request.args.get('page', 1, type=int)
     meetings = Meeting.query
     if form.validate_on_submit():
         filter = request.args.get('f', 1, type=str)
+        if form.type.data:
+            meeting_type = form.type.data
+            if meeting_type != 'All' and meeting_type != 'Meeting Type':
+                meetings = meetings.filter_by(tag=meeting_type)
         if filter:
             if filter == 'new':
                 meetings = meetings.order_by(Meeting.date_posted.desc())
@@ -30,12 +33,14 @@ def load_meetings():
                 meetings = meetings.join(Meeting.likes, isouter=True)\
                             .group_by(Meeting)\
                             .order_by(func.count(Like.id).desc())
+        if form.search.data:
+            query = form.search.data
+            meetings = Meeting.query.filter(or_(Meeting.title.ilike(f'%{query}%'),
+                        Meeting.address.ilike(f'%{query}%')))
+    meetings = meetings.paginate(page=page, per_page=15)
+    return render_template('meetings.html', meetings=meetings, form=form)
                 
-    if search_form.validate_on_submit():
-        search_query = search_form.search.data
-        meetings = Meeting.query.filter(or_(Meeting.title.ilike(f'%{search_query}%'),
-                            Meeting.address.ilike(f'%{search_query}%'))).paginate(page=page, per_page=15)
-        return render_template('meetings.html', meetings=meetings, form=form, filter_form=search_form)
+   
     
     meetings = Meeting.query.order_by(Meeting.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('meetings.html', meetings=meetings, post_timestamp=post_timestamp, form=form, filter_form=search_form)
@@ -110,4 +115,18 @@ def like_meeting(meeting_id):
             meeting.organizer.add_notification('meeting_like', like.id)
     return jsonify({
         'liked': current_user.has_liked_meeting(meeting)
+    })
+
+@meetings.route("/going/<int:meeting_id>", methods=["POST", "GET"])
+@login_required
+def going(meeting_id):
+    meeting = Meeting.query.filter_by(id=meeting_id).first()
+    is_attending = meeting.is_attending(current_user)
+    if is_attending:
+        meeting.remove(current_user)
+    else:
+        meeting.add(current_user)
+    db.session.commit()
+    return jsonify({
+        'going': is_attending
     })

@@ -5,6 +5,18 @@
       <img src="{{ url_for('static', filename='pics/' + meeting.organizer.image_file)}}" alt="Profile Picture" class="profile-picture">
       <div class="username">{{ meeting.organizer.username }}</div>
       <div class="date">{{ post_timestamp(meeting.date_posted) }}</div>
+      {% if meeting.is_attending(current_user) %}
+        <button class="create-btn" data-id="{{ meeting.id }}">
+          <i class="fa-solid fa-check"></i>
+          Not Going
+        </button>
+      {% else %}
+        <div class="create-btn" data-id="{{ meeting.id }}">
+          <i class="fa-solid fa-check"></i>
+          Going
+        </div>
+      {% endif %}
+      
     </div>
     <h1 class="title">{{ meeting.title }}</h1>
 
@@ -13,14 +25,15 @@
       {{ meeting.location }}
       {{ meeting.capacity }}
       {{ meeting.fee }}
+      {{ meeting.tag }}
     </div>
 
     <div class="content">
       <p>{{ meeting.content }}</p>
-      <p>{{ meeting.address }}</p>
+      <p class="address">{{ meeting.address }}</p><span class="focus-map">[ View map ]</span>
     </div>
 
-    <div id="map" data-lng="{{ meeting.lng }}" data-lat="{{ meeting.lat }}"></div>
+    <div id="map" data-lng="{{ meeting.lng }}" data-lat="{{ meeting.lat }}" tabindex="0"></div>
 
     <div class="uploads">
       {% if meeting.files|length != 0 %}
@@ -144,7 +157,7 @@
     </form>
     
   </div>
- 
+  <script src="{{ url_for('static', filename='js/going.js') }}"></script>
   <script src="{{ url_for('static', filename='js/map.js') }}"></script>
   <script src="{{ url_for('static', filename='js/material.js') }}"></script>
 {% endblock content %}

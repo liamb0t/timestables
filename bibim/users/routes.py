@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from bibim import db
 from bibim.users.forms import UpdateAccountForm
 from bibim.posts.forms import FollowForm
-from bibim.models import User, Post, Material, Comment
+from bibim.models import User, Post, Material, Comment, Meeting
 from bibim.users.utils import date_member_since, save_picture
 from datetime import datetime
 
@@ -34,7 +34,8 @@ def unfollow(username):
     return redirect(url_for('users.user_profile', username=username))
 
 @users.route("/users/<string:username>")
-def user_profile(username):
+@users.route("/users/<string:username>/<string:filter>")
+def user_profile(username, filter=None):
     form = FollowForm()
     user = User.query.filter_by(username=username).first_or_404()
     followers = user.followers.all()
@@ -42,9 +43,19 @@ def user_profile(username):
     followers_count = len(user.followers.all())
     following_count = len(user.following.all())
     member_time = date_member_since(user.date_joined)
+    posts = Post.query.filter_by(author=user).all()
+    if filter:
+        if filter == 'meetings':
+            posts = Meeting.query.filter_by(organizer=user).all()
+        elif filter == 'materials':
+            posts = Material.query.filter_by(creator=user).all()
+        elif filter == 'comments':
+            posts = Comment.query.filter_by(commenter=user).all()
+        elif filter == 'posts':
+            pass
     return render_template('user_profile.html', user=user, form=form, followers_count=followers_count, 
                            following_count=following_count, member_time=member_time, 
-                           followers=followers, following=following)
+                           followers=followers, following=following, posts=posts)
 
 @users.route("/users/<string:username>")
 def edit_profile(username):

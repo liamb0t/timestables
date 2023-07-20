@@ -105,7 +105,6 @@ def create_material(level):
     form.grade.choices = get_grades(level)
     if form.validate_on_submit():
         tagnames = [form.publisher.data, form.lesson.data, form.material_type.data]
-        print(request.form.get('ckeditor'))
         material = Material(title=form.title.data, level=level, grade=form.grade.data, 
                             content=request.form.get('ckeditor'), creator=current_user)
         for tagname in tagnames:

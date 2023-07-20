@@ -132,6 +132,24 @@
             
             
             <div class="announcement-bar">
+              {% if current_user.my_meetings()|length > 0 %}
+              <div style="display: flex; align-items: center;">
+                <i class="fa-solid fa-calendar"></i>
+                <h5>Your Upcoming Meetings</h5>
+              </div>
+                <ul class="list-group">
+                  {% for meeting in current_user.my_meetings() %}
+                      <li>
+                          <div class="announcement-bar-container">
+                              <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + meeting.organizer.image_file) }}">
+                              <div class="announcement-bar-header">
+                                  <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id) }}">{{ meeting.title | truncate(30, True, '')}}</a>                             
+                              </div>
+                          </div>
+                      </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
                 <div style="display: flex; align-items: center;">
                     <i class="fa-solid fa-arrow-trend-up"></i>
                     <h5>Popular Posts of the Day</h5>

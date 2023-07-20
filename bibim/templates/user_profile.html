@@ -35,10 +35,34 @@
             <span class="user-page-label">Following</span>
         </div>
     </div>
-    <div class="user-page-about-section">
+    <div class="user-about">
         {% if user.about %}
             <p>{{ user.about }} </p>
         {% endif %}
     </div>
+    <div class="user-filters">
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='posts')}}">
+            Posts
+        </a>
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='materials')}}">
+            Materials
+        </a>
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='meetings')}}">
+            Meetings
+        </a>
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='comments')}}">
+            Comments
+        </a>
+    </div>
+    <div class="user-content">
+        {% if posts %}
+            {% for post in posts %}
+            <div>
+                {{ post.content }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
 </div>
 {% endblock content %}

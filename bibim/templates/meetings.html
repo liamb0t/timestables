@@ -6,13 +6,13 @@
             <p>Join an existing meeting or create your own and meet other teachers</p>
         </div>
         <div>
-            <i class="fa-solid fa-pencil"></i>
-            <a class="create-btn" href="{{ url_for('meetings.create_meeting') }}">Create new meeting</a>
+            <a class="create-btn" href="{{ url_for('meetings.create_meeting') }}">
+                <i class="fa-solid fa-plus" style="color: white;"></i>
+                New
+            </a>
         </div>
-        
     </div>
     
-
     <div class="materials-filters">
         <form method="POST" action="" id="filter-submit">
             {{ form.hidden_tag() }}
@@ -23,8 +23,8 @@
                 <div class="adv-filter" data-para="comments">Comments</div>
                 <div class="adv-filter" data-para="following">Following</div>
             </div>
-               
-            {{ filter_form.search }}
+
+            {{ form.search(class='filter-select') }}
 
             {% if form.type.errors %}
                 {{form.type(class="form-control form-control-lg is-invalid")}}
@@ -57,7 +57,9 @@
                     </a>
                     <p>{{ meeting.location }}</p>
                    
-                    <p>Status: <span class="event-status">Open</span></p>
+                    {% if meeting.going|length > 0 %}
+                        <p>Going <span class="event-status">{{ meeting.going|length }}</span></p>
+                    {% endif %}
                 </div>
            
         {% endfor %}
@@ -73,6 +75,6 @@
             ...
         {% endif %}
     {% endfor %}    
-    <script src="{{ url_for('static', filename='js/customSelectBtn.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loadMeetings.js') }}"></script>
 {% endblock content %}
 

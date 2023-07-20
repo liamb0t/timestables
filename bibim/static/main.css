@@ -1040,7 +1040,7 @@ a:hover i {
   align-items: center;
 }
 
-.materials-nav a {
+.materials-nav, .user-filters a {
   color: #757575;
   border-radius: 10px;
   text-decoration: none;
@@ -1048,7 +1048,9 @@ a:hover i {
   margin-right: 5px;
 }
 
-.materials-nav a:hover {
+
+
+.materials-nav a:hover, .user-filters a:hover {
   color: rgb(27, 26, 26);
   background-color: #d1d1d1a5;
 }

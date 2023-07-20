@@ -59,6 +59,11 @@ function geocode() {
 }
 
 
+document.querySelector('.focus-map').addEventListener('click', function() {
+  document.querySelector('#map').focus()
+})
+
+
 
 
 

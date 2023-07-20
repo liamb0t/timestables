@@ -11,7 +11,7 @@ from flask_wtf.file import FileAllowed
 class MeetingForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()], render_kw={'placeholder': 'Event name'})
     content = TextAreaField('Description', validators=[DataRequired()], render_kw={'placeholder': 'Text'})
-    location = StringField('Location', validators=[DataRequired()], render_kw={'placeholder': 'Meeting location'})
+    location = StringField('Location', validators=[DataRequired()], render_kw={'placeholder': 'Place name'})
     start_date = DateField(validators=[DataRequired()])
     start_time = TimeField(validators=[DataRequired()])
     end_date = DateField(validators=[Optional()])
@@ -41,12 +41,14 @@ class CommentForm(FlaskForm):
     reply_id = HiddenField('reply_id')
     submit = SubmitField('')
 
-class SelectForm(FlaskForm):
-    type = SelectField('Type of Meeting', choices=[(x, x) for x in ['Meeting Type', 'All', 'Sports', 'Social',
+class FilterForm(FlaskForm):
+    type = SelectField('Type of Meeting', validators=[Optional()], choices=[(x, x) for x in ['Meeting Type', 'All', 'Sports', 'Social',
                                                                               'Outdoors', 'Language', 'Cultural',
                                                                               'Art', 'Hobbies', 'Others'
                                                                             ]])
+    search = SearchField('Search', validators=[Optional()], render_kw={'placeholder': 'City, province...'})
     submit = SubmitField('Filter')
 
-class SearchForm(FlaskForm):
-    search = SearchField('Search', render_kw={'placeholder': 'City, province...'})
+
+
+   
