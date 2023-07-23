@@ -187,3 +187,10 @@ def delete_material(material_id):
     db.session.commit()
     flash('Your material has been deleted!', 'success')
     return redirect(url_for('materials.load_materials, level=material.level'))
+
+
+@materials.route('/forum', methods=["POST", "GET"])
+def forum():
+    page = request.args.get('page', 1, type=int)
+    posts = Material.query.filter_by(level='teaching').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    return render_template('forum.html', materials=posts)

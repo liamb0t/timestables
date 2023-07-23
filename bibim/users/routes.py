@@ -6,6 +6,7 @@ from bibim.posts.forms import FollowForm
 from bibim.models import User, Post, Material, Comment, Meeting
 from bibim.users.utils import date_member_since, save_picture
 from datetime import datetime
+from bibim.posts.utils import post_timestamp
 
 users = Blueprint('users', __name__)
 
@@ -43,19 +44,21 @@ def user_profile(username, filter=None):
     followers_count = len(user.followers.all())
     following_count = len(user.following.all())
     member_time = date_member_since(user.date_joined)
-    posts = Post.query.filter_by(author=user).all()
+    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).all()
     if filter:
         if filter == 'meetings':
-            posts = Meeting.query.filter_by(organizer=user).all()
-        elif filter == 'materials':
-            posts = Material.query.filter_by(creator=user).all()
-        elif filter == 'comments':
-            posts = Comment.query.filter_by(commenter=user).all()
+            posts = Meeting.query.filter_by(organizer=user).order_by(Meeting.date_posted.desc()).all()
+        elif filter == 'materials': 
+            posts = Material.query.filter_by(creator=user).order_by(Material.date_posted.desc()).all()
+        elif filter == 'comments':  
+            posts = Comment.query.filter_by(commenter=user).order_by(Comment.date_posted.desc()).all()
+        elif filter == 'questions':
+            posts = Material.query.filter_by(creator=user, level='questions').order_by(Material.date_posted.desc()).all()
         elif filter == 'posts':
             pass
     return render_template('user_profile.html', user=user, form=form, followers_count=followers_count, 
                            following_count=following_count, member_time=member_time, 
-                           followers=followers, following=following, posts=posts)
+                           followers=followers, following=following, posts=posts, post_timestamp=post_timestamp)
 
 @users.route("/users/<string:username>")
 def edit_profile(username):

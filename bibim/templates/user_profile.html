@@ -7,62 +7,154 @@
         <div class="user-page-profile-info">
             <div class="user-page-user-bar">
                 <h2 class="user-page-username">{{ user.username }}</h2>
-              
+                
                 {% if current_user != user %}
+                <div>
                     <button class="user-page-follow-button">Follow</button>
                     <a href="{{ url_for('posts.inbox', user=user.id) }}">
                         <button class="user-page-message-button">Message</button>
                     </a>
+                </div>
+                   
                 {% else %}
                     <a href="{{ url_for('users.account') }}">
                         <button class="user-page-message-button">Edit Profile</button>
                     </a>
                 {% endif %}
             </div>
+
+            <div class="user-page-stats">
+                <div class="user-page-stat">
+                    <h3 class="user-page-count">{{ user.karma }}</h3>
+                    <span class="user-page-label">Reputation</span>
+                </div>
+                <div class="user-page-stat">
+                    <h3 class="user-page-count">{{ followers_count }}</h3>
+                    <span class="user-page-label">Followers</span>
+                </div>
+                <div class="user-page-stat">
+                    <h3 class="user-page-count">{{ following_count}}</h3>
+                    <span class="user-page-label">Following</span>
+                </div>
+            </div>
+
+            <div class="user-about">
+                {% if user.about %}
+                    <p>{{ user.about }} </p>
+                {% endif %}
+            </div>
         </div>
+       
     </div>
-    <div class="user-page-stats">
-        <div class="user-page-stat">
-            <h3 class="user-page-count">{{ user.karma }}</h3>
-            <span class="user-page-label">Reputation</span>
-        </div>
-        <div class="user-page-stat">
-            <h3 class="user-page-count">{{ followers_count }}</h3>
-            <span class="user-page-label">Followers</span>
-        </div>
-        <div class="user-page-stat">
-            <h3 class="user-page-count">{{ following_count}}</h3>
-            <span class="user-page-label">Following</span>
-        </div>
-    </div>
-    <div class="user-about">
-        {% if user.about %}
-            <p>{{ user.about }} </p>
-        {% endif %}
-    </div>
+    
     <div class="user-filters">
-        <a href="{{ url_for('users.user_profile', username=user.username, filter='posts')}}">
-            Posts
-        </a>
-        <a href="{{ url_for('users.user_profile', username=user.username, filter='materials')}}">
-            Materials
-        </a>
-        <a href="{{ url_for('users.user_profile', username=user.username, filter='meetings')}}">
-            Meetings
-        </a>
-        <a href="{{ url_for('users.user_profile', username=user.username, filter='comments')}}">
-            Comments
-        </a>
+        <a class="active" href="{{ url_for('users.user_profile', username=user.username, filter='posts')}}">Posts</a>
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='materials')}}">Materials</a>
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='questions ')}}">Questions</a>
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='meetings')}}">Meetings</a>
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='comments')}}">Comments</a>
     </div>
     <div class="user-content">
         {% if posts %}
             {% for post in posts %}
             <div>
-                {{ post.content }}
+                {% if post.__class__.__name__ == 'Post' %}
+                    <a href="{{ url_for('posts.post', post_id=post.id)}}" class="user-a">
+                        <div class="post">
+                            <div class="post-header">
+                            <p class="post-date">Posted {{ post_timestamp(post.date_posted) }} ago</p>
+                            </div>
+                            <div class="post-content">
+                            <p id="post-content-{{ post.id }}">{{ post.content }}</p>
+                            </div>
+                            <div class="post-likes" style="display: flex;">
+                                <p class="like-counter" id="like-counter-10" data-count="{{ post.likes_count() }}">{{ post.likes_count()}} likes</p>
+                                <p class="like-counter" id="like-counter-10" data-count="{{ post.comments_count() }}">{{ post.comments_count()}} comments</p>
+                            </div>
+                        </div>
+                    </a>
+                   
+                {% elif post.__class__.__name__ == 'Material' %}
+                    <a href="{{ url_for('materials.material', material_id=post.id)}}">
+                        <div class="material-post-container">
+                        <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + post.creator.image_file)}}" alt="Profile Picture">
+                        <div>
+                            <div class="material-post-header">
+                                <div class="material-post-grade">Grade {{ post.grade }}</div>
+                                <div class="material-post-title">{{ post.title }}</div>
+                                
+                            </div>
+                            <div class="material-post-footer">
+                                <div class="material-post-user-info">
+                                    <span class="material-post-author">Posted by {{ post.creator.username }}</span>
+                                    
+                                    <span class="material-post-date">{{ post_timestamp(post.date_posted) }} ago</span>
+                                </div>
+                            
+                                <div class="material-post-comment-info">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <span class="material-post-likes">{{ post.likes_count() }}</span>
+                                    <i class="fa-regular fa-comment"></i>
+                                    <span class="material-post-comments">{{ post.comments_count() }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </a>
+                {% elif post.__class__.__name__ == 'Meeting' %}
+                    <a href="{{ url_for('meetings.meeting', meeting_id=post.id)}}" class="user-a">
+                        <div class="post">
+                            <div class="post-header">
+                                <p class="post-date">Posted {{ post_timestamp(post.date_posted) }} ago</p>
+                            </div>
+                            <div class="post-content">
+                                <p id="post-content-{{ post.id }}">{{ post.title }}</p>
+                            </div>
+                            <div class="post-likes" style="display: flex;">
+                                <p class="like-counter" id="like-counter-10" data-count="{{ post.likes_count() }}">{{ post.going|length}} going</p>
+                                <p class="like-counter" id="like-counter-10" data-count="{{ post.comments_count() }}">{{ post.comments_count()}} comments</p>
+                            </div>
+                        </div>
+                    </a>
+                {% elif post.__class__.__name__ == 'Comment' %}
+                    {% if post.post_id %}
+                        <a href="{{ url_for('posts.post', post_id=post.post.id)}}" class="user-a">
+                        {% set coms = post.post.comments_count() %}
+                        {% if post.post.author == user%}
+                            {% set head = "their own post" %}
+                        {% else %}
+                            {% set head = post.post.author.username + "'s post" %}
+                        {% endif %}
+                    {% elif post.material_id %}
+                        <a href="{{ url_for('materials.material', material_id=post.material.id)}}" class="user-a">
+                        {% set coms = post.material.comments_count() %}
+                        {% set head = post.material.title %}
+                    {% elif post.meeting_id %}  
+                        <a href="{{ url_for('meetings.meeting', meeting_id=post.meeting.id)}}" class="user-a">
+                        {% set coms = post.meeting.comments_count() %}
+                        {% set head = post.meeting.title %}
+                    {% endif %}
+                        <div class="post">
+                            <div class="post-content">
+                                <p id="post-content-{{ post.id }}">{{ user.username}} commented on {{ head }}</p>
+                            </div>
+                            <div class="post-content">
+                                <p id="post-content-{{ post.id }}">{{ post.content}}</p>
+                            </div>
+                            <div class="post-likes" style="display: flex;">
+                                <p class="like-counter" id="like-counter-10" data-count="{{ post.likes_count() }}">{{ post.going|length}} going</p>
+                                <p class="like-counter">{{ coms }} comments</p>
+                                <p class="post-date">Posted {{ post_timestamp(post.date_posted) }} ago</p>
+                              
+                            </div>
+                        </div>
+                    </a>
+                {% else %}
+                {% endif %}
             </div>
             {% endfor %}
         {% endif %}
     </div>
-
+    <script src="{{ url_for('static', filename='js/user_profile.js') }}"></script>
 </div>
 {% endblock content %}

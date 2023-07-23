@@ -41,16 +41,13 @@
             <a href="{{ url_for('materials.load_materials', level=level) }}">Other</a>
     {% endif %}
     </nav>
-
+    
     <div class="materials-filters">
         <form method="POST" action="" id="filter-submit">
             {{ form.hidden_tag() }}
             {% if level == 'camp' %}
                
             {% else %}
-
-                
- 
                 <div class="select-options" id="selectOptions">
                    <div class="adv-filter" data-para="new">Latest</div>
                    <div class="adv-filter" data-para="old">Oldest</div>

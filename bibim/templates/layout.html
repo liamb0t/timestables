@@ -78,21 +78,22 @@
         <div class="wrapper">
             <div class="sidebar">
                 <ul>
-                  <li><a href="{{ url_for('main.home') }}"><i class="fa fa-house"></i>Home</a></li>
-                  <li><a id="materials-link" href="#"><i class="fa fa-book"></i>Library</a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa-solid fa-seedling"></i>Elementary</a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='middle') }}"><i class="fa fa-school"></i>Middle school</a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='high') }}"><i class="fa fa-graduation-cap"></i>High school</a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-tent"></i>Camp</a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='games') }}"><i class="fa fa-gamepad"></i>Games</a></li>
+                  <li><a href="{{ url_for('main.home') }}"><i class="fa fa-house"></i><span>Home</span></a></li>
+                  <li><a id="materials-link" href="#"><i class="fa fa-book"></i><span>Library</span></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa-solid fa-seedling"></i><span>Elementary</span></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='middle') }}"><i class="fa fa-school"></i><span>Middle School</span></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='high') }}"><i class="fa fa-graduation-cap"></i><span>High School</span></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-tent"></i><span>Camp</span></a></li>
+                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='games') }}"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
                   
-                  <li><a href="{{ url_for('materials.load_materials', level='teaching') }}"><i class="fa fa-chalkboard-user"></i>Teaching Advice</a></li>
-                  <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i>Hall of Fame</a></li>
-                  <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-business-time "></i>Meetings</a></li>
+                  <li><a href="{{ url_for('materials.forum') }}"><i class="fa fa-chalkboard-user"></i><span>Questions</span></a></li>
+                  <li><a href="{{ url_for('materials.forum') }}"><i class="fa-solid fa-globe"></i><span>Community</span></a></li>
+                  <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i><span>Users</span></a></li>
+                  <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-business-time "></i><span>Meetings</span></a></li>
                   <li>
                     <a href="{{ url_for('posts.inbox') }}">
                       <i class="fa-regular fa-paper-plane"></i>
-                      Messages
+                      <span>Messages</span>
                       {% if not current_user.is_anonymous %}
                         {% set new_messages = current_user.new_messages() %}
                         {% if new_messages %}
@@ -107,7 +108,7 @@
                   <li>
                     <a href="#" class="notifications-link">
                       <i class="fa-regular fa-bell"></i>
-                      Notifications
+                      <span>Notifications</span>
                       {% if not current_user.is_anonymous %}
                         {% set new_notifications = current_user.new_notifications() %}
                         {% if new_notifications > 0 %}

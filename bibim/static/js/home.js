@@ -60,17 +60,20 @@ window.onscroll = () => {
 }
 
 function load() {
-
+    const loader = document.querySelector(".loader");
     const current_page = page;
     page += 1;
-
-    fetch(`posts/${current_page}`)
-    .then(response => response.json())
-    .then(data => {
-        data['posts'].forEach(post => {
-            add_post(post);
-        });
-    })
+    setTimeout(() => {
+        fetch(`posts/${current_page}`)
+        .then(response => {
+            loader.style.display = "none";
+            return response.json() })
+        .then(data => {
+            data['posts'].forEach(post => {
+                add_post(post);
+            });
+        })
+    }, 1000);
 }
 
 function handleLikes() {
