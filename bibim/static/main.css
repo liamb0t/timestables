@@ -611,6 +611,10 @@ a:hover i {
   
 }
 
+.post-form-container textarea {
+  padding-bottom: 30px;
+}
+
 .post-form-header {
   display: flex;
   padding-left: 10px;
@@ -619,7 +623,7 @@ a:hover i {
 
 .post-form-footer {
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
 }
 
 .post-form-footer #submit {

@@ -26,29 +26,38 @@
         
         <h2>Staff Room</h2>
         <div class="post-form-container">
-            <div class="post-form-header">
-                <a href="{{ url_for('users.user_profile', username=current_user.username) }}">
-                    <img class="post-form-img" src="{{ url_for('static', filename='pics/' + current_user.image_file)}}">
-                </a>
-                <form method="POST" action="">
-                    {{ post_form.hidden_tag() }}
-                    <div>      
-                        {% if post_form.content.errors %}
-                            {{post_form.content(class="form-control form-control-lg is-invalid")}}
-                            <div class="invalid-feedback">
-                                {% for error in post_form.content.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
+            <div style="display: flex;">
+                <div style="flex: none;">
+                    <div style="position: relative;">
+                        <a href="{{ url_for('users.user_profile', username=current_user.username) }}">
+                            <img class="post-form-img" src="{{ url_for('static', filename='pics/' + current_user.image_file)}}">
+                        </a>
+                    </div>
+                   
+                </div>
+                <div style="display: flex; width: 100%;">
+                    <form method="POST" action="" style="width: 100%;">
+                        {{ post_form.hidden_tag() }}
+                         
+                            {% if post_form.content.errors %}
+                                {{post_form.content(class="form-control form-control-lg is-invalid")}}
+                                <div class="invalid-feedback">
+                                    {% for error in post_form.content.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
                         {% else %}
                             {{ post_form.content}}
                         {% endif %}
-                    </div>
-                    <div class="post-form-footer">
-                        <div>{{ post_form.submit }}</div>
-                    </div>
-                </form>
+                       
+                    </form>
+                </div>
+                
             </div>
+            <div class="post-form-footer">
+               {{ post_form.submit }}
+            </div>
+          
         </div>
         <div class="loader"></div>
     </div>

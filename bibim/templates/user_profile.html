@@ -142,8 +142,8 @@
                                 <p id="post-content-{{ post.id }}">{{ post.content}}</p>
                             </div>
                             <div class="post-likes" style="display: flex;">
-                                <p class="like-counter" id="like-counter-10" data-count="{{ post.likes_count() }}">{{ post.going|length}} going</p>
-                                <p class="like-counter">{{ coms }} comments</p>
+                                <p class="like-counter" id="like-counter-10" data-count="{{ post.likes_count() }}">{{ post.likes|length}} likes</p>
+                                <p class="like-counter">{{ post.replies_count() }} replies</p>
                                 <p class="post-date">Posted {{ post_timestamp(post.date_posted) }} ago</p>
                               
                             </div>
