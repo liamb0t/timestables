@@ -655,3 +655,12 @@ function handleEllipsis(data) {
         document.querySelector('.delete-btn').style.display = 'block'
     }
 }
+
+document.querySelector('.profile-pic').addEventListener('click', function() {
+    var dropdown = document.querySelector('.profile-dropdown-content');
+    if (dropdown.style.display === 'none') {
+      dropdown.style.display = 'block';
+    } else {
+      dropdown.style.display = 'none';
+    }
+  });
