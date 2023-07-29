@@ -238,6 +238,7 @@ function add_post(post) {
             count += 1;
             const commentContainer = document.createElement('div');
             commentContainer.classList.add('comment-container');
+            commentContainer.setAttribute('id', `comment-container-${comment['id']}`)
 
             if (count > limit) {
                 commentContainer.setAttribute('class', 'comment-container-hidden');
@@ -570,9 +571,9 @@ function displayOverlay(id) {
     overlay.style.display = 'block'
     optionsDiv.style.display = 'flex'
     handleDelete(id)
-  }
+}
   
-  function handleDelete(id) {
+function handleDelete(id) {
     document.querySelector('.delete-form').addEventListener('submit', function(event) {
       event.preventDefault()
       fetch(`/comment/delete/${id}`, {
@@ -583,14 +584,15 @@ function displayOverlay(id) {
     })
         .then(response => response.json())
         .then(function() {
-          comment.innerHTML = ''
-          document.querySelector('.modal-dialog').style.display = 'none'
-          document.querySelector('overlay').style.display = 'none'
-          document.getElementById('deleteModal').classList.remove('show')
+            console.log(document.querySelector(`.comment-container #${id}`))
+            comment.innerHTML = ''
+            document.querySelector('.modal-dialog').style.display = 'none'
+            document.querySelector('overlay').style.display = 'none'
+            document.getElementById('deleteModal').classList.remove('show')
         })
     })
     
-  }
+}
 
 
 function handleLikesComment(reply_id) {

@@ -6,10 +6,17 @@ const headerImg = document.querySelector('.header-img')
 const headerLastSeen =  document.querySelector('.header-lastseen')
 const headerLink =  document.querySelector('.header-link')
 
+window.onload = function(){
+    messageDisplay.scrollTop = messageDisplay.scrollHeight;
+};
+
 conversations.forEach(convo => {
     convo.addEventListener('click', function() {
+        messageDisplay.innerHTML = '';
         messageDisplay.style.alignItems = 'normal';
-        messageDisplay.style.justifyContent = 'flex-end'
+        messageDisplay.style.justifyContent = 'flex-end';
+        messageDisplay.style.display = 'block';
+
         const user = this.dataset.user;
         headerUsername.innerHTML = this.dataset.username;
         headerImg.src = `/static/pics/${this.dataset.img}`;
@@ -37,7 +44,6 @@ conversations.forEach(convo => {
 });
 
 function displayMessages(history) {
-    messageDisplay.innerHTML = '';
     history.forEach(msg => {
         isRead(msg);
         const messageDiv = document.createElement('div');
@@ -55,6 +61,7 @@ function displayMessages(history) {
         container.appendChild(messageDiv)
         messageDisplay.appendChild(container);
     });
+    messageDisplay.scrollTop = messageDisplay.scrollHeight;
 }
 
 function updateURL(div) {

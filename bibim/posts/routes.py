@@ -31,10 +31,10 @@ def like_post(post_id):
         like = current_user.like_post(post)
         if post.author != current_user:
             post.author.karma += 1
+            notification_exists = Notification.query.filter_by(user_id=post.author.id, name='post_like', related_id=post.id).first()
+            if not notification_exists:
+                post.author.add_notification('post_like', like.id, post.id)
         db.session.commit()
-        if post.author != current_user:
-            post.author.add_notification('post_like', like.id)
-
     return jsonify({
         'liked': current_user.has_liked_post(post)
     })
@@ -84,9 +84,9 @@ def inbox():
 
         if form.validate_on_submit():
             new_messages_count = user.new_messages()
-            user.add_notification('unread_message_count', new_messages_count + 1)
             msg = Message(author=current_user, recipient=user,
                         body=form.body.data)
+            user.add_notification('unread_message_count', msg.id, new_messages_count + 1, )
             db.session.add(msg)
             db.session.commit()
             flash(('Your message has been sent.'), 'success')

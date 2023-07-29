@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
+    <div style="margin: 0 auto;">
+
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
         <h2>Materials for {{ level }} school</h1>
         <div>
@@ -154,6 +156,7 @@
             ...
         {% endif %}
     {% endfor %}    
+    </div>  
     <script src="{{ url_for('static', filename='js/customSelectBtn.js') }}"></script>
 {% endblock content %}
 

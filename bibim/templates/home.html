@@ -49,19 +49,93 @@
                         {% else %}
                             {{ post_form.content}}
                         {% endif %}
+
+                        <div class="post-form-footer">
+                            {{ post_form.submit }}
+                         </div>
+                       
                        
                     </form>
                 </div>
                 
             </div>
-            <div class="post-form-footer">
-               {{ post_form.submit }}
-            </div>
-          
+           
         </div>
-        <div class="loader"></div>
+        <div class="loader-container">
+            <div class="loader"></div>
+        </div>
     </div>
     
    
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock content %}
+
+
+{% block announcement_bar %}
+
+
+    <div class="announcement-bar">
+        {% if current_user.my_meetings()|length > 0 %}
+        <div style="display: flex; align-items: center;">
+        <i class="fa-solid fa-calendar"></i>
+        <h5>Your Upcoming Meetings</h5>
+        </div>
+        <ul class="list-group">
+            {% for meeting in current_user.my_meetings() %}
+                <li>
+                    <div class="announcement-bar-container">
+                        <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + meeting.organizer.image_file) }}">
+                        <div class="announcement-bar-header">
+                            <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id) }}">{{ meeting.title | truncate(30, True, '')}}</a>  
+                                                
+                        </div>
+                        <div>
+                        <span>{{ meeting.start_date }} at {{ meeting.start_time }}</span>   
+                        <span>{{ meeting.going|length}} going</span>
+                        </div>
+                    
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div> 
+        <div style="display: flex; align-items: center;">
+            <i class="fa-solid fa-arrow-trend-up"></i>
+            <h5>Popular Posts of the Day</h5>
+        </div>
+        <ul class="list-group">
+            {% for post in popular_posts %}
+                <li>
+                    <div class="announcement-bar-container">
+                        <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + post.author.image_file) }}">
+                        <div class="announcement-bar-header">
+                            <a href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.content | truncate(30, True, '')}}</a>                             
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        </div>
+        <br>
+        <div style="display: flex; align-items: center;">
+            <i class="fa-solid fa-bookmark"></i>
+            <h5>Trending Materials</h5>
+        </div>
+        
+        <ul class="list-group">
+            {% for material in popular_materials %}
+                <li>
+                    <div class="announcement-bar-container">
+                        <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + material.creator.image_file) }}">
+                        <div class="announcement-bar-header">
+                            <a href="{{ url_for('materials.material', material_id=material.id) }}">{{ material.title | truncate(30, True, '')}}</a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        </span>
+    </div>
+
+{% endblock announcement_bar %}

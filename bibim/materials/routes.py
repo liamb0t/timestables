@@ -113,6 +113,7 @@ def create_material(level):
                 if not tag:
                     tag = Tag(tagname=tagname)
                 material.tags.append(tag)
+        print('tags:', material.tags)
         db.session.add(material)
         if form.files.data:
             for file in form.files.data:
@@ -130,16 +131,20 @@ def edit_material(material_id):
     if material.creator != current_user:
         abort(403)
     form = MaterialForm(obj=material)
+    form.publisher.choices = get_publishers(material.level)
+    form.grade.choices = get_grades(material.level)
     if form.validate_on_submit():
         tagnames = [form.publisher.data, form.lesson.data, form.material_type.data]
         material.title = form.title.data
         material.content = request.form.get('ckeditor')
+        material.grade = form.grade.data 
+        material.tags = []
         for tagname in tagnames:
-            if tagname is not None:
+            if tagname is not None and tagname not in material.tags:
                 tag = Tag.query.filter_by(tagname=tagname).first()
                 if not tag:
                     tag = Tag(tagname=tagname)
-                material.tags.append(tag)
+                material.tags.append(tag)   
         if form.files.data:
             for file in form.files.data:
                 if file.filename != '':
@@ -181,12 +186,20 @@ def like_material(material_id):
 @login_required
 def delete_material(material_id):
     material = Material.query.get_or_404(material_id)
+    level = material.level
     if material.creator != current_user:
         abort(403)
+
+    tags = db.session.query(tags_table).filter_by(material_id=material.id).all()
+    for tag in tags:
+        db.session.execute(tags_table.delete().where(tags_table.c.tag_id==tag[0]).where(tags_table.c.material_id==tag[1]))
+
+    db.session.commit()
+
     db.session.delete(material)
     db.session.commit()
     flash('Your material has been deleted!', 'success')
-    return redirect(url_for('materials.load_materials, level=material.level'))
+    return redirect(url_for('materials.load_materials', level=level))
 
 
 @materials.route('/forum', methods=["POST", "GET"])

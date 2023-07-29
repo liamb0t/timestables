@@ -1,7 +1,7 @@
 const buttons = document.querySelectorAll('.user-filters a');
 
 buttons.forEach((link) => {
-  link.classList.remove('active')
+  link.classList.remove('active');
   link.addEventListener('click', (event) => {
     // Store the active link information in localStorage
     localStorage.setItem('activeLinkUserProfile', link.getAttribute('href'));

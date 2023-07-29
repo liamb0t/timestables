@@ -152,8 +152,8 @@ class User(db.Model, UserMixin):
         return Notification.query.filter_by(user_id=self.id).filter(
             Notification.read == False, Notification.name != 'unread_message_count').count()
     
-    def add_notification(self, name, data):
-        n = Notification(name=name, payload_json = json.dumps(data), user=self)
+    def add_notification(self, name, data, related_id):
+        n = Notification(name=name, payload_json=json.dumps(data), user=self, related_id=related_id)
         db.session.add(n)
         db.session.commit()
         return n
@@ -436,6 +436,7 @@ class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    related_id = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.Float, index=True, default=time)
     read = db.Column(db.Boolean, nullable=False, default=False)
     payload_json = db.Column(db.Text)

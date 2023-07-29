@@ -1,3 +1,10 @@
+:root {
+  --navbar-height: 4rem;
+  --sidebar-width: 14rem;
+  --sidebar-padding-top: 2rem;
+  --conversations--width: 20rem;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -30,13 +37,13 @@ a:hover {
 /* create a post styling */
 
 .top-line {
-  display: none;
+  display: block;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 3px;
-  background-color: rgba(244, 19, 34, 0.505);
+  background-color: rgb(255, 149, 0);
   z-index: 9999;
 }
 
@@ -117,8 +124,79 @@ a:hover {
 
 /* navbar styling */
 
+
+.navbar {
+  height: var(--navbar-height);
+  position: fixed; /* Add this line */
+  top: 0; /* Add this line */
+  width: 100%; /* Add this line */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  color: #fff;
+  padding: 1px 26px;
+  border-bottom: 1px solid gainsboro;
+  z-index: 100;
+}
+
+.navbar .logo {
+  width: 150px;
+  height: auto;
+}
+
+.navbar .search-bar {
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+  
+}
+
+.navbar .search-bar input {
+  width: 100%;
+  padding: 5px 40px 5px 20px;
+  border-radius: 25px;
+  border: none;
+  border: 1px solid gainsboro;
+}
+
+.navbar .search-bar input:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0,0,0,.2);
+}
+
+.navbar .search-bar .fa-search {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #000;
+}
+
+.navbar .profile {
+  display: flex; /* Display the icons and the profile image inline */
+  align-items: center; /* Align the items vertically */
+}
+
+.navbar .profile i {
+  margin-right: 10px; /* Add some space between the icons */
+}
+
+.navbar .profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.navbar .profile-pic img {
+  width: 100%;
+  height: auto;
+}
+
+
 body {
-  padding-top: 0;
+  padding-top: 70px;
   background-color: #ffffff;
 }
 
@@ -133,31 +211,7 @@ a:hover i {
   transform: scale(1.6);
 }
 
-.navbar {
-  padding: 2%;
-  border-bottom: 1px solid gainsboro;
-}
 
-.navbar-container {
-  display: flex;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  padding: 10px;
-}
-
-.navbar input {
-  flex-grow: 1;
-  margin-right: 10px;
-}
-
-#navbar-home {
-  width: 15%;
-  height: 15%;
-}
 
 .notification {
   position: relative;
@@ -200,11 +254,14 @@ a:hover i {
 
 /* sidebar styling */
 .sidebar {
-  border-right: 1px solid gainsboro;
+  position: fixed;
+  top: var(--navbar-height);;
+  bottom: 0;
   background-color: white;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 0px 20px;
+  padding-top: var(--sidebar-padding-top);
+  width: var(--sidebar-width); /* You may have to specify a width for your sidebar */
 }
 
 .sidebar ul {
@@ -224,6 +281,7 @@ a:hover i {
 }
 
 .sidebar i {
+  transform: scale(1.1);
   margin: 0;
 }
 
@@ -264,8 +322,10 @@ a:hover i {
 
 /* main content styling */
 .main-content {
+  width: 55rem;
   overflow-y: scroll;
-  flex: 50%;
+  margin-left: var(--sidebar-width); 
+  padding-top: var(--sidebar-padding-top);
 }
 
 
@@ -589,7 +649,8 @@ a:hover i {
 /* Styling for displaying posts */
 
 .posts {
-  max-width: 80%;
+  margin: 0 auto;
+  width: 35rem;
 }
 
 .post-container {
@@ -627,10 +688,12 @@ a:hover i {
 }
 
 .post-form-footer #submit {
-  padding: 10px;
+  padding: 5px 10px;
   border: none;
-  background-color: #ffffff;
-  color: #0077CC;
+  background-color: #ffaa00;
+  color: #ffffff;
+  border-radius: 15%;
+  margin: 10px;
 }
 
 .post-form-img {
@@ -672,11 +735,11 @@ a:hover i {
 
 .post {
   background-color: #fff;
-  border-radius: 15px;
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   margin-bottom: 20px;
   overflow: hidden;
+  border-radius: 20px;
 }
 
 .post-form-container textarea {
@@ -954,6 +1017,8 @@ a:hover i {
 /* announcement-bar styling */
 
 .announcement-bar {
+  padding-left: 20px;
+  padding-top: var(--sidebar-padding-top);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   flex: 30%;
 }
@@ -1221,7 +1286,10 @@ a:hover i {
 
 /* style for users profile page */
 
-
+.user-page-container {
+  margin: 0 auto  ;
+  width: 40rem;
+}
 
 .user-page-profile-header {
   display: flex;
@@ -1319,7 +1387,9 @@ a:hover i {
   display: flex;
   border-right: 1px solid gainsboro;
   flex-direction: column;
-  height: 100vh;
+  height: 90vh;
+  overflow-y: auto;
+  width: var(--conversations--width);
 }
 
 .conversation {
@@ -1327,7 +1397,6 @@ a:hover i {
   align-items: center;
   padding: 5px;
   cursor: pointer;
-  padding-right: 90px;
   padding-left: 30px;
 }
 
@@ -1362,10 +1431,11 @@ a:hover i {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex: 60%;
+  height: 80vh;
   padding: 10px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
+
 .message {
   border-radius: 18px;
   background-color: rgb(239, 239, 239);
@@ -1403,29 +1473,27 @@ a:hover i {
 
 /* Message input */
 .message-input {
+  position: fixed;  
+  bottom: 0;
+  width: calc(100% - var(--conversations--width));
+  margin-bottom: 10px;
+}
+
+.inbox-form {
   display: flex;
+  justify-content: center;
   align-items: center;
-  width: 100%;
-  max-width: 500px; /* adjust as needed */
-  height: 50px;
-  border-radius: 25px;
-  background-color: #f2f2f2;
-  padding: 10px;
 }
 
 .inbox-input {
-  width: 100%;
+  flex: 1;
   border: none;
   outline: none;
-  background-color: transparent;
-  border-radius: 25px;
-  padding: 10px;
-  font-size: 16px;
 }
 
 .inbox-submit {
+  border-radius: 15px;
   border: none;
-  background-color: transparent;
 }
 
 
@@ -1488,12 +1556,18 @@ footer {
   font-weight: bold;
 }
 
+.loader-container {
+  display: flex;
+  justify-content: center;
+}
+
 
 .loader {
   position: relative;
   width: 64px;
   height: 60px;
 }
+
 .loader::after {
   content: '';
   position: absolute;

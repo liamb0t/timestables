@@ -129,9 +129,9 @@ function handleDelete(id) {
   })
       .then(response => response.json())
       .then(function() {
-        comment.innerHTML = ''
+        document.querySelector(`#comment-container-${id}`).innerHTML = ''
         document.querySelector('.modal-dialog').style.display = 'none'
-        document.querySelector('overlay').style.display = 'none'
+        overlay.style.display = 'none'
         document.getElementById('deleteModal').classList.remove('show')
       })
   })
