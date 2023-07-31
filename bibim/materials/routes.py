@@ -86,7 +86,7 @@ def material_comment(material_id):
             comment.parent = parent_comment
     comment.save()
     if material.creator != current_user and not comment.parent:
-        material.creator.add_notification('material_comment', comment.id)
+        material.creator.add_notification('material_comment', comment.id, material.id)
     elif material.creator != current_user and comment.parent:
         material.creator.add_notification('comment_reply', comment.id)
     return jsonify({

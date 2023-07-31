@@ -54,7 +54,7 @@ def post_comment(post_id):
             comment.parent = parent_comment
     comment.save()
     if user != current_user:
-        user.add_notification('post_comment', comment.id)
+        user.add_notification('post_comment', comment.id, post.id)
     return jsonify({
         'id': comment.id,
         'content': comment.content,

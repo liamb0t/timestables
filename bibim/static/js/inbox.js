@@ -1,6 +1,6 @@
 const conversations = document.querySelectorAll('.conversation');
 const messageDisplay = document.querySelector('.message-display');
-const header = document.querySelector('.header')
+const header = document.querySelector('.inbox-header')
 const headerUsername = document.querySelector('.header-username')
 const headerImg = document.querySelector('.header-img')
 const headerLastSeen =  document.querySelector('.header-lastseen')
@@ -8,7 +8,7 @@ const headerLink =  document.querySelector('.header-link')
 
 window.onload = function(){
     messageDisplay.scrollTop = messageDisplay.scrollHeight;
-};
+};  
 
 conversations.forEach(convo => {
     convo.addEventListener('click', function() {
@@ -16,6 +16,10 @@ conversations.forEach(convo => {
         messageDisplay.style.alignItems = 'normal';
         messageDisplay.style.justifyContent = 'flex-end';
         messageDisplay.style.display = 'block';
+        console.log(header.style.display);
+        header.style.display = 'flex';
+        
+        console.log(header.style.display);
 
         const user = this.dataset.user;
         headerUsername.innerHTML = this.dataset.username;
@@ -37,7 +41,7 @@ conversations.forEach(convo => {
         .then(data => {
             console.log(data)
             displayMessages(data['conversation'])
-            header.style.display = 'flex';
+           
             header.style.borderBottom = '1px solid gainsboro';
         })
     })

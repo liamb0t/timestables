@@ -49,7 +49,7 @@
           </div>
           <div class="profile">
             <a href="{{ url_for('posts.inbox') }}">
-              <i class="fa-regular fa-paper-plane"></i>
+              <i class="fa-regular fa-message"></i>
               {% if not current_user.is_anonymous %}
                 {% set new_messages = current_user.new_messages() %}
                 {% if new_messages %}
@@ -60,21 +60,21 @@
               {% endif %}
               </i>
             </a>
-            <i class="fa-regular fa-bell"></i>
+            <i id="notification-bell" class="fa-regular fa-bell"></i>
             {% if not current_user.is_anonymous %}
               {% set new_notifications = current_user.new_notifications() %}
               {% if new_notifications > 0 %}
                 <span id="notifications_count" class="badge" data-count="0">{{ new_notifications}}</span>
               {% endif %}
             {% endif %}
-            <div class="notifications" style="display: none;"></div>
+            <div class="notif-dropdown" style="display: none;"></div>
             
             <div class="profile-pic">
                 <img src="{{ url_for('static', filename='pics/' + current_user.image_file) }}" alt="User Profile">
                 <div class="profile-dropdown">
                   <div class="header">
-                   
-                    <h3>{{ current_user.username }}</h3>
+                    <img src="{{ url_for('static', filename='pics/' + current_user.image_file) }}" alt="User Profile">
+                    <h5>{{ current_user.username }}</h5>
                   </div>  
                   <hr>
                   <!-- Place other content here -->
@@ -115,7 +115,7 @@
 
           <footer>
             <div class="footer-content">
-              <p>&copy; Copyright 2023 | Bibimhak.</p>
+            
             </div>
           </footer>
          

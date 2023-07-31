@@ -34,21 +34,49 @@
 
       <div class="navbar">
         <a href="{{ url_for('main.home') }}"><img src="{{ url_for('static', filename='pics/BIBIMHAK.png')}}" alt="Site Logo" class="logo"></a>
-    
+        
         <div class="search-bar">
             <input type="text" placeholder="Search">
             <i class="fas fa-search"></i>
         </div>
-    
-
         <div class="profile">
-          <a href="{{ url_for('users.user_profile', username=current_user.username) }}">
-            <div class="profile-pic">
-                <img src="{{ url_for('static', filename='pics/' + current_user.image_file) }}" alt="User Profile">
-            </div>
+          <a href="{{ url_for('posts.inbox') }}">
+            <i class="fa-regular fa-message"></i>
+            {% if not current_user.is_anonymous %}
+              {% set new_messages = current_user.new_messages() %}
+              {% if new_messages %}
+                <span id="message_count" class="badge" data-count="{{ new_messages }}">{{ new_messages }}</span>
+              {% else %}
+                <span id="message_count" class="badge" data-count="{{ new_messages }}" style="display: none;">{{ new_messages }}</span>
+              {% endif %}
+            {% endif %}
+            </i>
           </a>
+          <i class="fa-regular fa-bell"></i>
+          {% if not current_user.is_anonymous %}
+            {% set new_notifications = current_user.new_notifications() %}
+            {% if new_notifications > 0 %}
+              <span id="notifications_count" class="badge" data-count="0">{{ new_notifications}}</span>
+            {% endif %}
+          {% endif %}
+          <div class="notifications" style="display: none;"></div>
+          
+          <div class="profile-pic">
+              <img src="{{ url_for('static', filename='pics/' + current_user.image_file) }}" alt="User Profile">
+              <div class="profile-dropdown">
+                <div class="header">
+                  <img src="{{ url_for('static', filename='pics/' + current_user.image_file) }}" alt="User Profile">
+                  <h5>{{ current_user.username }}</h5>
+                </div>  
+                <hr>
+                <!-- Place other content here -->
+                <a href="{{ url_for('main.logout') }}" class="logout-btn">
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+              </div>
+          </div>
         </div>
-      </div>
+      </div>  
 
       <div class="wrapper">
           
@@ -79,7 +107,7 @@
             <div style="display: flex; flex-direction: column; flex: auto;">
 
                 {% if user %}
-                  <div class="header" style="display: flex;">
+                  <div class="inbox-header" style="display: flex;">
                     <div class="header-info" style="border-bottom: 1px solid gainsboro; display: flex;">
                         <a class="header-link" href="{{ url_for('users.user_profile', username=user.username) }}">
                           <img class="header-img" src="{{ url_for('static', filename='pics/' + user.image_file)}}">
@@ -91,7 +119,7 @@
                     </div>
                   </div>
                 {% else %}
-                  <div class="header" style="display: none;">
+                  <div class="inbox-header" style="display: none;">
                       <div class="header-info" style="border-bottom: 1px solid gainsboro; display: flex;">
                           <a class="header-link">
                             <img class="header-img" src="#">
@@ -109,16 +137,18 @@
                             {% if msg.author != current_user %}
                                 <div class="message-container" style="display: flex; justify-content: flex-start;">
                                     <div class="message">{{ msg.author.username }}: {{ msg.body }}</div>
+                                    <div>{{ msg.timestamp.strftime('%H:%M') }}</div>
                                 </div>
                             {% else %}
                             <div class="message-sent-container" style="display: flex; justify-content: flex-end;">
-                                <div class="message-sent">{{ msg.author.username }}: {{ msg.body }}</div>
+                              <div>{{ msg.timestamp.strftime('%H:%M') }}</div>
+                              <div class="message-sent">{{ msg.author.username }}: {{ msg.body }}</div>
                             </div>  
                             {% endif %}
                         {% endfor %}
                     {% else %}
                         <div class="inbox-center">
-                          <i class="fa-regular fa-message"></i>
+                          <i class="fa-regular fa-paper-plane"></i>
                           <h3>
                             Your messages
                           </h3>
@@ -148,5 +178,6 @@
             </div> 
         </div>
         <script src="{{ url_for('static', filename='js/inbox.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/profile_dropdown.js') }}"></script>
     </body>
 </html>

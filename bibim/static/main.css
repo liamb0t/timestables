@@ -181,8 +181,9 @@ a:hover {
 .navbar .profile i {
   transform: scale(1.3);
   margin-bottom: 0;
-  margin-right: 1.5rem; /* Add some space between the icons */
+  margin-right: 2rem; /* Add some space between the icons */
 }
+
 
 .navbar .profile-pic {
   width: 35px;
@@ -197,16 +198,70 @@ a:hover {
 }
 
 .profile-dropdown {
+  color: black;
   display: none;
-  position: absolute; /* Add this line */
-  right: 0; /* Add this line */
-  top: 100%; /* Add this line */
+  position: absolute;
+  right: 0;
+  top: 100%;
   width: 200px;
   background-color: #fff;
-  z-index: 1000; /* You can adjust this value */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1000;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.profile-dropdown a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.profile-dropdown a:hover {
+  background-color: #ddd;
+}
+
+.profile-dropdown .header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.profile-dropdown .header img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.profile-dropdown .logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-dropdown .logout-btn i {
+  margin-right: 8px;
+}
+
+.notif-dropdown {
+  color: black;
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: 200px;
+  background-color: #fff;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border-radius: 4px;
 }
 
 
+.notification-message {
+  padding: 12px;
+}
 
 body {
   padding-top: 70px;
@@ -335,7 +390,7 @@ a:hover i {
 
 /* main content styling */
 .main-content {
-  width: 55rem;
+  width: 60rem;
   overflow-y: scroll;
   margin-left: var(--sidebar-width); 
   padding-top: var(--sidebar-padding-top);
@@ -378,9 +433,11 @@ a:hover i {
 }
 
 .material-container {
-  background-color: #ffffff;
+  border: 1px solid gainsboro;
+  margin: 0 auto;
+  max-width: 40rem;
   padding: 20px;
-  max-width: 800px;
+  border-radius: 25px;
 }
 
 /* Header */
@@ -391,8 +448,8 @@ a:hover i {
 }
 
 .material-container .profile-picture {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -407,7 +464,6 @@ a:hover i {
 
 /* Title */
 .material-container .title {
-  font-size: 24px;
   font-weight: bold;
   margin-bottom: 30px;
 }
@@ -475,8 +531,11 @@ a:hover i {
 }
 
 /* Tags */
-.material-container .tags {
-  margin-bottom: 10px;
+.material-container .tag {
+  color: #39739d;
+  background-color: #bae0fc;
+  padding: 5px;
+  border-radius: 10px;
 }
 
 /* Footer */
@@ -486,9 +545,6 @@ a:hover i {
 }
 
 /* Comments */
-.material-container .comments {
-  margin-bottom: 20px;
-}
 
 /* Comment form */
 .material-container .comment-form {
@@ -611,11 +667,10 @@ a:hover i {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 500px; /* adjust as needed */
-  height: 50px;
+  
   border-radius: 25px;
   background-color: #f2f2f2;
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .material-comment-field-profile-pic {
@@ -637,14 +692,13 @@ a:hover i {
 }
 
 .material-comment-field-submit {
-  width: 30px;
-  height: 30px;
+  
   border-radius: 50%;
-  background-color: #4CAF50;
+
   margin-left: 10px;
   border: none;
   outline: none;
-  position: relative;
+ 
 }
 
 .material-comment-field-submit::before {
@@ -839,6 +893,19 @@ a:hover i {
 
 .material-post-comment-info .fa-regular {
   transform: scale(1);
+}
+
+.material-post-tags {
+  display: flex;
+}
+
+.material-post-tags .tag {
+  color: #39739d;
+  background-color: #bae0fc;
+  padding: 5px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-right: 4px;
 }
 
 .fa-regular:hover {
@@ -1172,15 +1239,13 @@ a:hover i {
 }
 
 .materials-filters {
-  padding-left: 15px;
   margin-bottom: 20px;
 }
 
 .material-post-container {
   display: flex;
   align-items: center;  
-  padding: 4px;
-  padding-left: 30px;
+  padding: 9px;
   background-color: #ffffff;
   border-bottom: solid 1px rgb(200, 200, 200);
 }
@@ -1239,6 +1304,7 @@ a:hover i {
   background-color: #f9f9f9;
   min-width: 120px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px;
 }
 
 .select-options a {
@@ -1272,6 +1338,7 @@ a:hover i {
   display: flex;
   flex-direction: row;
   margin-top: 5px;
+  justify-content: space-between;
 }
 
 .material-post-date {
@@ -1459,11 +1526,9 @@ a:hover i {
 }
 .message-sent {
   border-radius: 18px;
-  color: white;
-  background-color: rgb(55, 151, 240);
+  background-color: orange;
   text-align: right;
   padding: 10px;
-  margin-bottom: 10px;
 }
 
 .message-container {

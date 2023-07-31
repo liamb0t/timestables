@@ -42,6 +42,6 @@ class SelectForm(FlaskForm):
     submit = SubmitField('Filter')
 
 class CommentForm(FlaskForm):
-    content = TextAreaField('Comment', validators=[DataRequired()], render_kw={'placeholder': 'Add a comment...'})
+    content = StringField('Comment', validators=[DataRequired()], render_kw={'placeholder': 'Add a comment...'})
     reply_id = HiddenField('reply_id')
-    submit = SubmitField('')
+    submit = SubmitField('Send')

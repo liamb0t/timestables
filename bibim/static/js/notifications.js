@@ -1,5 +1,7 @@
 const messageCounter = document.querySelector('#message_count');
 const count = messageCounter.dataset.count;
+const notiDropdown = document.querySelector('.notif-dropdown');
+const notificationsBtn = document.querySelector('#notification-bell'); 
 
 document.addEventListener('DOMContentLoaded', function() {
   get_notifications()
@@ -55,7 +57,6 @@ function updateNotifCount(n) {
   counter.innerHTML = counter.dataset.count;
 }
 
-
 function poller(timestamp) {
   let timer = 60000; 
   let since = timestamp;
@@ -68,28 +69,28 @@ function poller(timestamp) {
 };
 
 function display_notification(data) {
-  notiContainer = document.querySelector('.notifications');
-  notiDiv = document.createElement('div');
+  const notiDiv = document.createElement('div');
+  notiDiv.setAttribute('class', 'notification-message')
+  if (!data['read']) {
+    notiDiv.style.backgroundColor = '#DAE0E6'
+  }
   const url = document.createElement('a');
   url.setAttribute('href', data['url']);
   url.appendChild(notiDiv)
   const html = notificationHTML(data)
   notiDiv.innerHTML = html;
-  notiContainer.insertAdjacentElement('afterbegin', url);
-
+  notiDropdown.insertAdjacentElement('afterbegin', url);
   notiDiv.addEventListener('click', function() {
     if (!data['read']) {
       isRead(data['id']);
     }
   })
- 
 }
 
-const notificationsBtn = document.querySelector('.notifications-link');
-
 notificationsBtn.addEventListener('click', function() {
-  const notificationsDiv = document.querySelector('.notifications');
-  notificationsDiv.style.display = notificationsDiv.style.display === 'block' ? 'none' : 'block';
+  notiDropdown.style.display = notiDropdown.style.display === 'block' ? 'none' : 'block';
+  const rect = this.getBoundingClientRect();
+  notiDropdown.style.right = (document.documentElement.clientWidth - rect.right) + 'px';
 });
 
 function notificationHTML(data) {

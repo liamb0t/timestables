@@ -23,7 +23,7 @@
       <i class="fa fa-ellipsis" id="ellipsis-icon"></i>
     
     </div>
-    <h1 class="title">{{ material.title }}</h1>
+    <h2 class="title">{{ material.title }}</h2>
     <div class="content">
       <p>{{ material.content | safe }}</p>
     </div>
@@ -56,17 +56,19 @@
         {% endfor %}
       {% endif %}
     </div>
-
-    <div class="like-button">
-      <i id="material-like-button" class="fa-regular fa-heart" data-material-id="{{ material.id}}"></i>
-      <span id="material-like-count" class="like-count" data-material-likes="{{ material.likes_count() }}">{{ material.likes_count() }} likes</span>
+    <div style="display: flex; justify-content: space-between;">
+      <div class="like-button">
+        <i id="material-like-button" class="fa-regular fa-heart" data-material-id="{{ material.id}}"></i>
+        <span id="material-like-count" class="like-count" data-material-likes="{{ material.likes_count() }}">{{ material.likes_count() }} likes</span>
+      </div>
+  
+      <div class="tags">
+        {% for tag in material.tags %}
+          <span class="tag">{{ tag.tagname }}</span>
+        {% endfor %}
+      </div>
     </div>
-
-    <div class="tags">
-      {% for tag in material.tags %}
-        <span>{{ tag.tagname }}</span>
-      {% endfor %}
-    </div>
+   
 
     <div class="footer">
       <div class="comments">

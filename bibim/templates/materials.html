@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div style="margin: 0 auto;">
+    <div style="margin: 0 auto; width: 45rem;">
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2>Materials for {{ level }} school</h1>
         <div>
             <i class="fa-solid fa-pencil"></i>
@@ -120,24 +120,34 @@
             <a href="{{ url_for('materials.material', material_id=material.id)}}">
                 <div class="material-post-container">
                 <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + material.creator.image_file)}}" alt="Profile Picture">
-                <div>
+                <div style="width: 100%;">
                     <div class="material-post-header">
                         <div class="material-post-grade">Grade {{ material.grade }}</div>
                         <div class="material-post-title">{{ material.title }}</div>
                         
                     </div>
                     <div class="material-post-footer">
-                        <div class="material-post-user-info">
-                            <span class="material-post-author">Posted by {{ material.creator.username }}</span>
-                            
-                            <span class="material-post-date">{{ post_timestamp(material.date_posted) }} ago</span>
+                        <div style="display: flex;"> 
+                            <div class="material-post-user-info">
+                                <span class="material-post-author">Posted by {{ material.creator.username }}</span>
+                                
+                                <span class="material-post-date">{{ post_timestamp(material.date_posted) }} ago</span>
+                            </div>
+                          
+                            <div class="material-post-comment-info">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="material-post-likes">{{ material.likes_count() }}</span>
+                                <i class="fa-regular fa-comment"></i>
+                                <span class="material-post-comments">{{ material.comments_count() }}</span>
+                            </div>
                         </div>
                       
-                        <div class="material-post-comment-info">
-                            <i class="fa-regular fa-heart"></i>
-                            <span class="material-post-likes">{{ material.likes_count() }}</span>
-                            <i class="fa-regular fa-comment"></i>
-                            <span class="material-post-comments">{{ material.comments_count() }}</span>
+                        <div class="material-post-tags">
+                            {% for tag in material.tags %}
+                                <div class="tag">
+                                    {{ tag.tagname }}
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

@@ -185,7 +185,7 @@ def like_comment(comment_id):
         like = current_user.like_comment(comment)
         db.session.commit()
         if current_user != comment.commenter:
-            comment.commenter.add_notification('comment_like', like.id)
+            comment.commenter.add_notification('comment_like', like.id, comment.id, )
     return jsonify({
         'liked': current_user.has_liked_comment(comment)
     })
