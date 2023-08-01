@@ -5,6 +5,7 @@ const headerUsername = document.querySelector('.header-username')
 const headerImg = document.querySelector('.header-img')
 const headerLastSeen =  document.querySelector('.header-lastseen')
 const headerLink =  document.querySelector('.header-link')
+const messageBorder = document.querySelector('.message-input-border')
 
 window.onload = function(){
     messageDisplay.scrollTop = messageDisplay.scrollHeight;
@@ -16,10 +17,8 @@ conversations.forEach(convo => {
         messageDisplay.style.alignItems = 'normal';
         messageDisplay.style.justifyContent = 'flex-end';
         messageDisplay.style.display = 'block';
-        console.log(header.style.display);
         header.style.display = 'flex';
-        
-        console.log(header.style.display);
+        messageBorder.style.display = 'flex'
 
         const user = this.dataset.user;
         headerUsername.innerHTML = this.dataset.username;

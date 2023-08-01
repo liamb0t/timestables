@@ -160,7 +160,7 @@
                 <div class="message-input" >
                     <form method="POST" action="" class="inbox-form">
                         {{ form.hidden_tag() }}
-                        <div style="display: flex; width: 80%; padding: 9px; border: 1px solid gainsboro; border-radius: 50px;">      
+                        <div class="message-input-border">      
                             {% if form.body.errors %}
                                 {{form.body}}
                                 <div class="invalid-feedback">

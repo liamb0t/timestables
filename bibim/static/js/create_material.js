@@ -8,20 +8,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     selectButtons.forEach(btn => {
         btn.addEventListener('change', function() {
-            const publisher = publisherSelect.value;
-            const grade = gradeSelect.value;
-            fetch(`/get_lessons/${level}/${grade}/${publisher}`)
-                .then(response => response.json())
-                .then(data => { 
-                    lessonSelect.innerHTML = '';
-                    data['lesson_choices'].forEach(option => {
-                        const optionElem = document.createElement('option');
-                        optionElem.value = option[0];
-                        optionElem.text = option[1];
-                        lessonSelect.appendChild(optionElem);
-                    });
-                })
+            fetch(`/get_lessons/${level}/${gradeSelect.value}/${publisherSelect.value}`)  
+            .then(response => response.json())
+            .then(data => {
+                lessonSelect.innerHTML = ''
+                lessonSelect.style.display = 'flex'
+                data['lesson_choices'].forEach(choice => {
+                let option = document.createElement('option');
+                let text = choice[1];
+                if (text.length > 20) {
+                    text = text.substring(0, 15) + '...'
+                }
+                option.value = choice[0];
+                option.text = text
+                lessonSelect.appendChild(option);
+                });
+            })
             .catch(error => console.error(error));
         });
     });
 });
+
+

@@ -329,6 +329,7 @@ class Material(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'))
 
     tags = db.relationship('Tag', secondary='tags_table', backref=db.backref('tag_materials', lazy='dynamic'), lazy='joined')
     comments = db.relationship('Comment', backref='material')
@@ -349,6 +350,9 @@ class Material(db.Model):
 
     def comments_count(self):
         return len([comment for comment in self.comments])
+    
+    def lesson_title(self):
+        return Lesson.query.filter_by(id=self.lesson_id).first_or_404().title
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -548,8 +552,17 @@ class Notification(db.Model):
                 'url': f'/material/{material.id}',
                 'read': self.read,
             }
-        
-        
-        
 
+class Textbook(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    level = db.Column(db.String(60), nullable=False)
+    publisher = db.Column(db.String(120), nullable=False)
+    grade = db.Column(db.Integer, nullable=False)
+
+    # This will contain the list of lessons for this textbook
+    lessons = db.relationship('Lesson', backref='textbook', lazy=True)
         
+class Lesson(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    textbook_id = db.Column(db.Integer, db.ForeignKey('textbook.id'), nullable=False)

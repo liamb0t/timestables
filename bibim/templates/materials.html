@@ -12,28 +12,8 @@
     </div>
 
     <nav class="materials-nav">
-        {% if level == 'elementary' %}
         
-        {% elif level == 'middle' %}
-            <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">1st grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=2) }}">2nd grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=3) }}">3rd grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Afterschool</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Tests</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Themed lessons</a>
-        {% elif level == 'high' %}
-            <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">1st grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=2) }}">2nd grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=3) }}">3rd grade</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Afterschool</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Tests</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=6) }}">Themed lessons</a>
-        {% elif level == 'teaching' %}
-            <a href="{{ url_for('materials.load_materials', level=level, grade=1) }}">Classroom Management</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=2) }}">Teaching advice</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=3) }}">School life</a>
-            <a href="{{ url_for('materials.load_materials', level=level, grade=3) }}">Contracts</a>
-        {% elif level == 'camp' %}
+        {% if level == 'camp' %}
             <a href="{{ url_for('materials.load_materials', level=level) }}">Movie themed</a>
             <a href="{{ url_for('materials.load_materials', level=level) }}">Music themed</a>
             <a href="{{ url_for('materials.load_materials', level=level) }}">Science themed</a>
@@ -41,10 +21,10 @@
             <a href="{{ url_for('materials.load_materials', level=level) }}">Game themed</a>
             <a href="{{ url_for('materials.load_materials', level=level) }}">Reading themed</a>
             <a href="{{ url_for('materials.load_materials', level=level) }}">Other</a>
-    {% endif %}
+        {% endif %}
     </nav>
     
-    <div class="materials-filters">
+    <div class="materials-filters" data-level="{{ level }}">
         <form method="POST" action="" id="filter-submit">
             {{ form.hidden_tag() }}
             {% if level == 'camp' %}
@@ -119,19 +99,26 @@
         {% for material in materials %}
             <a href="{{ url_for('materials.material', material_id=material.id)}}">
                 <div class="material-post-container">
-                <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + material.creator.image_file)}}" alt="Profile Picture">
+              
                 <div style="width: 100%;">
                     <div class="material-post-header">
                         <div class="material-post-grade">Grade {{ material.grade }}</div>
+                        
+                        {% if material.lesson_id %}
+                            <div class="">{{ material.lesson_title() }}</div>
+                        {% endif %}
                         <div class="material-post-title">{{ material.title }}</div>
                         
                     </div>
+                  
                     <div class="material-post-footer">
                         <div style="display: flex;"> 
-                            <div class="material-post-user-info">
-                                <span class="material-post-author">Posted by {{ material.creator.username }}</span>
-                                
-                                <span class="material-post-date">{{ post_timestamp(material.date_posted) }} ago</span>
+                            <div class="material-post-tags">
+                                {% for tag in material.tags %}
+                                    <div class="tag">
+                                        {{ tag.tagname }}
+                                    </div>
+                                {% endfor %}
                             </div>
                           
                             <div class="material-post-comment-info">
@@ -141,14 +128,13 @@
                                 <span class="material-post-comments">{{ material.comments_count() }}</span>
                             </div>
                         </div>
-                      
-                        <div class="material-post-tags">
-                            {% for tag in material.tags %}
-                                <div class="tag">
-                                    {{ tag.tagname }}
-                                </div>
-                            {% endfor %}
+                        <div class="material-post-user-info">
+                            <span class="material-post-author">Posted by</span>
+                            <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + material.creator.image_file)}}" alt="Profile Picture">
+                            <span class="material-post-author">{{ material.creator.username }}</span>
+                            <span class="material-post-date">{{ post_timestamp(material.date_posted) }} ago</span>
                         </div>
+                      
                     </div>
                 </div>
                 </div>

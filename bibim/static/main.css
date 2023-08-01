@@ -1284,7 +1284,7 @@ a:hover i {
 }
 
 #lesson {
-  display: none;
+  
 }
 
 
@@ -1319,10 +1319,10 @@ a:hover i {
 }
 
 .material-post-profile-picture {
-  width: 40px; /* Adjust the size as needed */
-  height: 40px; /* Adjust the size as needed */
+  width: 20px; /* Adjust the size as needed */
+  height: 20px; /* Adjust the size as needed */
   border-radius: 50%;
-  margin-right: 10px;
+
 }
 
 .material-post-grade {
@@ -1557,6 +1557,14 @@ a:hover i {
   bottom: 0;
   width: calc(100% - var(--conversations--width));
   margin-bottom: 10px;
+}
+
+.message-input-border {
+  display: none;
+  width: 80%;
+  padding: 9px;
+  border: 1px solid gainsboro;
+  border-radius: 50px;
 }
 
 .inbox-form {

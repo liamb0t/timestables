@@ -3,21 +3,37 @@ from flask_login import current_user, login_required
 from bibim import db
 from bibim.materials.forms import CommentForm
 from bibim.materials.forms import MaterialForm, SelectForm
-from bibim.models import Material, Tag, Comment, Like, tags_table
-from bibim.materials.utils import textbooks_elem, get_publishers, get_grades, save_file, get_file_size
+from bibim.models import Material, Tag, Comment, Like, tags_table, Textbook
+from bibim.materials.utils import update_textbooks_db, get_publishers, get_grades, save_file, get_file_size
 from bibim.posts.utils import post_timestamp
 from sqlalchemy import func
+from urllib.parse import unquote
 
 materials = Blueprint('materials', __name__)
 
+@materials.route("/update_textbooks")
+@login_required
+def update_textbooks():
+    try:
+        update_textbooks_db()
+        return redirect(url_for('main.home'))
+    except Exception as e:
+        print('Error updating textbooks:', e)
+        return redirect(url_for('main.home'))
+
 @materials.route("/get_lessons/<string:level>/<int:grade>/<string:publisher>")
 @login_required
-def get_lesson_choices(level, grade, publisher):    
-    lesson_choices = textbooks_elem[publisher][str(grade)]
-    formatted_lesson_choices = [(key, value) for key, value in lesson_choices.items()]
-    
+def get_lesson_choices(level, grade, publisher):
+    textbook = Textbook.query.filter_by(publisher=publisher, level=level, grade=grade).first()
+   
+    # If no textbook found, return an error response
+    if textbook is None:
+        return jsonify({'error': 'Textbook not found'}), 404
+
+    lesson_choices = [(lesson.id, lesson.title) for lesson in textbook.lessons]
+
     return jsonify({
-        'lesson_choices': formatted_lesson_choices
+        'lesson_choices': lesson_choices
     })
 
 @materials.route("/materials/<string:level>", methods=['GET', 'POST'])
@@ -25,6 +41,10 @@ def load_materials(level):
     page = request.args.get('page', 1, type=int)
     materials = Material.query.filter_by(level=level)
     form = SelectForm()
+    publishers = Textbook.query.with_entities(Textbook.publisher).filter(Textbook.level == level).distinct().all()
+    form.publisher.choices = ['Textbook', 'All'] + [publisher[0] for publisher in publishers]
+    
+
     if form.validate_on_submit():
         filter = request.args.get('f', 1, type=str)
         grade = form.grade.data
@@ -59,6 +79,8 @@ def load_materials(level):
                 materials = materials.join(Material.likes, isouter=True)\
                             .group_by(Material)\
                             .order_by(func.count(Like.id).desc())
+        else:
+            print(form.errors)
     materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('materials.html', materials=materials, level=level, form=form, post_timestamp=post_timestamp)
 
@@ -101,19 +123,21 @@ def material_comment(material_id):
 @login_required
 def create_material(level):
     form = MaterialForm(level=level)
-    form.publisher.choices = get_publishers(level)
+    publishers = Textbook.query.with_entities(Textbook.publisher).filter(Textbook.level == level).distinct().all()
+    form.publisher.choices = [publisher[0] for publisher in publishers]
     form.grade.choices = get_grades(level)
     if form.validate_on_submit():
-        tagnames = [form.publisher.data, form.lesson.data, form.material_type.data]
+        tagnames = [form.publisher.data, form.material_type.data]
         material = Material(title=form.title.data, level=level, grade=form.grade.data, 
                             content=request.form.get('ckeditor'), creator=current_user)
+        if form.lesson.data:
+            material.lesson_id = form.lesson.data
         for tagname in tagnames:
             if tagname is not None:
                 tag = Tag.query.filter_by(tagname=tagname).first()
                 if not tag:
                     tag = Tag(tagname=tagname)
                 material.tags.append(tag)
-        print('tags:', material.tags)
         db.session.add(material)
         if form.files.data:
             for file in form.files.data:

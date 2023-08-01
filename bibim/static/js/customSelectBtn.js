@@ -1,10 +1,12 @@
 const customSelectBtn = document.getElementById('custom-select');
 const options = document.getElementById("selectOptions");
-
+const filters = document.querySelector('.materials-filters')
 customSelectBtn.addEventListener('click', toggleOptions)
 
 const lessonFilter = document.querySelector('#lesson')
 const textBookFilter = document.querySelector('#publisher')
+
+const gradeFilter = document.querySelector('#grade')
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -56,3 +58,22 @@ document.querySelectorAll('.adv-filter').forEach(select => {
     document.querySelector('#filter-submit').submit()
   }
 });
+
+
+textBookFilter.onchange = function() {
+  fetch(`/get_lessons/${filters.dataset.level}/${gradeFilter.value}/${textBookFilter.value}`)  
+    .then(response => response.json())
+    .then(data => {
+      lessonFilter.innerHTML = ''
+      data['lesson_choices'].forEach(choice => {
+        let option = document.createElement('option');
+        let text = choice[1];
+        if (text.length > 20) {
+          text = text.substring(0, 15) + '...'
+        }
+        option.value = choice[0];
+        option.text = text
+        lessonFilter.appendChild(option);
+      });
+    })
+}

@@ -31,10 +31,8 @@ class SelectForm(FlaskForm):
                                           ('5', 'Grade 5'), ('6', 'Grade 6'), ('7', 'Kinder'), 
                                           ('1', 'After'), ('1', 'Phonics'),])
     
-    publisher = SelectField('Publisher', choices=[(x, x) for x in ['Textbook', 'All', 'YBM Choi ', 'YBM Kim ',
-                                                                              'Cheonjae', 'Daegyo', 'Donga',
-                                                                            ]])
-    lesson = SelectField('Lesson', choices=['Lesson', 'All'])
+    publisher = SelectField('Publisher', choices=['Textbook', 'All'])
+    lesson = SelectField('Lesson', choices=['Lesson', 'All'], validate_choice=False)
     type = SelectField('Type of Material', choices=[(x, x) for x in ['Material Type', 'Any', 'Bomb game', 'Writing game',
                                                                               'Reading game', 'Review game', 'Intro PPT',
                                                                               'Words in songs', 'Non-tech game'
@@ -44,4 +42,4 @@ class SelectForm(FlaskForm):
 class CommentForm(FlaskForm):
     content = StringField('Comment', validators=[DataRequired()], render_kw={'placeholder': 'Add a comment...'})
     reply_id = HiddenField('reply_id')
-    submit = SubmitField('Send')
+    submit = SubmitField('Send  ')
