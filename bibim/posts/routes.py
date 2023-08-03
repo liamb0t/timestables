@@ -24,17 +24,8 @@ def like_post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
     if current_user.has_liked_post(post):
         current_user.unlike_post(post)
-        if post.author != current_user:
-            post.author.karma -= 1
-        db.session.commit()
     else:
-        like = current_user.like_post(post)
-        if post.author != current_user:
-            post.author.karma += 1
-            notification_exists = Notification.query.filter_by(user_id=post.author.id, name='post_like', related_id=post.id).first()
-            if not notification_exists:
-                post.author.add_notification('post_like', like.id, post.id)
-        db.session.commit()
+        current_user.like_post(post)
     return jsonify({
         'liked': current_user.has_liked_post(post)
     })
@@ -46,15 +37,19 @@ def post_comment(post_id):
     content = data["textAreaData"]
     parent_id = data["parent_id"]
     post = Post.query.get(post_id)
-    user = post.author
     comment = Comment(content=content, post=post, commenter=current_user)
     if parent_id:
         parent_comment = Comment.query.filter_by(id=parent_id).first()
         if parent_comment:
             comment.parent = parent_comment
     comment.save()
-    if user != current_user:
-        user.add_notification('post_comment', comment.id, post.id)
+    if parent_id:
+        n = Notification(name='reply', user_id=comment.parent.user_id, comment_id=comment.id, post_id=post.id)
+        db.session.add(n)
+    if post.author != current_user:
+        n = Notification(name='post_comment', user_id=post.user_id, comment_id=comment.id, post_id=post.id)
+        db.session.add(n)
+    db.session.commit()
     return jsonify({
         'id': comment.id,
         'content': comment.content,
@@ -100,8 +95,7 @@ def inbox():
 @login_required
 def notifications():
     since = request.args.get('since', 0.0, type=float)
-    notifications = current_user.notifications.filter(
-        Notification.timestamp > since).order_by(Notification.timestamp.asc())
+    notifications = current_user.notifications.order_by(Notification.timestamp.desc())
     return jsonify({
         'notifications': [n.serialize() for n in notifications if n.name != 'unread_message_count'],
         'unread_message_count': current_user.new_messages(),

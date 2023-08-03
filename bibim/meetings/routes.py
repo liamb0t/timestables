@@ -1,7 +1,7 @@
 from flask import Blueprint, url_for, redirect, request, jsonify, render_template, flash
 from flask_login import current_user, login_required
 from bibim import db
-from bibim.models import Comment, Meeting, Like
+from bibim.models import Comment, Meeting, Like, Notification
 from bibim.meetings.forms import CommentForm, MeetingForm, FilterForm
 from bibim.posts.utils import post_timestamp
 from bibim.materials.utils import save_file, get_file_size
@@ -70,9 +70,13 @@ def meeting_comment(meeting_id):
 
     comment.save()
     if meeting.organizer != current_user and not comment.parent:
-        meeting.organizer.add_notification('meeting_comment', comment.id)
+        n = Notification(name='meeting_comment', comment_id=comment.id, user_id=meeting.user_id, meeting_id=meeting.id)
+        db.session.add(n)
+        db.session.commit()
     elif meeting.organizer != current_user and comment.parent:
-        meeting.organizer.add_notification('comment_reply', comment.id)
+        n = Notification(name='reply', comment_id=comment.id, user_id=comment.parent.id, meeting_id=meeting.id)
+        db.session.add(n)
+        db.session.commit()
     return jsonify({
         'content': comment.content,
         'date_posted': post_timestamp(comment.date_posted),
@@ -112,7 +116,9 @@ def like_meeting(meeting_id):
         like = current_user.like_meeting(meeting)
         db.session.commit()
         if meeting.organizer != current_user:
-            meeting.organizer.add_notification('meeting_like', like.id)
+            n = Notification(name='meeting_like', like_id=like.id, user_id=meeting.user_id, meeting_id=meeting.id)
+            db.session.add(n)
+            db.session.commit()
     return jsonify({
         'liked': current_user.has_liked_meeting(meeting)
     })

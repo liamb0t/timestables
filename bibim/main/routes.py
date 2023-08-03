@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, render_template, flash, url_for, request,
 from flask_login import current_user, login_user, logout_user, login_required
 from bibim.models import Post, User, Material, File, Comment, Notification, Like, Meeting
 from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
-from bibim.main.utils import send_reset_email
+from bibim.main.utils import send_reset_email, prompts
 from bibim.posts.forms import PostForm, EditForm
 from bibim import bcrpyt, db, app
 import datetime
@@ -14,18 +14,6 @@ import os
 
 main = Blueprint('main', __name__)
 
-prompts = [
-    "Share a recent lesson plan you've used in your classroom and how it went.",
-    "Have you tried any new teaching strategies or techniques lately? Tell us about it.",
-    "What are some of the biggest challenges you face as an English teacher in Korea?",
-    "How do you incorporate Korean culture into your English lessons?",
-    "Share a funny or interesting story from your time teaching in Korea.",
-    "How do you keep your students motivated to learn English?",
-    "What are your favorite resources for teaching English as a foreign language?",
-    "Have you attended any professional development workshops or conferences recently? What did you learn?",
-    "How do you use technology in your English lessons?",
-    "What advice would you give to new English teachers in Korea?"
-]
 
 @app.context_processor
 def inject():
@@ -132,6 +120,7 @@ def home():
     post_form = PostForm()
     edit_form = EditForm()
     placeholder =  choice(prompts)
+    print(placeholder)
     if not current_user.is_anonymous:
         post_form.content.render_kw['placeholder'] = f"{current_user.username}, {placeholder[0].lower()}{placeholder[1:]}"
     else:
@@ -185,7 +174,9 @@ def like_comment(comment_id):
         like = current_user.like_comment(comment)
         db.session.commit()
         if current_user != comment.commenter:
-            comment.commenter.add_notification('comment_like', like.id, comment.id, )
+            n = Notification(name='comment_like', like_id=like.id, user_id=comment.commenter.id, comment_id=comment.id)
+            db.session.add(n)
+            db.session.commit()
     return jsonify({
         'liked': current_user.has_liked_comment(comment)
     })

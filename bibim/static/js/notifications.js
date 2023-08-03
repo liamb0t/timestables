@@ -69,22 +69,24 @@ function poller(timestamp) {
 };
 
 function display_notification(data) {
-  const notiDiv = document.createElement('div');
-  notiDiv.setAttribute('class', 'notification-message')
-  if (!data['read']) {
-    notiDiv.style.backgroundColor = '#DAE0E6'
-  }
-  const url = document.createElement('a');
-  url.setAttribute('href', data['url']);
-  url.appendChild(notiDiv)
-  const html = notificationHTML(data)
-  notiDiv.innerHTML = html;
-  notiDropdown.insertAdjacentElement('afterbegin', url);
-  notiDiv.addEventListener('click', function() {
+  if (!data['error']) {
+    const notiDiv = document.createElement('div');
+    notiDiv.setAttribute('class', 'notification-message')
     if (!data['read']) {
-      isRead(data['id']);
+      notiDiv.style.backgroundColor = '#DAE0E6'
     }
-  })
+    const url = document.createElement('a');
+    url.setAttribute('href', data['url']);
+    url.appendChild(notiDiv)
+    const html = notificationHTML(data)
+    notiDiv.innerHTML = html;
+    notiDropdown.appendChild(url);
+    notiDiv.addEventListener('click', function() {
+      if (!data['read']) {
+        isRead(data['id']);
+      }
+    })
+  }
 }
 
 notificationsBtn.addEventListener('click', function() {
@@ -99,7 +101,8 @@ function notificationHTML(data) {
   const sent_data = data['sent_data'];
 
   if (type === 'post_comment' || type === 'material_comment' || type === 'comment_reply') {
-    return `${sent_data['author']} ${data['html']}: ${sent_data['content']}`
+    console.log(data)
+    return `${sent_data['author']} ${data['html']} ${sent_data['date_posted']}: ${sent_data['content']}`
   }
   else {
     return `${sent_data['author']} ${data['html']} ${user_data['content']}`

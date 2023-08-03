@@ -38,7 +38,6 @@ conversations.forEach(convo => {
         fetch(`get_messages/${this.dataset.user}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             displayMessages(data['conversation'])
            
             header.style.borderBottom = '1px solid gainsboro';
@@ -48,7 +47,9 @@ conversations.forEach(convo => {
 
 function displayMessages(history) {
     history.forEach(msg => {
-        isRead(msg);
+        if (msg['current_user'] != msg['sender']) {
+            isRead(msg);
+        }
         const messageDiv = document.createElement('div');
         const container = document.createElement('div')
         messageDiv.innerHTML = msg['sender'] + ': ' + msg['content'];

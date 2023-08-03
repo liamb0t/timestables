@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from bibim import db
 from bibim.materials.forms import CommentForm
 from bibim.materials.forms import MaterialForm, SelectForm
-from bibim.models import Material, Tag, Comment, Like, tags_table, Textbook
+from bibim.models import Material, Tag, Comment, Like, tags_table, Textbook, Notification
 from bibim.materials.utils import update_textbooks_db, get_publishers, get_grades, save_file, get_file_size
 from bibim.posts.utils import post_timestamp
 from sqlalchemy import func
@@ -44,7 +44,6 @@ def load_materials(level):
     publishers = Textbook.query.with_entities(Textbook.publisher).filter(Textbook.level == level).distinct().all()
     form.publisher.choices = ['Textbook', 'All'] + [publisher[0] for publisher in publishers]
     
-
     if form.validate_on_submit():
         filter = request.args.get('f', 1, type=str)
         grade = form.grade.data
@@ -59,9 +58,7 @@ def load_materials(level):
             if tag:
                 materials = materials.filter(Material.material_tag.contains(tag))
         if lesson != 'All' and lesson != 'Lesson':
-            tag = Tag.query.filter_by(tagname=lesson).first()
-            if tag:
-                materials = materials.filter(Material.material_tag.contains(tag))
+            materials = materials.filter_by(lesson_id=lesson)
         if material_type != 'Any' and material_type != 'Material Type':
             tag = Tag.query.filter_by(tagname=material_type).first()
             if tag:
@@ -108,9 +105,13 @@ def material_comment(material_id):
             comment.parent = parent_comment
     comment.save()
     if material.creator != current_user and not comment.parent:
-        material.creator.add_notification('material_comment', comment.id, material.id)
-    elif material.creator != current_user and comment.parent:
-        material.creator.add_notification('comment_reply', comment.id)
+        n = Notification(name='material_comment', comment_id=comment.id, user_id=material.user_id, material_id=material.id)
+        db.session.add(n)
+        db.session.commit()
+    if material.creator != current_user and comment.parent:
+        n = Notification(name='reply', comment_id=comment.id, user_id=comment.parent.id, material_id=material.id)
+        db.session.add(n)
+        db.session.commit()
     return jsonify({
         'content': comment.content,
         'date_posted': post_timestamp(comment.date_posted),
@@ -195,13 +196,17 @@ def edit_material(material_id):
 def like_material(material_id):
     material = Material.query.filter_by(id=material_id).first_or_404()
     if current_user.has_liked_material(material):
-        current_user.unlike_material(material)  
+        current_user.unlike_material(material)
+        n = Notification.query.filter_by(user_id=current_user.id, material_id=material.id, name='material_like').first()
+        db.session.delete(n)
         db.session.commit()
     else:
         like = current_user.like_material(material)
         db.session.commit()
         if material.creator != current_user:
-            material.creator.add_notification('material_like', like.id)
+            n = Notification(name='material_like', like_id=like.id, user_id=material.user_id, material_id=material.id)
+            db.session.add(n)
+            db.session.commit()
     return jsonify({
         'liked': current_user.has_liked_material(material)
     })

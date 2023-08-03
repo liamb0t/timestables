@@ -73,18 +73,25 @@ class User(db.Model, UserMixin):
 
     def like_post(self, post):
         like = Like(user_id=self.id, post_id=post.id)
+        if post.author != current_user:
+            post.author.karma += 1
         db.session.add(like)
+        db.session.commit()
+        if post.author != current_user:
+            n = Notification(name='post_like', like_id=like.id, user_id=post.user_id, post_id=post.id)
+            db.session.add(n)
+            db.session.commit()
         return like
 
     def unlike_post(self, post):
-        Notification.query.filter_by(
-            name='post_like',
-            user_id=post.user_id,
-            id=self.id).delete()
-        Like.query.filter_by(
-            user_id=self.id,
-            post_id=post.id).delete()
-
+        like = Like.query.filter_by(user_id=self.id, post_id=post.id).first()
+        n = Notification.query.filter_by(name='post_like', user_id=post.user_id, post_id=post.id, like_id=like.id).first()
+        db.session.delete(like)
+        db.session.delete(n)
+        if post.author != current_user:
+            post.author.karma -= 1
+        db.session.commit()
+        
     def has_liked_post(self, post):
         return Like.query.filter(
             Like.user_id == self.id,
@@ -152,12 +159,6 @@ class User(db.Model, UserMixin):
         return Notification.query.filter_by(user_id=self.id).filter(
             Notification.read == False, Notification.name != 'unread_message_count').count()
     
-    def add_notification(self, name, data, related_id):
-        n = Notification(name=name, payload_json=json.dumps(data), user=self, related_id=related_id)
-        db.session.add(n)
-        db.session.commit()
-        return n
-    
     def active_since(self):
         return post_timestamp(self.last_seen)
     
@@ -215,6 +216,7 @@ class Post(db.Model):
 
     likes = db.relationship('Like', backref='post')
     comments = db.relationship('Comment', backref='post')
+    notifications = db.relationship('Notification', backref='post', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"Post('{self.id}', '{self.date_posted}')"
@@ -251,6 +253,8 @@ class Like(db.Model):
     comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+    notifications = db.relationship('Notification', backref='like', cascade="all, delete-orphan")
+
     def serialize(self):
         return {
             'author': self.user.username,
@@ -271,6 +275,8 @@ class Comment(db.Model):
     meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
 
     likes = db.relationship('Like', backref='comment')
+    notifications = db.relationship('Notification', backref='comment', cascade="all, delete-orphan")
+
     replies = db.relationship(
         'Comment', backref=db.backref('parent', remote_side=[id]),
         lazy='dynamic'
@@ -335,6 +341,7 @@ class Material(db.Model):
     comments = db.relationship('Comment', backref='material')
     files = db.relationship('File', backref='files_material', lazy=True)
     likes = db.relationship('Like', backref='material')
+    notifications = db.relationship('Notification', backref='material', cascade="all, delete-orphan")
 
     def serialize(self):
         return {
@@ -396,6 +403,7 @@ class Meeting(db.Model):
     files = db.relationship('File', backref='files_meeting', lazy=True)
     likes = db.relationship('Like', backref='meeting')
     going = db.relationship('User', secondary='going_table', backref=db.backref('going', lazy='dynamic'), lazy='joined')
+    notifications = db.relationship('Notification', backref='meeting', cascade="all, delete-orphan")
 
     def likes_count(self):
         return len([likes for likes in self.likes])
@@ -440,10 +448,14 @@ class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    related_id = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.Float, index=True, default=time)
     read = db.Column(db.Boolean, nullable=False, default=False)
-    payload_json = db.Column(db.Text)
+
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id')) 
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))  
+    like_id = db.Column(db.Integer, db.ForeignKey('like.id'))  
+    material_id = db.Column(db.Integer, db.ForeignKey('material.id'))  
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))  
 
     def get_data(self):
         return json.loads(str(self.payload_json))
@@ -453,11 +465,10 @@ class Notification(db.Model):
             Notification.read == False).count()
     
     def serialize(self):
-        data = self.get_data()
 
         if self.name == 'post_comment':
 
-            comment = Comment.query.filter_by(id=data).first()
+            comment = Comment.query.filter_by(id=self.comment_id).first()
             post = comment.post
 
             return {
@@ -473,40 +484,42 @@ class Notification(db.Model):
         
         elif self.name == 'post_like':
 
-            like = Like.query.filter_by(id=data).first()
+            like = Like.query.filter_by(id=self.like_id).first()
             post = like.post
 
             return {
                 'id': self.id,
                 'type': self.name,
                 'sent_data': like.serialize(),
-                'user_data': post.serialize(),
+                'user_data': post.serialize() if post else None,
                 'timestamp': self.timestamp,
                 'html': 'liked your post',
-                'url': f'/post/{post.id}',
+                'url': f'/post/{post.id if post else None}',
                 'read': self.read,
             }
         
         elif self.name == 'comment_like':
 
             like = Like.query.filter_by(id=data).first()
-            comment = like.comment
-            post_id, link = comment.get_post()
+            if like:
+                comment = like.comment if like else None
+                post_id, link = comment.get_post()
 
-            return {
-                'id': self.id,
-                'type': self.name,
-                'sent_data': like.serialize(),
-                'user_data': comment.serialize(),
-                'timestamp': self.timestamp,
-                'html': 'liked your comment',
-                'url': f'/{link}/{post_id}',
-                'read': self.read,
-            }
+                return {
+                    'id': self.id,
+                    'type': self.name,
+                    'sent_data': like.serialize(),
+                    'user_data': comment.serialize() if comment else None,
+                    'timestamp': self.timestamp,
+                    'html': 'liked your comment',
+                    'url': f'/{link}/{post_id}' if comment else None,
+                    'read': self.read,
+                }
+            else:
+                return {'error': 'Notification does not exist'}
         
-        elif self.name == 'comment_reply':
-
-            reply = Comment.query.filter_by(id=data).first()
+        elif self.name == 'reply':
+            reply = Comment.query.filter_by(id=self.comment_id).first()
             comment = reply.parent
             post_id, link = comment.get_post()
 

@@ -49,33 +49,44 @@
           </div>
           <div class="profile">
             <a href="{{ url_for('posts.inbox') }}">
-              <i class="fa-regular fa-message"></i>
+              <div style="position: relative; display: inline-block;">
+                <i class="fa-regular fa-message"></i>
+                {% if not current_user.is_anonymous %}
+                  {% set new_messages = current_user.new_messages() %}
+                  {% if new_messages %}
+                    <span id="message_count" class="badge" data-count="{{ new_messages }}">{{ new_messages }}</span>
+                  {% else %}
+                    <span id="message_count" class="badge" data-count="{{ new_messages }}" style="display: none;">{{ new_messages }}</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </a>
+            <div style="position: relative; display: inline-block;">
+              <i id="notification-bell" class="fa-regular fa-bell"></i>
               {% if not current_user.is_anonymous %}
-                {% set new_messages = current_user.new_messages() %}
-                {% if new_messages %}
-                  <span id="message_count" class="badge" data-count="{{ new_messages }}">{{ new_messages }}</span>
-                {% else %}
-                  <span id="message_count" class="badge" data-count="{{ new_messages }}" style="display: none;">{{ new_messages }}</span>
+                {% set new_notifications = current_user.new_notifications() %}
+                {% if new_notifications > 0 %}
+                  <span id="notifications_count" class="badge" data-count="0">{{ new_notifications}}</span>
                 {% endif %}
               {% endif %}
-              </i>
-            </a>
-            <i id="notification-bell" class="fa-regular fa-bell"></i>
-            {% if not current_user.is_anonymous %}
-              {% set new_notifications = current_user.new_notifications() %}
-              {% if new_notifications > 0 %}
-                <span id="notifications_count" class="badge" data-count="0">{{ new_notifications}}</span>
-              {% endif %}
-            {% endif %}
-            <div class="notif-dropdown" style="display: none;"></div>
+            </div>
+           
+            <div class="notif-dropdown" style="display: none;">
+              <h5>Notifications</h5>
+            </div>
             
             <div class="profile-pic">
                 <img src="{{ url_for('static', filename='pics/' + current_user.image_file) }}" alt="User Profile">
                 <div class="profile-dropdown">
                   <div class="header">
                     <img src="{{ url_for('static', filename='pics/' + current_user.image_file) }}" alt="User Profile">
-                    <h5>{{ current_user.username }}</h5>
+                    <div>
+                      <h5>{{ current_user.username }}</h5>
+                      <p style="font-size: small;">{{ current_user.karma }} reputation</p>
+                    </div>
+                
                   </div>  
+             
                   <hr>
                   <!-- Place other content here -->
                   <a href="{{ url_for('main.logout') }}" class="logout-btn">

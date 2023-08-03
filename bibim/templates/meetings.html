@@ -1,68 +1,71 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
-        <div>
-            <h2>Bibim Meetings</h1>
-            <p>Join an existing meeting or create your own and meet other teachers</p>
-        </div>
-        <div>
-            <a class="create-btn" href="{{ url_for('meetings.create_meeting') }}">
-                New meeting
-            </a>
-        </div>
-    </div>
-    
-    <div class="materials-filters">
-        <form method="POST" action="" id="filter-submit">
-            {{ form.hidden_tag() }}
-            <div class="select-options" id="selectOptions">
-                <div class="adv-filter" data-para="new">Latest</div>
-                <div class="adv-filter" data-para="old">Oldest</div>
-                <div class="adv-filter" data-para="likes">Likes</div>
-                <div class="adv-filter" data-para="comments">Comments</div>
-                <div class="adv-filter" data-para="following">Following</div>
+    <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
+            <div>
+                <h2>Bibim Meetings</h1>
+                <p>Join an existing meeting or create your own and meet other teachers</p>
             </div>
-
-            {{ form.search(class='filter-select') }}
-
-            {% if form.type.errors %}
-                {{form.type(class="form-control form-control-lg is-invalid")}}
-                <div class="invalid-feedback">
-                    {% for error in form.type.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
+            <div>
+                <a class="create-btn" href="{{ url_for('meetings.create_meeting') }}">
+                    New meeting
+                </a>
+            </div>
+        </div>
+        
+        <div class="materials-filters">
+            <form method="POST" action="" id="filter-submit">
+                {{ form.hidden_tag() }}
+                <div class="select-options" id="selectOptions">
+                    <div class="adv-filter" data-para="new">Latest</div>
+                    <div class="adv-filter" data-para="old">Oldest</div>
+                    <div class="adv-filter" data-para="likes">Likes</div>
+                    <div class="adv-filter" data-para="comments">Comments</div>
+                    <div class="adv-filter" data-para="following">Following</div>
                 </div>
-                {% else %}
-                    {{ form.type(class="filter-select")}}
+    
+                {{ form.search(class='filter-select') }}
+    
+                {% if form.type.errors %}
+                    {{form.type(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.type.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ form.type(class="filter-select")}}
+                {% endif %}
+    
+                <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
+            </form>
+        </div>
+    
+        <div class="event-grid">
+            {% if meetings.total == 0 %}
+                <h3>Hm...it seems like there are no results with those attributes. 🙅</h3>
+                <p>Try using a different filter or use the searchbar above.</p>
             {% endif %}
-
-            <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
-        </form>
+            {% for meeting in meetings %}
+                    <div class="event">
+                        <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id)}}">
+                            <img src="/static/pics/default.jpg">
+                        </a>
+                        <p>{{ meeting.start_date.strftime('%B %d') }} at {{ meeting.start_time }}</p>
+                        <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id)}}"></a>
+                            <p class="material-post-title">{{ meeting.title }}</p>
+                        </a>
+                        <p>{{ meeting.location }}</p>
+                       
+                        {% if meeting.going|length > 0 %}
+                            <p>Going <span class="event-status">{{ meeting.going|length }}</span></p>
+                        {% endif %}
+                    </div>
+               
+            {% endfor %}
+        </div>
     </div>
-
-    <div class="event-grid">
-        {% if meetings.total == 0 %}
-            <h3>Hm...it seems like there are no results with those attributes. 🙅</h3>
-            <p>Try using a different filter or use the searchbar above.</p>
-        {% endif %}
-        {% for meeting in meetings %}
-                <div class="event">
-                    <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id)}}">
-                        <img src="/static/pics/default.jpg">
-                    </a>
-                    <p>{{ meeting.start_date.strftime('%B %d') }} at {{ meeting.start_time }}</p>
-                    <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id)}}"></a>
-                        <p class="material-post-title">{{ meeting.title }}</p>
-                    </a>
-                    <p>{{ meeting.location }}</p>
-                   
-                    {% if meeting.going|length > 0 %}
-                        <p>Going <span class="event-status">{{ meeting.going|length }}</span></p>
-                    {% endif %}
-                </div>
-           
-        {% endfor %}
-    </div>
+  
     {% for page_num in meetings.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
         {% if page_num %}
             {% if meetings.page == page_num %}

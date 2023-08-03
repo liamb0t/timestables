@@ -594,7 +594,6 @@ function handleDelete(id) {
     
 }
 
-
 function handleLikesComment(reply_id) {
     let comment_id;
     if (typeof reply_id === 'number') {
@@ -639,7 +638,6 @@ function cleanString(string) {
 
     return splitString.slice(1).join(" ")
 }
-
 
 function handleEllipsis(data) {
     const id = data[0]
