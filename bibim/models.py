@@ -500,10 +500,11 @@ class Notification(db.Model):
         
         elif self.name == 'comment_like':
 
-            like = Like.query.filter_by(id=data).first()
+            like = Like.query.filter_by(id=self.like_id).first()
             if like:
                 comment = like.comment if like else None
                 post_id, link = comment.get_post()
+                print(comment)
 
                 return {
                     'id': self.id,
@@ -536,7 +537,7 @@ class Notification(db.Model):
         
         elif self.name == 'material_like':
 
-            like = Like.query.filter_by(id=data).first()
+            like = Like.query.filter_by(id=self.like_id).first()
             material = like.material
 
             return {

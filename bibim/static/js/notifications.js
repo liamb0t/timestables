@@ -5,9 +5,6 @@ const notificationsBtn = document.querySelector('#notification-bell');
 
 document.addEventListener('DOMContentLoaded', function() {
   get_notifications()
-  .then(since => {
-    poller(since)
-  })
 });
 
 // change notification badge if new messages

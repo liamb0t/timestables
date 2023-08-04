@@ -16,7 +16,7 @@
             // Add other bootstrap parameters as needed, using camel case.
           });
         </script>
-        <title>BIBIMHAK</title>
+        <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
         <div class="top-line"></div>
@@ -46,7 +46,7 @@
           <div class="search-bar">
               <input type="text" placeholder="Search">
               <i class="fas fa-search"></i>
-          </div>
+          </div>  
           <div class="profile">
             <a href="{{ url_for('posts.inbox') }}">
               <div style="position: relative; display: inline-block;">

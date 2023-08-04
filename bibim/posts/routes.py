@@ -37,16 +37,19 @@ def post_comment(post_id):
     content = data["textAreaData"]
     parent_id = data["parent_id"]
     post = Post.query.get(post_id)
+    single_notification = False
     comment = Comment(content=content, post=post, commenter=current_user)
     if parent_id:
         parent_comment = Comment.query.filter_by(id=parent_id).first()
         if parent_comment:
             comment.parent = parent_comment
+            if parent_comment.user_id == post.user_id:
+                single_notification = True
     comment.save()
     if parent_id:
         n = Notification(name='reply', user_id=comment.parent.user_id, comment_id=comment.id, post_id=post.id)
         db.session.add(n)
-    if post.author != current_user:
+    if post.author != current_user and single_notification == False:
         n = Notification(name='post_comment', user_id=post.user_id, comment_id=comment.id, post_id=post.id)
         db.session.add(n)
     db.session.commit()
@@ -131,6 +134,7 @@ def edit_post(post_id):
         db.session.commit()
         flash('Your post has been sucessfully updated!', 'success')
     return redirect(url_for('main.home'))
+
 
 @posts.route('/post/<int:post_id>/delete', methods=["POST", "GET"])
 def delete_post(post_id):

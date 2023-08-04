@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Page Not Found - Bibimhak{% endblock %}
+{% block content %}
+    <div class="error-container">
+        <img src="{{ url_for('static', filename='landing_page/egg_sleep.png')}}" style="width: 30%;">
+        <h1>
+            Oops. Page not found
+        </h1>
+        <p>
+            That page does not exist. Please try a different location
+        </p>    
+    </div>
+{% endblock content %}

@@ -33,9 +33,11 @@ from bibim.posts.routes import posts
 from bibim.main.routes import main
 from bibim.materials.routes import materials
 from bibim.meetings.routes import meetings
+from bibim.errors.handlers import errors
 
 app.register_blueprint(users)
 app.register_blueprint(posts)
 app.register_blueprint(main)
 app.register_blueprint(materials)
 app.register_blueprint(meetings)
+app.register_blueprint(errors)
