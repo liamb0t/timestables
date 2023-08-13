@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function toggleOptions() {
   const rect = this.getBoundingClientRect();
-  options.style.left = (document.documentElement.clientWidth - rect.left + 45) + 'px';
+  options.style.right = (document.documentElement.clientWidth - rect.right + 20) + 'px';
   
   if (options.style.display === "none" || options.style.display === "") {
     options.style.display = "block";

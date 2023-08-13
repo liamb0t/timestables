@@ -35,6 +35,8 @@ class User(db.Model, UserMixin):
     about = db.Column(db.String(120))
     last_message_read_time = db.Column(db.DateTime)
     last_seen = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
+    verified = db.Column(db.Boolean, nullable=False, default=False)
     
     posts = db.relationship('Post', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='commenter', lazy=True)
@@ -59,6 +61,10 @@ class User(db.Model, UserMixin):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}, salt='reset-password-salt')
     
+    def get_verification_token(self, expires_sec=1800):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'email': self.email}, salt='email-verification-salt')
+    
     @staticmethod
     def verify_reset_token(token):
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -67,6 +73,18 @@ class User(db.Model, UserMixin):
         except:
            return None
         return User.query.get(user_id)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+    
+    @staticmethod
+    def verify_email_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+           email = s.loads(token, salt='email-verification-salt')['email']
+        except:
+           return None
+        return User.query.filter_by(email=email).first()
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -85,9 +103,7 @@ class User(db.Model, UserMixin):
 
     def unlike_post(self, post):
         like = Like.query.filter_by(user_id=self.id, post_id=post.id).first()
-        n = Notification.query.filter_by(name='post_like', user_id=post.user_id, post_id=post.id, like_id=like.id).first()
         db.session.delete(like)
-        db.session.delete(n)
         if post.author != current_user:
             post.author.karma -= 1
         db.session.commit()
@@ -258,7 +274,7 @@ class Like(db.Model):
     def serialize(self):
         return {
             'author': self.user.username,
-            'date': self.date_created,
+            'date': post_timestamp(self.date_created),
         }
 
 class Comment(db.Model):
@@ -546,14 +562,14 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your post',
+                'html': 'liked your material:',
                 'url': f'/material/{material.id}',
                 'read': self.read,
             }
         
         elif self.name == 'material_comment':
 
-            comment = Comment.query.filter_by(id=data).first()
+            comment = Comment.query.filter_by(id=self.comment_id).first()
             material = comment.material
 
             return {
@@ -562,7 +578,7 @@ class Notification(db.Model):
                 'sent_data': comment.serialize(),
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'commented on your post',
+                'html': 'commented on your post:',
                 'url': f'/material/{material.id}',
                 'read': self.read,
             }

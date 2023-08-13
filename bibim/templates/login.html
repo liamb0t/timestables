@@ -22,6 +22,11 @@
   </div>
   <div style="display: flex; flex-direction: column; align-items: center;">
     <div class="login-container">
+      {% if current_user.is_authenticated and not current_user.email_confirmed %}
+          <p> Please confirm your email address. 
+              <a href="{{ url_for('users.resend_confirmation') }}">Click here</a> to resend the confirmation email.
+          </p>
+      {% endif %}
       <a href="{{ url_for('main.landing') }}">
         <img src="{{ url_for('static', filename='pics/BIBIMHAK.png')}}" alt="Website Logo" class="login-logo">
       </a>

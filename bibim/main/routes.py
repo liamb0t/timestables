@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, render_template, flash, url_for, request,
 from flask_login import current_user, login_user, logout_user, login_required
 from bibim.models import Post, User, Material, File, Comment, Notification, Like, Meeting
 from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
-from bibim.main.utils import send_reset_email, prompts
+from bibim.main.utils import send_reset_email, prompts, send_verification_email
 from bibim.posts.forms import PostForm, EditForm
 from bibim import bcrpyt, db, app
 import datetime
@@ -32,8 +32,7 @@ def search():
     meetings = Meeting.query.filter(or_(Meeting.title.ilike(f'%{search_query}%'),
                             Meeting.content.ilike(f'%{search_query}%'))).all()
     users = User.query.filter(User.username.ilike(f'%{search_query}%')).all()
-    
-    print(materials, posts, comments, meetings, users)
+
     return render_template('search.html', posts=posts, meetings=meetings, comments=comments, materials=materials,
                            users=users)
 
@@ -51,14 +50,16 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrpyt.check_password_hash(user.password, form.password.data):
-            login_user(user)
-            nextpage = request.args.get('next')
-            flash('Login succesful', 'success')
-            return redirect(url_for(nextpage)) if nextpage else redirect(url_for('main.home'))
+            if user.verified:
+                login_user(user)
+                nextpage = request.args.get('next')
+                flash('Login succesful', 'success')
+                return redirect(url_for(nextpage)) if nextpage else redirect(url_for('main.home'))
+            else:
+                flash('Please confirm your email address to login.', 'danger')
+                return redirect(url_for('main.login'))
         else:
-            flash('Login unsuccesful. Please check your email and password details.')
-       
-   
+            flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form=form)
 
 
@@ -72,7 +73,8 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=hashed_pw)
         db.session.add(user)
         db.session.commit()
-        flash(f'Account successfully created for {form.username.data}!', 'success')
+        send_verification_email(user)
+        flash(f'An email has been sent with instructions to confirm your email address.', 'info')
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
 
@@ -107,7 +109,16 @@ def reset_token(token):
         return redirect(url_for('main.login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
 
-
+@main.route('/confirm_email/<token>')
+def confirm_email(token):
+    user = User.verify_email_token(token)
+    if user is None:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    else:
+        user.verified = True
+        db.session.commit()
+        flash('Your email has been confirmed. You can now log in!', 'success')
+    return redirect(url_for('main.login'))
 
 @main.route("/logout")
 def logout():
@@ -152,7 +163,6 @@ def download(file_id):
 @main.route("/download_all/<int:material_id>", methods=["GET"])
 def download_all(material_id):
     material = Material.query.get(material_id)
-    
     memory_file = io.BytesIO()
     with zipfile.ZipFile(memory_file, 'w') as zipf:
         for file in material.files:
@@ -188,7 +198,11 @@ def delete_comment(comment_id):
     comment = Comment.query.filter_by(id=comment_id).first_or_404()
     if comment.commenter != current_user:
         abort(403)
-    db.session.delete(comment)
+    for n in comment.notifications:
+        if n:   
+            db.session.delete(n)
+            db.session.commit()
+    comment.content = 'The user deleted this comment.'
     db.session.commit()
     return jsonify({
         'message': 'Your comment has been deleted.'

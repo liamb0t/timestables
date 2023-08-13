@@ -284,6 +284,7 @@ function add_post(post) {
             const commentContent = document.createElement('div');
             commentContent.classList.add('comment');
 
+
             commentContent.textContent = cleanString(comment["content"])
 
          

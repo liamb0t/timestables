@@ -14,6 +14,18 @@ If you did not make this request, then simply ignore this email.
 '''
     mail.send(msg)
 
+def send_verification_email(user):
+    token = user.get_verification_token()
+    msg = Message('Verifiy Your Account', 
+                  sender='bibimhak@demo.com', 
+                  recipients=[user.email])
+    msg.body = f'''Please visit the following link to verify your email address:
+{url_for('main.confirm_email', token=token, _external=True)}
+
+If you did not make this request, then simply ignore this email. 
+'''
+    mail.send(msg)
+
 prompts = [
     "Share a funny or surprising misunderstanding you've had due to language differences.",
     "What's the most interesting Korean food you've tried since moving here?",

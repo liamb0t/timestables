@@ -97,12 +97,16 @@ function notificationHTML(data) {
   const user_data = data['user_data'];
   const sent_data = data['sent_data'];
 
-  if (type === 'post_comment' || type === 'material_comment' || type === 'comment_reply') {
+  if (type === 'post_comment' || type === 'material_comment' || type === 'reply') {
     console.log(data)
     return `${sent_data['author']} ${data['html']} ${sent_data['date_posted']}: ${sent_data['content']}`
   }
+  else if (type === 'material_like') {
+    console.log(data)
+    return `${sent_data['author']} ${data['html']} ${sent_data['date']}: ${user_data['title']}`
+  }
   else {
-    return `${sent_data['author']} ${data['html']} ${user_data['content']}`
+    return `${sent_data['author']} ${data['html']} ${user_data['date_posted']}: ${user_data['content']}`
   }
 }
 

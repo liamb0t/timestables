@@ -25,8 +25,9 @@
             </form>
         </div>
         
-        <h2>Staff Room</h2>
+      
         <div class="post-form-container">
+            <h2>Staff Room</h2>
             <div style="display: flex;">
                 <div style="flex: none;">
                     <div style="position: relative;">
@@ -40,13 +41,13 @@
                     <form method="POST" action="" style="width: 100%;">
                         {{ post_form.hidden_tag() }}
                          
-                            {% if post_form.content.errors %}
-                                {{post_form.content(class="form-control form-control-lg is-invalid")}}
-                                <div class="invalid-feedback">
-                                    {% for error in post_form.content.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
+                        {% if post_form.content.errors %}
+                            {{post_form.content(class="form-control form-control-lg is-invalid")}}
+                            <div class="invalid-feedback">
+                                {% for error in post_form.content.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
                         {% else %}
                             {{ post_form.content}}
                         {% endif %}
@@ -54,11 +55,8 @@
                         <div class="post-form-footer">
                             {{ post_form.submit }}
                          </div>
-                       
-                       
                     </form>
                 </div>
-                
             </div>
            
         </div>
