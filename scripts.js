@@ -53,7 +53,7 @@ function endGame() {
 
 function playRandomWrongSound() {
     // Generate a random number between 1 and 3
-    let randomNum = Math.floor(Math.random() * 3) + 1;
+    let randomNum = Math.floor(Math.random() * 4) + 1;
     console.log(randomNum)
 
     // Play the corresponding audio
