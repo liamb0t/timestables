@@ -2,22 +2,22 @@
 {% block content %}
     <div style="margin: 0 auto; width: 50rem; background-color: white; border-radius: 17px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
-            <h2>Community</h1>
+            <h2>Questions</h1>
             <div>
                 <i class="fa-solid fa-pencil"></i>
-                <a class="create-btn" href="{{ url_for('materials.create_material', level='teaching') }}">Make a post</a>
+                <a class="create-btn" href="{{ url_for('materials.create_material', level='teaching') }}">Ask a question</a>
             </div>
         </div>
-
+        
         <nav class="materials-nav">
-            <a href="{{ url_for('materials.forum', section='marketplace') }}">Marketplace</a>
-            <a href="{{ url_for('materials.forum', section='recommendations') }}">맛집</a>
-            <a href="{{ url_for('meetings.load_meetings') }}">Meetings</a>
-            <a href="{{ url_for('materials.forum', section='visa') }}">Contract Reviews</a>
-            <a href="{{ url_for('materials.forum', section='epik') }}">Job Adverts</a>
-            <a href="{{ url_for('materials.forum', section='hagwon') }}">Politics</a>
-            <a href="{{ url_for('materials.forum', section='new') }}">Random</a>
-            <a href="{{ url_for('materials.forum', section='other') }}">Other</a>
+            <a href="{{ url_for('materials.questions', section='classroom') }}">Classroom</a>
+            <a href="{{ url_for('materials.questions', section='visa') }}">Visa</a>
+            <a href="{{ url_for('materials.questions', section='coteaching') }}">Co-teachers</a>
+            <a href="{{ url_for('materials.questions', section='contracts') }}">Contracts</a>
+            <a href="{{ url_for('materials.questions', section='epik') }}">EPIK</a>
+            <a href="{{ url_for('materials.questions', section='hagwon') }}">Hagwon</a>
+            <a href="{{ url_for('materials.questions', section='new') }}">New teachers</a>
+            <a href="{{ url_for('materials.questions', section='other') }}">Other</a>
             <div class="materials-filters">
                 <form method="POST" action="" id="filter-submit">
                     <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>

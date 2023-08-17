@@ -1,8 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Bibimhak - Home{% endblock %}
 {% block content %}
-   
-    
     <div class="posts">
         <div class="post-editor">
             <form class="edit-form" method="POST" action="" style="flex-grow: 1;">
@@ -25,7 +23,6 @@
             </form>
         </div>
         
-      
         <div class="post-form-container">
             <h2>Staff Room</h2>
             <div style="display: flex;">
@@ -35,7 +32,6 @@
                             <img class="post-form-img" src="{{ url_for('static', filename='pics/' + current_user.image_file)}}">
                         </a>
                     </div>
-                   
                 </div>
                 <div style="display: flex; width: 100%;">
                     <form method="POST" action="" style="width: 100%;">
@@ -64,15 +60,10 @@
             <div class="loader"></div>
         </div>
     </div>
-    
-   
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock content %}
 
-
 {% block announcement_bar %}
-
-
     <div class="announcement-bar">
         {% if current_user.my_meetings()|length > 0 %}
         <div style="display: flex; align-items: center;">
@@ -136,5 +127,4 @@
         </ul>
         </span>
     </div>
-
 {% endblock announcement_bar %}

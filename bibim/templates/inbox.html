@@ -89,32 +89,52 @@
         <div class="conversations">
           <h5>Messages</h5>
           {% for user in conversations %}
-              <div class="conversation" 
-                    data-user="{{ user.id }}" 
-                    data-username="{{ user.username }}" 
-                    data-img="{{ user.image_file }}"
-                    data-lastseen="{{ user.active_since() }}">
+              {% set last_message = user.get_last_message() %}
+              {% if last_message.read and last_message.user_id != current_user.id %}
+                <div class="conversation" 
+                      data-user="{{ user.id }}" 
+                      data-username="{{ user.username }}" 
+                      data-img="{{ user.image_file }}"
+                      data-lastseen="{{ user.active_since() }}">
+                    <div style="display: flex; align-items: center;">
+                      <img class="conversation-img" src="static/pics/{{ user.image_file }}">
+                      <div>
+                          <p>{{ user.username }}</p>
+                          <div style="display: flex;">
+                            <p>{{ last_message.body|truncate(20, killwords=False, end='...') }}</p>
+                            <span>&bull;</span>
+                            <span>{{ user.get_last_message_time() }}</span>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+              {% else %}
+                <div class="conversation-unread" 
+                  data-user="{{ user.id }}" 
+                  data-username="{{ user.username }}" 
+                  data-img="{{ user.image_file }}"
+                  data-lastseen="{{ user.active_since() }}">
                   <div style="display: flex; align-items: center;">
-                    <img src="static/pics/{{ user.image_file }}">
+                    <img class="conversation-img" src="static/pics/{{ user.image_file }}">
                     <div>
                         <p>{{ user.username }}</p>
                         <div style="display: flex;">
-                          <p>{{ user.get_last_message().body|truncate(20, killwords=False, end='...') }}</p>
+                          <p>{{ last_message.body|truncate(20, killwords=False, end='...') }}</p>
                           <span>&bull;</span>
                           <span>{{ user.get_last_message_time() }}</span>
                         </div>
                     </div>
                   </div>
-                  
-              </div> 
+              </div>
+            {% endif %}
           {% endfor %}
         </div>
 
-            <div style="display: flex; flex-direction: column; flex: auto;">
+            <div style="display: flex; flex-direction: column; flex: auto; background-color: white;">
 
                 {% if user %}
                   <div class="inbox-header" style="display: flex;">
-                    <div class="header-info" style="border-bottom: 1px solid gainsboro; display: flex;">
+                    <div class="header-info" style="display: flex;">
                         <a class="header-link" href="{{ url_for('users.user_profile', username=user.username) }}">
                           <img class="header-img" src="{{ url_for('static', filename='pics/' + user.image_file)}}">
                         </a>

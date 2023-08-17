@@ -224,15 +224,24 @@ def delete_material(material_id):
         db.session.execute(tags_table.delete().where(tags_table.c.tag_id==tag[0]).where(tags_table.c.material_id==tag[1]))
 
     db.session.commit()
-
     db.session.delete(material)
     db.session.commit()
     flash('Your material has been deleted!', 'success')
     return redirect(url_for('materials.load_materials', level=level))
 
 
-@materials.route('/forum', methods=["POST", "GET"])
-def forum():
+@materials.route('/questions', defaults={'section': None}, methods=["POST", "GET"])
+@materials.route('/questions/<string:section>', methods=["POST", "GET"])
+def questions(section):
     page = request.args.get('page', 1, type=int)
-    posts = Material.query.filter_by(level='teaching').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    posts = Material.query.filter_by(level='questions').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    return render_template('questions.html', materials=posts)
+
+@materials.route('/forum/', defaults={'section': None}, methods=["POST", "GET"])
+@materials.route('/forum/<string:section>', methods=["POST", "GET"])
+def forum(section): 
+    page = request.args.get('page', 1, type=int)
+    if section:
+        posts = Material.query.filter_by(level='questions', section=section).order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    posts = Material.query.filter_by(level='questions').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('forum.html', materials=posts)

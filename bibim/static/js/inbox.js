@@ -1,4 +1,6 @@
-const conversations = document.querySelectorAll('.conversation');
+const unreadConversations = document.querySelectorAll('.conversation-unread');
+const readConversations =  document.querySelectorAll('.conversation');
+const conversations = [...unreadConversations, ...readConversations]
 const messageDisplay = document.querySelector('.message-display');
 const header = document.querySelector('.inbox-header')
 const headerUsername = document.querySelector('.header-username')
@@ -52,17 +54,23 @@ function displayMessages(history) {
         }
         const messageDiv = document.createElement('div');
         const container = document.createElement('div')
+        const time = document.createElement('div')
+        time.setAttribute('class', 'message-timestamp')
         messageDiv.innerHTML = msg['sender'] + ': ' + msg['content'];
+        time.innerHTML = msg['date']
         if (msg['sender'] != msg['current_user']) {
             container.setAttribute('class', 'message-container')
             messageDiv.setAttribute('class', 'message')
+            container.appendChild(messageDiv)
+            container.appendChild(time)
         }
         else {
             container.setAttribute('class', 'message-sent-container')
             messageDiv.setAttribute('class', 'message-sent')
-            
+            container.appendChild(time)
+            container.appendChild(messageDiv)
         }
-        container.appendChild(messageDiv)
+       
         messageDisplay.appendChild(container);
     });
     messageDisplay.scrollTop = messageDisplay.scrollHeight;

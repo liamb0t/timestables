@@ -53,11 +53,10 @@ def login():
             if user.verified:
                 login_user(user)
                 nextpage = request.args.get('next')
-                flash('Login succesful', 'success')
                 return redirect(url_for(nextpage)) if nextpage else redirect(url_for('main.home'))
             else:
                 flash('Please confirm your email address to login.', 'danger')
-                return redirect(url_for('main.login'))
+                return redirect(url_for('main.login'))  
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form=form)
@@ -65,7 +64,7 @@ def login():
 
 @main.route("/register", methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and current_user.verified:
         return redirect(url_for('main.home'))
     form = RegistrationForm()
     if form.validate_on_submit():

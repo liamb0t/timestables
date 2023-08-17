@@ -766,7 +766,6 @@ a:hover i {
   background-color: #ffaa00;
   color: #ffffff;
   border-radius: 15%;
-  margin: 10px;
 }
 
 .post-form-img {
@@ -1484,6 +1483,7 @@ a:hover i {
 /* Conversations sidebar */
 
 .conversations {
+  background-color: white;
   display: flex;
   border-right: 1px solid gainsboro;
   flex-direction: column;
@@ -1500,6 +1500,15 @@ a:hover i {
   padding-left: 30px;
 }
 
+.conversation-unread {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  padding-left: 30px;
+  background-color: gainsboro;
+}
+
 .conversations h5 {
   padding-top: 10px;
   padding-left: 30px;
@@ -1509,7 +1518,7 @@ a:hover i {
   background-color: #f5f5f5;
 }
 
-.conversation img {
+.conversation-img {
   vertical-align: middle;
   width: 60px;
   height: 60px;
@@ -1534,26 +1543,37 @@ a:hover i {
   height: 80vh;
   padding: 10px;
   overflow-y: auto;
+  background-color: white;
 }
-
-
 
 .message {
   border-radius: 18px;
   background-color: rgb(239, 239, 239);
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 .message-sent {
   border-radius: 18px;
   background-color: orange;
   text-align: right;
   padding: 10px;
+  margin-bottom: 5px;
 }
 
 .message-container {
   display: flex;
   justify-content: flex-start;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.message-timestamp {
+  display: flex;
+  align-items: flex-end;
+  font-size: smaller;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-bottom: 5px;
 }
 
 .message-sent-container {
@@ -1580,7 +1600,7 @@ a:hover i {
 }
 
 .message-input-border {
-  display: none;
+  display: flex;
   width: 80%;
   padding: 9px;
   border: 1px solid gainsboro;
@@ -1600,10 +1620,17 @@ a:hover i {
 }
 
 .inbox-submit {
+  background-color: white;
   border-radius: 15px;
   border: none;
 }
 
+.inbox-header {
+  background-color: white;
+  padding-top: 10px;
+  padding-left: 10px;
+  border-bottom: 1px solid gainsboro;
+}
 
 
 /* Footer for bottom of page containing copyright and other shtuff */

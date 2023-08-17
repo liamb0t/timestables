@@ -170,6 +170,12 @@ class User(db.Model, UserMixin):
         Meeting.start_time >= current_datetime.time()
         ).all()
         return going_meetings
+    
+    def add_notification(self, name, related_id, data):
+        n = Notification(name=name, payload_json=json.dumps(data), user=self, message_id=related_id)
+        db.session.add(n)
+        db.session.commit()
+        return n
 
     def new_notifications(self):
         return Notification.query.filter_by(user_id=self.id).filter(
@@ -348,6 +354,7 @@ class Material(db.Model):
     title = db.Column(db.String(100), nullable=False)
     level = db.Column(db.String, nullable=False)
     grade = db.Column(db.Integer, nullable=False)
+    section = db.Column(db.String, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -456,7 +463,7 @@ class Message(db.Model):
             'sender': self.author.username,
             'recipient': self.recipient.username,
             'content': self.body,
-            'date': self.timestamp,
+            'date': self.timestamp.strftime("%I:%M%p").lower() ,
             'read': self.read,
         }
     
@@ -466,12 +473,14 @@ class Notification(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.Float, index=True, default=time)
     read = db.Column(db.Boolean, nullable=False, default=False)
+    payload_json = db.Column(db.Text)
 
     post_id = db.Column(db.Integer, db.ForeignKey('post.id')) 
     comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))  
     like_id = db.Column(db.Integer, db.ForeignKey('like.id'))  
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))  
     meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))  
+    message_id = db.Column(db.Integer, db.ForeignKey('message.id'))  
 
     def get_data(self):
         return json.loads(str(self.payload_json))
