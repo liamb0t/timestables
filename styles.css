@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #ffffff;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.problem {
+    font-size: 2em;
+    margin: 20px 0;
+}
+
+.timeDisplay {
+    background-color: #e0e0e0;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+
+input, button {
+    padding: 10px 15px;
+    margin-top: 10px;
+    font-size: 1em;
+}
+
+button {
+    cursor: pointer;
+}
+
+.highScoreDisplay {
+    background-color: #f0f8ff;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
