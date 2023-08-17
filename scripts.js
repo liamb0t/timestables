@@ -51,6 +51,17 @@ function endGame() {
     playAgainButton.style.display = 'inline-block';
 }
 
+function playRandomWrongSound() {
+    // Generate a random number between 1 and 3
+    let randomNum = Math.floor(Math.random() * 3) + 1;
+    console.log(randomNum)
+
+    // Play the corresponding audio
+    document.getElementById(`wrongSound${randomNum}`).play();
+    console.log( document.getElementById(`wrongSound${randomNum}`))
+    console.log('sdifjo')
+}
+
 function resetGame() {
     maxNumber = 2;
     score = 0;
@@ -106,9 +117,10 @@ function checkAnswer() {
         message.style.color = 'green';
         answer.value = '';
     } else {
+        playRandomWrongSound()
         timeLeft--;
         generateNumbers();
-        message.textContent = `Tanga! That's the wrong answer! The correct answer was ${correctAnswer }`;
+        message.textContent = `Wrong answer! The correct answer was ${correctAnswer }`;
         message.style.color = 'red';
         answer.value = '';
     }
