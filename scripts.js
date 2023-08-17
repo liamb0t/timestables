@@ -108,7 +108,7 @@ function checkAnswer() {
     } else {
         timeLeft--;
         generateNumbers();
-        message.textContent = `Wrong answer! The correct answer was ${correctAnswer }`;
+        message.textContent = `Tanga! That's the wrong answer! The correct answer was ${correctAnswer }`;
         message.style.color = 'red';
         answer.value = '';
     }
