@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
+            <div>
+                <h2>Marketplace</h1>
+                <p>Buy or sell used goods</p>
+            </div>
+            <div>
+                <a class="create-btn" href="{{ url_for('marketplace.create_ad') }}">
+                    Create ad
+                </a>
+            </div>
+        </div>
+        
+        <div class="materials-filters">
+            <form method="POST" action="" id="filter-submit">
+                {{ form.hidden_tag() }}
+                <div class="select-options" id="selectOptions">
+                    <div class="adv-filter" data-para="new">Latest</div>
+                    <div class="adv-filter" data-para="old">Oldest</div>
+                    <div class="adv-filter" data-para="likes">Likes</div>
+                    <div class="adv-filter" data-para="comments">Comments</div>
+                    <div class="adv-filter" data-para="following">Following</div>
+                </div>
+    
+                {{ form.search(class='filter-select') }}
+    
+                {% if form.type.errors %}
+                    {{form.type(class="form-control form-control-lg is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.type.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ form.type(class="filter-select")}}
+                {% endif %}
+    
+                <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
+            </form>
+        </div>
+    
+        <div class="event-grid">
+            {% if classifieds.total == 0 %}
+                <h3>Hm...it seems like there are no results with those attributes. 🙅</h3>
+                <p>Try using a different filter or use the searchbar above.</p>
+            {% endif %}
+            {% for classified in classifieds %}
+                    <div class="event">
+                        <a href="{{ url_for('marketplace.ad', ad_id=classified.id)}}">
+                            <img src="/static/pics/default.jpg">     
+                        </a>
+                        <a href="{{ url_for('marketplace.ad', ad_id=classified.id)}}"></a>
+                            <p class="material-post-title">{{ classified.title }}</p>
+                        </a>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+  
+    {% for page_num in classifieds.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% if page_num %}
+            {% if classifieds.page == page_num %}
+                <a style="background-color: rgba(244, 130, 37, 1); color: white;" class="paginate-btn" href="{{ url_for('marketplace.load_ads', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="paginate-btn" href="{{ url_for('marketplace.load_ads', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}    
+    <script src="{{ url_for('static', filename='js/loadMeetings.js') }}"></script>
+{% endblock content %}
+

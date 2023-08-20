@@ -44,11 +44,11 @@
           <a href="{{ url_for('main.home') }}"><img src="{{ url_for('static', filename='pics/BIBIMHAK.png')}}" alt="Site Logo" class="logo"></a>
           
           <div class="search-bar">
-              <form method="POST" action="{{ url_for('main.search')}}">
-                {{ search_form.hidden_tag() }}
-                {{ search_form.query() }}
-              </form>
-              <i class="fas fa-search"></i>
+            <i class="fas fa-search"></i>
+            <form method="POST" action="{{ url_for('main.search')}}">
+              {{ search_form.hidden_tag() }}
+              {{ search_form.query() }}
+            </form>
           </div>  
           <div class="profile">
             <a href="{{ url_for('posts.inbox') }}">

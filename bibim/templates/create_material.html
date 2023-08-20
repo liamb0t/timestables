@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h4>Create a post for {{ legend }}</h4>
     <div class="creator-container">
+        <h3>Create a post for {{ legend }}</h3>
         <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -16,7 +16,6 @@
                 {% else %}
                     {{ form.title(class="form-control form-control-lg")}}
                 {% endif %}
-                    
                 </div>
                    
                 <div>
@@ -80,7 +79,7 @@
                 </div>
             </fieldset>
             <div>
-                {{ form.submit(class="btn btn-outline-info") }}
+                {{ form.submit(class="submit-btn-orange") }}
             </div>
         </form>
     </div>

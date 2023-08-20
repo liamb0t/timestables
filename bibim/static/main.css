@@ -159,9 +159,11 @@ a:hover {
   
 }
 
+
+
 .navbar .search-bar input {
   width: 100%;
-  padding: 5px 40px 5px 20px;
+  padding: 5px 15px 5px 35px;
   border-radius: 25px;
   border: none;
   border: 1px solid gainsboro;
@@ -173,11 +175,11 @@ a:hover {
 }
 
 .navbar .search-bar .fa-search {
-  position: absolute;
-  right: 10px;
+  position: absolute; 
   top: 50%;
   transform: translateY(-50%);
   color: #000;
+  margin-left: 10px;
 }
 
 .navbar .profile {
@@ -423,6 +425,14 @@ a:hover i {
   background-color: rgb(42, 142, 229);
 }
 
+
+.submit-btn-orange {
+  background-color: orange;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+}
 
 .paginate-btn {
   display: inline-block;
@@ -927,7 +937,6 @@ a:hover i {
   border: none;
   outline: none;
   background-color: transparent;
-  border-radius: 25px;
   font-size: 16px;
   width: 100%
 }

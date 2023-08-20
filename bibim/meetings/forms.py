@@ -7,7 +7,6 @@ from wtforms_components import DateField
 from flask_wtf.file import FileAllowed
 
 
-
 class MeetingForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()], render_kw={'placeholder': 'Event name'})
     content = TextAreaField('Description', validators=[DataRequired()], render_kw={'placeholder': 'Text'})

@@ -42,6 +42,7 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', backref='commenter', lazy=True)
     materials = db.relationship('Material', backref='creator')
     meetings = db.relationship('Meeting', backref='organizer')
+    classifieds = db.relationship('Classified', backref='advertiser')
     notifications = db.relationship('Notification', backref='user',
                                     lazy='dynamic')
     followers = db.relationship('User', secondary='follower', 
@@ -130,7 +131,27 @@ class User(db.Model, UserMixin):
     def has_liked_material(self, material):
         return Like.query.filter(
             Like.user_id == self.id,
-            Like.material_id == material.id).count() > 0   
+            Like.material_id == material.id).count() > 0  
+
+
+    def like_classified(self, classified):
+        like = Like(user_id=self.id, classified_id=classified.id)
+        db.session.add(like)
+        return like
+
+    def unlike_classified(self, classified):
+        Notification.query.filter_by(
+            name='classified_like',
+            user_id=self.id,
+            id=self.id).delete()
+        Like.query.filter_by(
+            user_id=self.id,
+            classified_id=classified.id).delete()
+
+    def has_liked_classified(self, classified):
+        return Like.query.filter(
+            Like.user_id == self.id,
+            Like.material_id == classified.id).count() > 0   
 
     def like_comment(self, comment):
         like = Like(user_id=self.id, comment_id=comment.id)
@@ -273,6 +294,7 @@ class Like(db.Model):
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
     meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
     comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
+    classified_id = db.Column(db.Integer, db.ForeignKey('classified.id'))
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     notifications = db.relationship('Notification', backref='like', cascade="all, delete-orphan")
@@ -295,6 +317,7 @@ class Comment(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
     meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
+    classified_id = db.Column(db.Integer, db.ForeignKey('classified.id'))
 
     likes = db.relationship('Like', backref='comment')
     notifications = db.relationship('Notification', backref='comment', cascade="all, delete-orphan")
@@ -400,6 +423,7 @@ class File(db.Model):
 
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
     meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
+    classified_id = db.Column(db.Integer, db.ForeignKey('classified.id'))
 
     def __repr__(self):
         return f"File('{self.filename}', '{self.file_type}')"
@@ -444,6 +468,38 @@ class Meeting(db.Model):
 
     def is_attending(self, user):
         return True if user in self.going else False
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'author': self.organizer.username,
+            'title': self.title,
+            'content': self.content,
+            'timestamp': post_timestamp(self.date_posted),
+        }
+    
+class Classified(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+    fee = db.Column(db.Integer, nullable=False, default=0)
+    tag = db.Column(db.String(50), nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    comments = db.relationship('Comment', backref='ad')
+    files = db.relationship('File', backref='files_ad', lazy=True)
+    likes = db.relationship('Like', backref='ad')
+    notifications = db.relationship('Notification', backref='ad', cascade="all, delete-orphan")
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'author': self.advertiser.username,
+            'title': self.title,
+            'content': self.content,
+            'timestamp': post_timestamp(self.date_posted),
+        }
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -481,6 +537,7 @@ class Notification(db.Model):
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))  
     meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))  
     message_id = db.Column(db.Integer, db.ForeignKey('message.id'))  
+    classified_id = db.Column(db.Integer, db.ForeignKey('classified.id'))  
 
     def get_data(self):
         return json.loads(str(self.payload_json))
@@ -589,6 +646,38 @@ class Notification(db.Model):
                 'timestamp': self.timestamp,
                 'html': 'commented on your post:',
                 'url': f'/material/{material.id}',
+                'read': self.read,
+            }
+        
+        elif self.name == 'classified_comment':
+
+            comment = Comment.query.filter_by(id=self.comment_id).first()
+            classified = comment.classified
+
+            return {
+                'id': self.id,
+                'type': self.name,
+                'sent_data': comment.serialize(),
+                'user_data': classified.serialize(),
+                'timestamp': self.timestamp,
+                'html': 'commented on your advert:',
+                'url': f'/material/{classified.id}',
+                'read': self.read,
+            }
+        
+        elif self.name == 'classified_like':
+
+            like = Like.query.filter_by(id=self.like_id).first()
+            classified = like.classified
+
+            return {
+                'id': self.id,
+                'type': self.name,
+                'sent_data': like.serialize(),
+                'user_data': classified.serialize(),
+                'timestamp': self.timestamp,
+                'html': 'liked your advert:',
+                'url': f'/material/{classified.id}',
                 'read': self.read,
             }
 

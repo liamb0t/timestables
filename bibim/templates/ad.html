@@ -1,0 +1,176 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="options-popup-secondary">
+    {% if current_user == ad.advertiser %}
+      <button type="button" class="delete-btn" data-toggle="modal" data-target="#deleteModal">Delete</button>
+      <a href="{{ url_for('marketplace.edit_ad', ad_id=ad.id) }}">
+        <div class="options-editBtn">Edit</div>
+      </a>
+    {% endif %}
+    <div>Report</div>
+    <div>Cancel</div>
+  </div>
+  <div class="material-container">
+    <div class="header">
+      <a href="{{ url_for('users.user_profile', username=ad.advertiser.username) }}">
+        <img src="{{ url_for('static', filename='pics/' + ad.advertiser.image_file)}}" alt="Profile Picture" class="profile-picture">
+      </a>
+      <a href="{{ url_for('users.user_profile', username=ad.advertiser.username) }}">
+        <div class="username">{{ ad.advertiser.username }}</div>
+      </a>
+      <span>&bull;</span>
+      <div class="date">{{ post_timestamp(ad.date_posted) }}</div>
+      <i class="fa fa-ellipsis" id="ellipsis-icon"></i>
+    
+    </div>
+    <h2 class="title">{{ ad.title }}</h2>
+    <div class="content">
+      <p>{{ ad.content | safe }}</p>
+    </div>
+
+    <div class="uploads">
+      {% if ad.files|length != 0 %}
+        <h5>Attachments <span class="attachment-count">{{ ad.files|length }}</span></h5>
+        {% if ad.files|length > 1 %}
+          <div class="attachment">
+            <i class="fa-regular fa-file-zipper"></i>
+            <a href="{{ url_for('main.download_all', classified_id=classified.id) }}">
+              <p class="attachment-filename">Get all</p>
+            </a>
+          </div>
+        {% endif %}
+      {% endif %}
+      {% if material.files %}
+        {% for file in material.files %}
+        {% set filesize, byte_size = get_file_size(file.filepath) %}
+          <a href="{{ url_for('main.download', file_id=file.id)}}">
+            <div class="attachment">
+              <i class="fa-regular fa-file-image"></i>
+              <div class="attachment-info">
+                <p class="attachment-filename">{{ file.filename }} 
+                  <span class="attachment-size">{{ filesize}}{{ byte_size}}</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <div class="like-button">
+        <i id="material-like-button" class="fa-regular fa-heart" data-material-id="{{ ad.id}}"></i>
+        <span id="material-like-count" class="like-count" data-material-likes="{{ ad.likes | length }}">{{ ad.likes | length }} likes</span>
+      </div>
+  
+      <div class="tags">
+        {% for tag in material.tags %}
+          <span class="tag">{{ tag.tagname }}</span>
+        {% endfor %}
+      </div>
+    </div>
+   
+
+    <div class="footer">
+      <div class="comments">
+        {% for comment in comments %}
+        <div class="comment-container">
+          <div>
+            <img class="user-pic" src="{{ url_for('static', filename='pics/' + comment.commenter.image_file)}}" alt="User profile picture">
+          </div>
+          <div class="user-info" id="user-info-{{ comment.id }}">
+            <div class="header">
+              <div class="username">{{ comment.commenter.username }}</div>
+              {% if comment.parent %}
+                <a href="{{url_for('users.user_profile', username=comment.parent.commenter.username) }}" style="color: rgb(53, 152, 157)">@{{ comment.parent.commenter.username }}</a>
+              {% endif %}
+              <div class="comment">{{ comment.content }}</div>
+            </div>
+            <div class="footer">
+              <div class="date">{{ post_timestamp(comment.date_posted) }}</div>
+              {% if comment.likes_count() > 0 %}
+                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes_count() }}" style="display: block">{{ comment.likes_count() }} likes</div>
+                {% else %}
+                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes_count() }}" style="display: none;">{{ comment.likes_count() }} likes</div>
+              {% endif %}
+              <div class="reply-btn" data-comment-id="{{ comment.id }}" data-author="{{ comment.commenter.username }}">Reply</div>
+            </div>
+          </div>
+          <div class="like-btn">
+            <div class="like-icon">
+              <i id="material-comment-like-icon-{{ comment.id}}" class="fa-regular fa-heart" data-comment-id="{{ comment.id }}"></i>
+            </div>
+          </div>
+        </div>
+
+        {% if comment.get_replies() %}
+        <btn class="show-replies-btn" id="show-replies-btn-{{ comment.id }}" style="display: block" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies ({{ comment.get_replies()|length }})</btn>
+        <div class="comments-replies" id="comment-reply-{{ comment.id }}" style="display: none">
+          {% for reply in comment.get_replies() %}
+            <div class="comment-container" style="margin-left: 50px;">
+              <div>
+                <img class="user-pic" src="{{ url_for('static', filename='pics/' + reply.commenter.image_file)}}" alt="User profile picture">
+              </div>
+              <div class="user-info">
+                <div class="header">
+                  <div class="username">{{ reply.commenter.username }}</div>
+                
+                  <div class="comment">{{ reply.content }}</div>
+                </div>
+                <div class="footer">
+                  <div class="date">{{ post_timestamp(reply.date_posted) }}</div>
+                  {% if reply.likes_count() > 0 %}
+                    <div class="date" id="like-counter-{{ reply.id }}" data-count="{{ reply.likes_count() }}" style="display: block">{{ reply.likes_count() }} likes</div>
+                    {% else %}
+                    <div class="date" id="like-counter-{{ reply.id }}" data-count="{{ reply.likes_count() }}" style="display: none;">{{ reply.likes_count() }} likes</div>
+                  {% endif %}
+                  <div class="reply-btn" data-comment-id="{{ reply.id }}" data-author="{{ reply.commenter.username }}">Reply</div>
+                </div> 
+              </div>
+              <div class="like-btn">
+                <div class="like-icon">
+                  <i id="material-comment-like-icon-{{ reply.id}}" class="fa-regular fa-heart" data-comment-id="{{ reply.id }}"></i>
+                </div>
+              </div>
+            </div>    
+          {% endfor %}
+        </div>
+      {% else %}
+        <btn class="show-replies-btn" id="show-replies-btn-{{ comment.id }}" style="display: none" data-comment-id="{{ comment.id }}" data-replies-count="{{ comment.get_replies()|length }}">	&mdash;&mdash; View replies ({{ comment.get_replies()|length }})</btn>
+      {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <form class="material-comment-form" method="POST" action="" data-postid="{{ ad.id }}">
+      <div class="material-comment-field">
+        <img src="/static/pics/default.jpg" alt="User Profile Pic" class="material-comment-field-profile-pic">
+        {{ comment_form.hidden_tag() }}
+        {{ comment_form.content(class="material-comment-field-input") }}
+        {{ comment_form.submit(class="material-comment-field-submit") }}
+      </div>
+    </form>
+  </div>
+  <!--Modal-->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
+          <p>Are you sure you want to delete this post?</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form class="delete-form" action="{{ url_for('marketplace.delete_ad', ad_id=ad.id)}}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/material.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/edits.js') }}"></script>
+{% endblock content %}
+
