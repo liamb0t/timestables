@@ -1424,6 +1424,14 @@ a:hover i {
   margin-right: 5px;
 }
 
+.question-post-title {
+  font-size: medium;
+  font-weight: bolder;
+}
+
+.question-post-content {
+  font-size: smaller;
+}
 
 /* style for users profile page */
 

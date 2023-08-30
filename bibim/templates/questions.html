@@ -38,11 +38,9 @@
                 <div style="width: 100%;">
                     <div class="material-post-header">
                         <div style="display: flex;">
-                            <div class="material-post-grade">
+                            <div class="question-post-title">
                                {{ question.title }}
                             </div>
-                            
-                          
                         </div>
                         <div class="material-post-user-info">
                             <span class="material-post-author">Asked by</span>
@@ -50,10 +48,10 @@
                             <span class="material-post-author">{{ question.creator.username }}</span>
                             <span class="material-post-date">{{ post_timestamp(question.date_posted) }} ago</span>
                         </div>
-                      
-                        
                     </div>
-                    <div class="material-post-title">{{ question.content|safe | truncate(190, killwords=False, end='...')}}</div>
+                    <div class="question-post-content">
+                        {{ question.content|striptags|escape|replace('\n', '')|replace('  ', ' ')|truncate(200, killwords=False, end='...') }}
+                    </div>
                     <div class="material-post-footer">
                         <div style="display: flex; align-items: center;"> 
                             <div class="material-post-tags">
