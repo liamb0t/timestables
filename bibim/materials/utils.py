@@ -38,7 +38,15 @@ def get_grades(level):
         return [('0', 'Select Grade'), ('1', '1st Grade'), ('2', '2nd Grade'), 
                 ('3', '3rd Grade'), ('4', '4th Grade'), ('5', '5th Grade'), ('6', '6th Grade')]
     elif level == 'middle':
-        return [('0', 'Select a textbook'), ('1', 'Dong-A Lee'), ('2', 'Dong-A Kim'), ('3', 'YBM Kim'), ('4', 'YBM Choi'), ('5', 'Dong-A')]
+        return [('0', 'Select Grade'), ('1', '1st Grade'), ('2', '2nd Grade'), 
+                ('3', '3rd Grade')]
+    elif level == 'high':
+        return [('0', 'Select Grade'), ('1', '1st Grade'), ('2', '2nd Grade'), 
+                ('3', '3rd Grade')]
+    elif level == 'question':
+        return [('0', 'Select category'), ('classroom', 'Classroom'), ('visa', 'Visa'), 
+                ('coteaching', 'Co-teachers'), ('epik', 'EPIK'), ('hagwon', 'Hagwon'), 
+                ('new', 'New teachers'), ('accommodation', 'Accommodation'), ('contracts', 'Contracts'), ('other', 'Other'), ]
     else:
         return
 

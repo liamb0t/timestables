@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div style="margin: 0 auto; width: 50rem; background-color: white; border-radius: 17px;">
+    <div class="main-container">
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 20px; padding-top: 20px">
         <h2>Materials for {{ level }} school</h1>
@@ -31,6 +31,7 @@
                
             {% else %}
                 <div class="select-options" id="selectOptions">
+                    <h5>Sort by</h5>
                    <div class="adv-filter" data-para="new">Latest</div>
                    <div class="adv-filter" data-para="old">Oldest</div>
                    <div class="adv-filter" data-para="likes">Likes</div>

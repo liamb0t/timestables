@@ -4,6 +4,7 @@ from bibim.models import Post, User, Material, File, Comment, Notification, Like
 from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
 from bibim.main.utils import send_reset_email, prompts, send_verification_email
 from bibim.posts.forms import PostForm, EditForm
+from bibim.posts.utils import post_timestamp
 from bibim import bcrpyt, db, app
 import datetime
 from sqlalchemy import or_, func
@@ -11,6 +12,7 @@ from random import choice
 import zipfile
 import io
 import os 
+import bleach
 
 main = Blueprint('main', __name__)
 
@@ -127,28 +129,33 @@ def logout():
 @main.route("/home", methods=["POST", "GET"])
 @login_required
 def home():
+    current_datetime = datetime.datetime.utcnow()
     post_form = PostForm()
     edit_form = EditForm()
     placeholder =  choice(prompts)
-    print(placeholder)
     if not current_user.is_anonymous:
         post_form.content.render_kw['placeholder'] = f"{current_user.username}, {placeholder[0].lower()}{placeholder[1:]}"
     else:
         post_form.content.render_kw['placeholder'] = placeholder
     # code for announcement bar
-    today = datetime.date.today()
     popular_posts = Post.query.join(Post.likes, isouter=True)\
                             .group_by(Post)\
                             .order_by(func.count(Like.id).desc()).limit(5)
     popular_materials = Material.query.join(Material.likes, isouter=True)\
                             .group_by(Material)\
-                            .order_by(func.count(Like.id).desc()).limit(10)
+                            .order_by(func.count(Like.id).desc()).limit(5)
+    upcoming_meetings =  Meeting.query.filter(Meeting.start_date >= current_datetime.date(),).all()
+    recent_questions = Material.query.filter_by(level='question').limit(5)
     if post_form.validate_on_submit():
-        post = Post(content=post_form.content.data, author=current_user)
+        post_content = post_form.content.data
+        linkified_content = bleach.linkify(post_content)
+        post = Post(content=linkified_content, author=current_user)
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('main.home'))
-    return render_template('home.html', post_form=post_form, edit_form=edit_form, popular_posts=popular_posts, popular_materials=popular_materials)
+    return render_template('home.html', post_form=post_form, edit_form=edit_form, popular_posts=popular_posts, 
+                           popular_materials=popular_materials, timestamper=post_timestamp, 
+                           upcoming_meetings=upcoming_meetings, recent_questions=recent_questions)
 
 @main.route("/download/<int:file_id>", methods=["GET"])
 @login_required

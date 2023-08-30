@@ -5,14 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
 </head>
 <body>
     <div class="top-line"></div>
     <nav class="navbar">
         <div class="navbar-logo">
             <a href="{{ url_for('main.landing') }}">
-                <img id="logo-header" src="{{ url_for('static', filename='landing_page/logo-name.png') }}" alt="Website Logo" class="login-logo">
+                <img id="logo-header" src="{{ url_for('static', filename='BIBIMHAK.png') }}" alt="Website Logo" class="login-logo">
             </a>
             
         </div>
@@ -35,19 +35,21 @@
         </div>
         <img src="{{ url_for('static', filename='landing_page/teacher.png')}}">
     </div>
-
-
     <footer>
         <div class="footer-container">
           <div class="logo">
-            <img style="width: 220px;" src="{{ url_for('static', filename='landing_page/logo-name.png')}}" alt="Your Logo">
+            <img style="width: 220px;" src="{{ url_for('static', filename='BIBIMHAK.png')}}" alt="Your Logo">
           </div>
-          <div class="copyright">
+          <div class="copyright" style="font-size: small;">
             &copy; 2023 Bibimhak. All rights reserved.
+          </div>
+          <div class="copyright" style="font-size: small;">
+            Logo design by 
+            <a class="credit-link" href="https://www.instagram.com/shazzah.98/" target="_blank">
+               @shazzah.98
+            </a>
           </div>
         </div>
     </footer>
-    
-    
 </body>
 </html>

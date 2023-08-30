@@ -134,3 +134,22 @@ def edit_ad(ad_id):
     return jsonify({
         'liked': current_user.has_liked_ad(ad)
     })
+
+
+@marketplace.route("/marketplace/delete/<int:ad_id>")
+@login_required
+def delete_ad(ad_id):
+    ad = Classified.query.filter_by(id=ad_id).first_or_404()
+    if current_user.has_liked_ad(ad):
+        current_user.unlike_ad(ad)  
+        db.session.commit()
+    else:
+        like = current_user.like_ad(ad)
+        db.session.commit()
+        if ad.advertiser != current_user:
+            n = Notification(name='ad_like', like_id=like.id, user_id=ad.user_id, ad_id=ad.id)
+            db.session.add(n)
+            db.session.commit()
+    return jsonify({
+        'liked': current_user.has_liked_ad(ad)
+    })

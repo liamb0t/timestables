@@ -36,7 +36,7 @@
                 <div style="display: flex; width: 100%;">
                     <form method="POST" action="" style="width: 100%;">
                         {{ post_form.hidden_tag() }}
-                         
+
                         {% if post_form.content.errors %}
                             {{post_form.content(class="form-control form-control-lg is-invalid")}}
                             <div class="invalid-feedback">
@@ -45,10 +45,12 @@
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ post_form.content}}
+                            {{ post_form.content }}
                         {% endif %}
 
                         <div class="post-form-footer">
+                            <i id="emoji-icon" class="fa-regular fa-face-smile"></i>
+                            <emoji-picker></emoji-picker>
                             {{ post_form.submit }}
                          </div>
                     </form>
@@ -66,65 +68,135 @@
 {% block announcement_bar %}
     <div class="announcement-bar">
         {% if current_user.my_meetings()|length > 0 %}
-        <div style="display: flex; align-items: center;">
-        <i class="fa-solid fa-calendar"></i>
-        <h5>Your Upcoming Meetings</h5>
-        </div>
-        <ul class="list-group">
-            {% for meeting in current_user.my_meetings() %}
-                <li>
-                    <div class="announcement-bar-container">
-                        <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + meeting.organizer.image_file) }}">
-                        <div class="announcement-bar-header">
-                            <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id) }}">{{ meeting.title | truncate(30, True, '')}}</a>  
-                                                
-                        </div>
-                        <div>
-                        <span>{{ meeting.start_date }} at {{ meeting.start_time }}</span>   
-                        <span>{{ meeting.going|length}} going</span>
-                        </div>
-                    
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+            <div class="announcement-bar-container"> 
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <h5>Events you're attending</h5>
+                </div>
+                <ul class="list-group">
+                    {% for meeting in current_user.my_meetings() %}
+                        <li>
+                            <div class="announcement-bar-entry">
+                                <div class="announcement-bar-header">
+                                    <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id) }}">{{ meeting.title | truncate(30, True, '')}}</a>                             
+                                </div>
+                                <div>
+                                    <span style="font-size: smaller; color: grey;">{{ meeting.start_date.strftime('%B %d') }} at {{ meeting.start_time }}</span>
+                                    <span style="font-size: small;">&bull;</span>
+                                    <span style="font-size: smaller; color: grey;">{{ meeting.going|length }}</span>
+                                    <span style="font-size: smaller; color: grey;">going</span>
+                                   
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <br>
         {% endif %}
-        <div> 
-        <div style="display: flex; align-items: center;">
-            <i class="fa-solid fa-arrow-trend-up"></i>
-            <h5>Popular Posts of the Day</h5>
-        </div>
-        <ul class="list-group">
-            {% for post in popular_posts %}
-                <li>
-                    <div class="announcement-bar-container">
-                        <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + post.author.image_file) }}">
-                        <div class="announcement-bar-header">
-                            <a href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.content | truncate(30, True, '')}}</a>                             
+        <div class="announcement-bar-container"> 
+            <div style="display: flex; align-items: center;">
+                <h5>Popular posts</h5>
+            </div>
+            <ul class="list-group">
+                {% for post in popular_posts %}
+                    <li>
+                        <div class="announcement-bar-entry">
+                            <div class="announcement-bar-header">
+                                <a href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.content | truncate(30, True, '')}}</a>                             
+                            </div>
+                            <div>
+                                <span style="font-size: smaller; color: grey;">{{ post.likes|length }}</span>
+                                <span style="font-size: smaller; color: grey;">likes</span>
+                                <span style="font-size: small;">&bull;</span>
+                                <span style="font-size: smaller; color: grey;">{{ post.comments|length }}</span>
+                                <span style="font-size: smaller; color: grey;">comments</span>
+                                <span style="font-size: small;">&bull;</span>
+                                <span style="font-size: smaller; color: grey;">{{ timestamper(post.date_posted) }}</span>
+                            </div>
                         </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
         <br>
-        <div style="display: flex; align-items: center;">
-            <i class="fa-solid fa-bookmark"></i>
-            <h5>Trending Materials</h5>
-        </div>
-        
-        <ul class="list-group">
-            {% for material in popular_materials %}
-                <li>
-                    <div class="announcement-bar-container">
-                        <img class="announcementbar-img" src="{{ url_for('static', filename='pics/' + material.creator.image_file) }}">
-                        <div class="announcement-bar-header">
-                            <a href="{{ url_for('materials.material', material_id=material.id) }}">{{ material.title | truncate(30, True, '')}}</a>
+        <div class="announcement-bar-container"> 
+            <div style="display: flex; align-items: center;">
+                <h5>Recently asked questions</h5>
+            </div>
+            <ul class="list-group">
+                {% for question in recent_questions %}
+                    <li>
+                        <div class="announcement-bar-entry">
+                            <div class="announcement-bar-header">
+                                <a href="{{ url_for('materials.material', material_id=question.id) }}">{{ question.title | truncate(50, killwords=false, end='...')}}</a>                             
+                            </div>
+                            <div>
+                                <span style="font-size: smaller; color: grey;">{{ question.likes|length }}</span>
+                                <span style="font-size: smaller; color: grey;">likes</span>
+                                <span style="font-size: small;">&bull;</span>
+                                <span style="font-size: smaller; color: grey;">{{ question.comments|length }}</span>
+                                <span style="font-size: smaller; color: grey;">comments</span>
+                                <span style="font-size: small;">&bull;</span>
+                                <span style="font-size: smaller; color: grey;">{{ timestamper(question.date_posted) }}</span>
+                            </div>
                         </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
+        <div class="announcement-bar-container">
+            <div style="display: flex; align-items: center;">
+                <h5>Trending Materials</h5>
+            </div>
+            <ul class="list-group">
+                {% for material in popular_materials %}
+                    <li>
+                        <div class="announcement-bar-entry">
+                            <div class="announcement-bar-header">
+                                <a href="{{ url_for('materials.material', material_id=material.id) }}">{{ material.title | truncate(30, True, '')}}</a>
+                                 <div>
+                                <span style="font-size: smaller; color: grey;">{{ material.likes|length }}</span>
+                                <span style="font-size: smaller; color: grey;">likes</span>
+                                <span style="font-size: small;">&bull;</span>
+                                <span style="font-size: smaller; color: grey;">{{ material.comments|length }}</span>
+                                <span style="font-size: smaller; color: grey;">comments</span>
+                                <span style="font-size: small;">&bull;</span>
+                                <span style="font-size: smaller; color: grey;">{{ timestamper(material.date_posted) }}</span>
+                            </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            </span>
+        </div>
+        <br>
+        <div class="announcement-bar-container"> 
+            <div style="display: flex; align-items: center;">
+                <h5>Upcoming meetings</h5>
+            </div>
+            <ul class="list-group">
+                {% for meeting in upcoming_meetings %}
+                    <li>
+                        <div class="announcement-bar-entry">
+                            <div class="announcement-bar-header">
+                                <a href="{{ url_for('meetings.meeting', meeting_id=meeting.id) }}">{{ meeting.title | truncate(30, True, '')}}</a>                             
+                            </div>
+                            <div>
+                                <span style="font-size: smaller; color: grey;">{{ meeting.start_date.strftime('%B %d') }} at {{ meeting.start_time }}</span>
+                                <span style="font-size: small;">&bull;</span>
+                                <span style="font-size: smaller; color: grey;">{{ meeting.going|length }}</span>
+                                <span style="font-size: smaller; color: grey;">going</span>
+                               
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
     </div>
+    <script type="module" src="https://unpkg.com/emoji-picker-element"></script>
 {% endblock announcement_bar %}

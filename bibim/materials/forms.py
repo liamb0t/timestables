@@ -9,10 +9,10 @@ class MaterialForm(FlaskForm):
     grade = SelectField('Grade', validators=[DataRequired()])
     content = CKEditorField('Content', render_kw={'placeholder': 'Text'})
     files = MultipleFileField('Attachments')
-    publisher = SelectField('Publisher')
+    publisher = SelectField('Publisher', validate_choice=False)
     level = HiddenField()
     lesson = SelectField('Lesson', choices=[], validate_choice=False)
-    material_type = SelectField('Type of Material', validators=[DataRequired()], choices=[(x, x) for x in ['Select a tag', 'Bomb game', 'Writing game',
+    material_type = SelectField('Type of Material', validate_choice=False, choices=[(x, x) for x in ['Select a tag', 'Bomb game', 'Writing game',
                                                                               'Reading game', 'Review game', 'Intro PPT',
                                                                               'Words in songs', 'Non-tech game'
                                                                             ]])

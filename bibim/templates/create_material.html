@@ -1,7 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="creator-container">
-        <h3>Create a post for {{ legend }}</h3>
+        {% if level == 'question' %}
+            <h3>Ask a question</h3>
+        {% else %}
+            <h3>Add a material for {{ legend }}</h3>
+        {% endif %}
         <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -20,7 +24,7 @@
                    
                 <div>
                     {{ ckeditor.create() }}
-                </div>
+                </div> 
                 <div> {% if form.grade.errors %}
                     {{form.grade(class="form-control form-control-lg is-invalid")}}
                     <div class="invalid-feedback">
@@ -31,41 +35,41 @@
                     {% else %}
                         {{ form.grade(class="filter-select")}}
                 {% endif %}
-
-                {% if form.publisher.errors %}
-                    {{form.publisher(class="form-control form-control-lg is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.publisher.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    {{ form.publisher(class="filter-select")}}
-                {% endif %}
-
-                {% if form.lesson.errors %}
-                    {{form.lesson(class="form-control form-control-lg is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.lesson.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    {{ form.lesson(class="filter-select")}}
-                {% endif %}
-                    {% if form.material_type.errors %}
-                        {{form.material_type(class="form-control form-control-lg is-invalid")}}
+                {% if level != 'question' %}
+                    {% if form.publisher.errors %}
+                        {{form.publisher(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
-                            {% for error in form.material_type.errors %}
+                            {% for error in form.publisher.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.material_type(class="form-control form-control-lg") }}
+                        {{ form.publisher(class="filter-select")}}
                     {% endif %}
-                </div>
+
+                    {% if form.lesson.errors %}
+                        {{form.lesson(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.lesson.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.lesson(class="filter-select")}}
+                    {% endif %}
+                        {% if form.material_type.errors %}
+                            {{form.material_type(class="form-control form-control-lg is-invalid")}}
+                            <div class="invalid-feedback">
+                                {% for error in form.material_type.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.material_type(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                {% endif %}
                 <div>
-                    
                     {% if form.files.errors %}
                         {{form.files(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
@@ -78,7 +82,7 @@
                     {% endif %}
                 </div>
             </fieldset>
-            <div>
+            <div style="display: flex; justify-content: flex-end;">
                 {{ form.submit(class="submit-btn-orange") }}
             </div>
         </form>

@@ -188,7 +188,6 @@ class User(db.Model, UserMixin):
         going_meetings = Meeting.query.filter(
         Meeting.going.any(id=self.id),
         Meeting.start_date >= current_datetime.date(),
-        Meeting.start_time >= current_datetime.time()
         ).all()
         return going_meetings
     
@@ -377,7 +376,7 @@ class Material(db.Model):
     title = db.Column(db.String(100), nullable=False)
     level = db.Column(db.String, nullable=False)
     grade = db.Column(db.Integer, nullable=False)
-    section = db.Column(db.String, nullable=False)
+    section = db.Column(db.String)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

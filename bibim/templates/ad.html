@@ -40,8 +40,8 @@
           </div>
         {% endif %}
       {% endif %}
-      {% if material.files %}
-        {% for file in material.files %}
+      {% if ad.files %}
+        {% for file in ad.files %}
         {% set filesize, byte_size = get_file_size(file.filepath) %}
           <a href="{{ url_for('main.download', file_id=file.id)}}">
             <div class="attachment">
@@ -63,7 +63,7 @@
       </div>
   
       <div class="tags">
-        {% for tag in material.tags %}
+        {% for tag in ad.tags %}
           <span class="tag">{{ tag.tagname }}</span>
         {% endfor %}
       </div>

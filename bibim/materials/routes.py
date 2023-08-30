@@ -78,7 +78,7 @@ def load_materials(level):
                             .order_by(func.count(Like.id).desc())
         else:
             print(form.errors)
-    materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=10)
     return render_template('materials.html', materials=materials, level=level, form=form, post_timestamp=post_timestamp)
 
 @materials.route("/material/<int:material_id>", methods=["POST", "GET"])
@@ -131,6 +131,8 @@ def create_material(level):
         tagnames = [form.publisher.data, form.material_type.data]
         material = Material(title=form.title.data, level=level, grade=form.grade.data, 
                             content=request.form.get('ckeditor'), creator=current_user)
+        if level == 'question':
+            material.section = form.grade.data
         if form.lesson.data:
             material.lesson_id = form.lesson.data
         for tagname in tagnames:
@@ -147,6 +149,8 @@ def create_material(level):
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('materials.material', material_id=material.id))
+    else:
+        print(form.errors)
     return render_template('create_material.html', title='New Material', form=form, level=level, legend=level)
 
 @materials.route("/material/edit/<int:material_id>", methods=['GET','POST'])
@@ -234,8 +238,11 @@ def delete_material(material_id):
 @materials.route('/questions/<string:section>', methods=["POST", "GET"])
 def questions(section):
     page = request.args.get('page', 1, type=int)
-    posts = Material.query.filter_by(level='questions').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
-    return render_template('questions.html', materials=posts)
+    questions = Material.query.filter_by(level='question')
+    if section:
+            questions = Material.query.filter_by(level='question', section=section)
+    questions = questions.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    return render_template('questions.html', questions=questions, post_timestamp=post_timestamp)
 
 @materials.route('/forum/', defaults={'section': None}, methods=["POST", "GET"])
 @materials.route('/forum/<string:section>', methods=["POST", "GET"])

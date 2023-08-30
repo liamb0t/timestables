@@ -5,6 +5,21 @@ const overlay = document.querySelector('.overlay');
 const popupContainer = document.querySelector('.likes-popup');
 const optionsDiv = document.querySelector('.options-popup');
 const editor = document.querySelector('.post-editor')
+const emojiBox = document.querySelector('emoji-picker')
+
+document.querySelector('#emoji-icon').addEventListener('click', function() {
+    if (emojiBox.style.display === 'none' || emojiBox.style.display === '') {
+        emojiBox.style.display = 'block'
+    }
+    else {
+        emojiBox.style.display = 'none'
+    }
+})
+
+document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+    const textarea = document.getElementById('content');
+    textarea.value += event.detail.unicode;
+});
 
 function paginate(id, btn) {
     const comments = document.querySelectorAll(`#post-comments-${id} .comment-container-hidden`)
@@ -173,7 +188,7 @@ function add_post(post) {
     content.classList.add('post-content');
     
     const contentText = document.createElement('p');
-    contentText.textContent = post['content'];
+    contentText.innerHTML = post['content'].replace(/\n/g, '<br>');
     content.appendChild(contentText);
     contentText.setAttribute('id', `post-content-${post['id']}`)
 

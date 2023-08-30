@@ -62,7 +62,6 @@ def post_comment(post_id):
         'pic': current_user.image_file,
     })
 
-
 @posts.route("/inbox", methods=["GET", "POST"])
 @login_required
 def inbox():
