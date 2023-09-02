@@ -1,40 +1,23 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>Search Results</h1>
-    <h5>Posts</h5>
-   
-        {% for post in posts %}
+    <nav class="materials-nav">
+        <a href="{{ url_for('main.search', q=query, type='posts') }}">Posts</a>
+        <a href="{{ url_for('main.search',  q=query, type='materials')}}">Materials</a>
+        <a href="{{ url_for('main.search', q=query, type='questions')}}">Questions</a>
+        <a href="{{ url_for('main.search', q=query, type='meetings')}}">Meetings</a>
+        <a href="{{ url_for('main.search', q=query, type='users')}}">Users</a>
+        <a href="{{ url_for('main.search', q=query, type='comments')}}">Comments</a>
+    </nav>
+    {% if results %}
+        {% for result in results %}
             <div>
-                {{ post.author.username }}
-                {{ post.content }}
+                {{ result.content}}
             </div>
         {% endfor %}
-  
-   
-    <h5>Materials</h5>
-        {% for material in materials %}
-            <div>
-                {{ material.creator.username }}
-                {{ material.title }}
-                {{ material.content }}
-            </div> 
-        {% endfor %}
-   
-    <h5>Comments</h5>
-        {% for comment in comments %}
-            <div>
-                {{ comment.commenter.username }}
-                {{ comment.content }}
-            </div>
-        {% endfor %}
-  
-    <h5>Meetings</h5>
-        {% for meeting in meetings %}
-            <div>
-                {{ meeting.organizer.username }}
-                {{ meeting.title }}
-                {{ meeting.content }}
-            </div>
-        {% endfor %}
-{% endblock content %}
+    {% else %}
+        <div>
+            No results matching that search
+        </div>
+    {% endif %}
+{% endblock content %}  

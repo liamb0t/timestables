@@ -2,22 +2,36 @@
 {% block content %}
     <div style="margin: 0 auto; width: 50rem; background-color: white; border-radius: 17px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
-            <h2>Community</h1>
+            <div>   
+                <h2>Community</h1>
+                
+                {% if section == 'recommendations' %}
+                    <p>Visited a delicious restraurant recently? Tell us about it!</p>
+                {% elif section == 'random' %}
+                    <p>Discuss anything</p>
+                {% elif section == 'politics' %}
+                    <p>Discussions related to politics</p>
+                {% elif section == 'jobs' %}
+                    <p>Post job adverts here</p>
+                {% else %}
+                    <p>Discuss various topics with other teachers here</p>
+                {% endif %}
+            </div>
             <div>
                 <i class="fa-solid fa-pencil"></i>
-                <a class="create-btn" href="{{ url_for('materials.create_material', level='teaching') }}">Make a post</a>
+                <a class="create-btn" href="{{ url_for('materials.create_material', level='community') }}">Make a post</a>
             </div>
         </div>
 
         <nav class="materials-nav">
             <a href="{{ url_for('marketplace.load_ads') }}">Marketplace</a>
-            <a href="{{ url_for('materials.forum', section='recommendations') }}">맛집</a>
             <a href="{{ url_for('meetings.load_meetings') }}">Meetings</a>
-            <a href="{{ url_for('materials.forum', section='visa') }}">Contract Reviews</a>
-            <a href="{{ url_for('materials.forum', section='epik') }}">Job Adverts</a>
-            <a href="{{ url_for('materials.forum', section='hagwon') }}">Politics</a>
-            <a href="{{ url_for('materials.forum', section='new') }}">Random</a>
-            <a href="{{ url_for('materials.forum', section='other') }}">Other</a>
+            <a href="{{ url_for('materials.forum', section='recommendations') }}">맛집</a>
+            <a href="{{ url_for('materials.forum', section='visa') }}">Teaching</a>
+            <a href="{{ url_for('materials.forum', section='jobs') }}">Job Adverts</a>
+            <a href="{{ url_for('materials.forum', section='travel') }}">Travel</a>
+            <a href="{{ url_for('materials.forum', section='politics') }}">Politics</a>
+            <a href="{{ url_for('materials.forum', section='random') }}">Random</a>
            
             <form method="POST" action="" id="filter-submit">
                 <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>

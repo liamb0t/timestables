@@ -46,7 +46,7 @@ def get_grades(level):
     elif level == 'question':
         return [('0', 'Select category'), ('classroom', 'Classroom'), ('visa', 'Visa'), 
                 ('coteaching', 'Co-teachers'), ('epik', 'EPIK'), ('hagwon', 'Hagwon'), 
-                ('new', 'New teachers'), ('accommodation', 'Accommodation'), ('contracts', 'Contracts'), ('other', 'Other'), ]
+                ('nhis', 'NHIS'), ('accommodation', 'Accommodation'), ('contracts', 'Contracts'), ('other', 'Other'), ]
     else:
         return
 

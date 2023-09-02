@@ -6,6 +6,9 @@
 </head>
 <body class="login-body">
     <div class="login-container">
+        <a href="{{ url_for('main.landing') }}">
+            <img src="{{ url_for('static', filename='BIBIMHAK.png')}}" alt="Website Logo" class="login-logo">
+        </a>
         <div>
             Forgot your account’s password? Enter your email address and we’ll send you a recovery link.
         </div>
@@ -25,9 +28,6 @@
                     {% endif %}
                     {{ form.submit(class="login-button") }}
                 </div>
-           
-              
-          
         </form>
     </div>
 </body>

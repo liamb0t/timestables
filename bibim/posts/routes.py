@@ -46,7 +46,7 @@ def post_comment(post_id):
             if parent_comment.user_id == post.user_id:
                 single_notification = True
     comment.save()
-    if parent_id:
+    if parent_id and parent_comment.commenter.id != current_user.id:
         n = Notification(name='reply', user_id=comment.parent.user_id, comment_id=comment.id, post_id=post.id)
         db.session.add(n)
     if post.author != current_user and single_notification == False:

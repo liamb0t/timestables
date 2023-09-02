@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% block title %}{{ ad.title }}{% endblock %}
 {% block content %}
   <div class="options-popup-secondary">
     {% if current_user == ad.advertiser %}

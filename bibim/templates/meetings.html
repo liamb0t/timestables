@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
+{% block title %}Bibimhak - Meetings{% endblock %}
 {% block content %}
     <div class="main-container">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px;">
             <div>
                 <h2>Bibim Meetings</h1>
-                <p>Join an existing meeting or create your own and meet other teachers</p>
+                <p>Create or join a meeting and meet other teachers</p>
             </div>
             <div>
                 <a class="create-btn" href="{{ url_for('meetings.create_meeting') }}">

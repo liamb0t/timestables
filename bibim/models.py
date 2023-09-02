@@ -317,6 +317,7 @@ class Comment(db.Model):
     material_id = db.Column(db.Integer, db.ForeignKey('material.id'))
     meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
     classified_id = db.Column(db.Integer, db.ForeignKey('classified.id'))
+    deleted = db.Column(db.Boolean, nullable=False, default=False)
 
     likes = db.relationship('Like', backref='comment')
     notifications = db.relationship('Notification', backref='comment', cascade="all, delete-orphan")
@@ -368,7 +369,8 @@ class Comment(db.Model):
             "liked": True if current_user.has_liked_comment(self) else False,
             "replies_count": self.replies_count(),
             "pic": self.commenter.image_file,
-            "parent": self.parent.get_username() if self.parent else None
+            "parent": self.parent.get_username() if self.parent else None,
+            "deleted": self.deleted,
         }
 
 class Material(db.Model):

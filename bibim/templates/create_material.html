@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% block title %}Bibimhak - Add a material{% endblock %}
 {% block content %}
     <div class="creator-container">
         {% if level == 'question' %}
@@ -35,7 +36,7 @@
                     {% else %}
                         {{ form.grade(class="filter-select")}}
                 {% endif %}
-                {% if level != 'question' %}
+                {% if level != 'question' and level != 'community' %}
                     {% if form.publisher.errors %}
                         {{form.publisher(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">

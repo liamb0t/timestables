@@ -244,11 +244,11 @@ def questions(section):
     questions = questions.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('questions.html', questions=questions, post_timestamp=post_timestamp)
 
-@materials.route('/forum/', defaults={'section': None}, methods=["POST", "GET"])
-@materials.route('/forum/<string:section>', methods=["POST", "GET"])
+@materials.route('/b/', defaults={'section': None}, methods=["POST", "GET"])
+@materials.route('/b/<string:section>', methods=["POST", "GET"])
 def forum(section): 
     page = request.args.get('page', 1, type=int)
     if section:
         posts = Material.query.filter_by(level='questions', section=section).order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     posts = Material.query.filter_by(level='questions').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
-    return render_template('forum.html', materials=posts)
+    return render_template('forum.html', materials=posts, section=section)

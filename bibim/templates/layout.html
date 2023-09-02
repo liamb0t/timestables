@@ -46,9 +46,8 @@
           
           <div class="search-bar">
             <i class="fas fa-search"></i>
-            <form method="POST" action="{{ url_for('main.search')}}">
-              {{ search_form.hidden_tag() }}
-              {{ search_form.query() }}
+            <form method="GET" action="{{ url_for('main.search')}}">
+              <input type="search" name="q" placeholder="Search...">
             </form>
           </div>  
           <div class="profile">
@@ -114,8 +113,8 @@
                   
                   <li><a href="{{ url_for('materials.questions') }}"><i class="fa fa-chalkboard-user"></i><span>Questions</span></a></li>
                   <li><a href="{{ url_for('materials.forum') }}"><i class="fa-solid fa-globe"></i><span>Community</span></a></li>
-                  <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i><span>Users</span></a></li>
                   <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-business-time "></i><span>Meetings</span></a></li>
+                  <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i><span>Users</span></a></li>
                 </ul> 
             </div>
             

@@ -78,17 +78,17 @@ function load() {
     const loader = document.querySelector(".loader");
     const current_page = page;
     page += 1;
-    setTimeout(() => {
-        fetch(`posts/${current_page}`)
-        .then(response => {
-            loader.style.display = "none";
-            return response.json() })
-        .then(data => {
-            data['posts'].forEach(post => {
-                add_post(post);
-            });
-        })
-    }, 1000);
+  
+    fetch(`posts/${current_page}`)
+    .then(response => {
+        loader.style.display = "none";
+        return response.json() })
+    .then(data => {
+        data['posts'].forEach(post => {
+            add_post(post);
+        });
+    })
+  
 }
 
 function handleLikes() {
@@ -145,7 +145,7 @@ function add_post(post) {
     const username = document.createElement('h2');
     username.classList.add('post-username');
     username.textContent = post['author'];
-    
+  
     authorLink.appendChild(username);
     header.appendChild(authorLink);
 
@@ -271,11 +271,17 @@ function add_post(post) {
             } 
 
             const picLink = document.createElement('a');
-            picLink.href = `/users/${comment['author']}`;
-
+         
             const userPic = document.createElement('img');
             userPic.classList.add('user-pic');
-            userPic.src = `/static/pics/${comment['pic']}`;
+            if (!comment["deleted"]) {
+                userPic.src = `/static/pics/${comment['pic']}`;
+                picLink.href = `/users/${comment['author']}`;
+            }
+            else {
+                userPic.src = `/static/pics/default.jpg`;
+            }
+          
             userPic.alt = "User profile picture";
 
             picLink.appendChild(userPic)
@@ -288,19 +294,28 @@ function add_post(post) {
             header.classList.add('header');
 
             const nameLink = document.createElement('a');
-            nameLink.href = `/users/${comment['author']}`;
+            nameLink.href = `/users/d}`;
 
             const username = document.createElement('div');
             username.classList.add('username');
-            username.textContent = comment["author"];
-            nameLink.appendChild(username)
-            header.appendChild(nameLink);
-
+            
+           
+        
+            if (!comment["deleted"]) {
+                username.textContent = comment["author"];
+                nameLink.appendChild(username)
+                header.appendChild(nameLink);
+            }
+         
             const commentContent = document.createElement('div');
             commentContent.classList.add('comment');
 
-
-            commentContent.textContent = cleanString(comment["content"])
+            if (!comment["deleted"]) {
+                commentContent.textContent = cleanString(comment["content"])
+            }
+            else {
+                commentContent.textContent = 'Comment deleted by user'
+            }
 
          
             header.appendChild(commentContent);
@@ -354,9 +369,10 @@ function add_post(post) {
                     document.querySelector('.delete-btn').style.display = 'block'
                 }
             })
-
-            footer.appendChild(replyBtn);
-            footer.appendChild(ellipsis);
+            if (!comment["deleted"]) {
+                footer.appendChild(replyBtn);
+                footer.appendChild(ellipsis);
+            }
 
             userInfo.appendChild(footer);
     
@@ -367,24 +383,26 @@ function add_post(post) {
             const divContainer = document.createElement('div');
             divContainer.setAttribute('class', 'like-btn');
 
-            const divIcon = document.createElement('div');
-            divIcon.setAttribute('class', 'like-icon');
+            
+            if (!comment["deleted"]) {
+                const divIcon = document.createElement('div');
+                divIcon.setAttribute('class', 'like-icon');
+                const iElement = document.createElement('i');
+                iElement.setAttribute('id', 'material-comment-like-icon-' + commentId);
+                iElement.setAttribute('class', 'fa-regular fa-heart');
+                iElement.setAttribute('data-comment-id', commentId);
 
-            const iElement = document.createElement('i');
-            iElement.setAttribute('id', 'material-comment-like-icon-' + commentId);
-            iElement.setAttribute('class', 'fa-regular fa-heart');
-            iElement.setAttribute('data-comment-id', commentId);
+                if (comment['liked']) {
+                    iElement.style.color = 'orange'
+                }
 
-            if (comment['liked']) {
-                iElement.style.color = 'orange'
+                iElement.addEventListener('click', handleLikesComment)
+
+
+
+                divIcon.appendChild(iElement);
+                divContainer.appendChild(divIcon);
             }
-
-            iElement.addEventListener('click', handleLikesComment)
-
-
-
-            divIcon.appendChild(iElement);
-            divContainer.appendChild(divIcon);
 
             commentContainer.appendChild(divContainer)
 
@@ -410,38 +428,65 @@ function add_post(post) {
                 comment["replies"].forEach(reply => {
                     const replyDiv = document.createElement('div');
                     const content = cleanString(reply["content"])
-                    const html = `
+                    let html;
+                    if (!reply["deleted"]) {
+                        html = `
+                            <div class="comment-container" style="margin-left: 50px;">
+                                <div>
+                                    <a href="/users/${reply['author']}">
+                                        <img class="user-pic" src="/static/pics/${reply['pic']}" alt="User profile picture">
+                                    </a> 
+                                </div>
+                                <div class="user-info">
+                                    <div class="header">
+                                        <a href="/users/${reply['author']}">
+                                            <div class="username">${reply["author"]}</div>
+                                        </a>
+                                        ${comment['deleted'] ? '' : '<a style="color: #385898;" href="/users/' + reply['parent'] + '">@' + reply['parent'] + '</a>'}
+
+                                        <div class="comment">${content}</div>
+                                    </div>
+                                    <div class="footer">
+                                        <div class="date">${reply["date_posted"]}</div>
+                                        
+                                        ${reply["likes_count"] > 0 ? `<div class="date" id="like-counter-${reply["id"]} data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>` : `<div class="date" id="like-counter-${reply["likes_count"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>`}
+                                        
+                                        <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
+                                        <div onclick="handleReply({ author: '${reply["author"]}', comment_id: ${reply["id"]}, post_id: ${post["id"]} })" class="reply-btn" data-comment-id="${reply['id']}" data-author="${reply['author']}">Reply</div>
+                                        <i class="fa fa-ellipsis" onclick="handleEllipsis([${reply['id']}, '${reply['author']}', '${post['current_user']}'])"></i>
+                                    </div> 
+                                </div>
+                                <div class="like-btn">
+                                    <div class="like-icon">
+                                    ${reply["likes_count"] > 0 ? `<i style="color:orange;" id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-reply-id="${reply['id']}" onclick="handleLikesComment(${reply['id']})"></i>` : `<i id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-reply-id="${reply['id']}" onclick="handleLikesComment(${reply['id']})"></i>`}
+                                    </div>
+                                </div>
+                            </div>    
+                        `;
+                    }
+                    else {
+                        html = `
                         <div class="comment-container" style="margin-left: 50px;">
-                        <div>
-                            <a href="/users/${reply['author']}">
-                                <img class="user-pic" src="/static/pics/${reply['pic']}" alt="User profile picture">
-                            </a> 
-                        </div>
-                        <div class="user-info">
-                            <div class="header">
-                                <a href="/users/${reply['author']}">
-                                    <div class="username">${reply["author"]}</div>
-                                </a>
-                                <a style="color: #385898;" href="/users/${reply['parent']}">@${reply['parent']}</a>
-                                <div class="comment">${content}</div>
+                            <div>
+                                <a href="">
+                                    <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
+                                </a> 
                             </div>
-                            <div class="footer">
-                                <div class="date">${reply["date_posted"]}</div>
-                                
-                                ${reply["likes_count"] > 0 ? `<div class="date" id="like-counter-${reply["id"]} data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>` : `<div class="date" id="like-counter-${reply["likes_count"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>`}
-                                
-                                <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
-                                <div onclick="handleReply({ author: '${reply["author"]}', comment_id: ${reply["id"]}, post_id: ${post["id"]} })" class="reply-btn" data-comment-id="${reply['id']}" data-author="${reply['author']}">Reply</div>
-                                <i class="fa fa-ellipsis" onclick="handleEllipsis([${reply['id']}, '${reply['author']}', '${post['current_user']}'])"></i>
-                            </div> 
-                        </div>
-                        <div class="like-btn">
-                            <div class="like-icon">
-                            ${reply["likes_count"] > 0 ? `<i style="color:orange;" id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-reply-id="${reply['id']}" onclick="handleLikesComment(${reply['id']})"></i>` : `<i id="material-comment-like-icon-${reply["id"]}" class="fa-regular fa-heart" data-reply-id="${reply['id']}" onclick="handleLikesComment(${reply['id']})"></i>`}
+                            <div class="user-info">
+                                <div class="header">
+                                    <div class="comment">Comment deleted by user</div>
+                                </div>
+                                <div class="footer">
+                                    <div class="date">${reply["date_posted"]}</div>
+                                    
+                                    ${reply["likes_count"] > 0 ? `<div class="date" id="like-counter-${reply["id"]} data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>` : `<div class="date" id="like-counter-${reply["likes_count"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>`}
+                                    
+                                    <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
+                                </div> 
                             </div>
-                        </div>
                         </div>    
                     `;
+                    }
                     replyDiv.innerHTML = html;
                     replies.appendChild(replyDiv);
                 });

@@ -13,6 +13,10 @@ a {
   color: #494949;
 }
 
+input, select {
+  height: 2.1rem;
+}
+
 .user-profile-post:hover {
   border: 1px solid gainsboro;
 }
@@ -537,7 +541,6 @@ a:hover i {
 .attachment {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .attachment:hover {
@@ -636,6 +639,7 @@ a:hover i {
   display: flex;
   flex-direction: row;
   margin: 0;
+  align-items: center;
 }
 
 .comment-container .footer {
@@ -647,8 +651,8 @@ a:hover i {
 }
 
 .comment-container .user-info .username {
+  font-size: smaller;
   font-weight: bold;
-  margin-right: 5px;
 }
 
 .comment-container .date {
@@ -870,13 +874,10 @@ a:hover i {
 
 
 .post a, .material-container a {
+  display: flex;
   text-decoration: none;
   color: #1d2024;
   margin-right: 5px;
-}
-
-.post a:hover, .material-container a:hover {
-  color: #96a1b2;
 }
 
 .post span {
@@ -889,7 +890,7 @@ a:hover i {
 }
 
 .post-username {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   margin: 0;
 }
@@ -986,15 +987,16 @@ a:hover i {
 }
 
 .comment {
+  font-size: smaller;
   list-style: none;
 }
 
 .post-profile-pic {
   top: 10px;
   left: 10px;
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  margin-right: 5px;
   border-radius: 50%; /* Make the picture circular */
   background-color: #030303; /* Add a background color to the profile picture */
 }
@@ -1046,6 +1048,7 @@ a:hover i {
   resize: none;
   border: none;
   border-radius: 5px;
+  padding: 0.5rem;
 }
 
 .likes-popup, .options-popup, .options-popup-secondary {
@@ -1243,6 +1246,7 @@ a:hover i {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  margin-left: 15px;
 }
 
 .materials-nav a, .user-filters a {
@@ -1288,7 +1292,7 @@ a:hover i {
 .material-post-container {
   display: flex;
   align-items: center;  
-  padding: 9px 20px;
+  padding: 12px 20px;
   background-color: #ffffff;
   border-top: solid 1px rgb(200, 200, 200);
 }
@@ -1394,7 +1398,8 @@ a:hover i {
   display: flex;
   flex-direction: row;
   margin-top: 5px;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .material-post-footer i {
@@ -1754,6 +1759,7 @@ footer {
 
 
 .loader {
+  margin-top: 1rem;
   position: relative;
   width: 32px;
   height: 32px;

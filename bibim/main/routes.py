@@ -16,28 +16,27 @@ import bleach
 
 main = Blueprint('main', __name__)
 
-
-@app.context_processor
-def inject():
-    return dict(search_form=SearchForm())
-
-
 @main.route("/search", methods=['GET', 'POST'])
 def search():
-  
-    search_query = f"%{request.form.get('query')}"
-    
-    materials = Material.query.filter(or_(Material.title.ilike(f'%{search_query}%'),
+    search_query = request.args.get('q', '')
+    type = request.args.get('type', '')
+    results = None
+    if type:
+        if type == 'materials':
+            results = Material.query.filter(or_(Material.title.ilike(f'%{search_query}%'),
                             Material.content.ilike(f'%{search_query}%'))).all()
-    posts = Post.query.filter(Post.content.ilike(f'%{search_query}%')).all()
-    comments = Comment.query.filter(Comment.content.ilike(f'%{search_query}%')).all()
-    meetings = Meeting.query.filter(or_(Meeting.title.ilike(f'%{search_query}%'),
+        if type == 'posts' and not results:
+            results = Post.query.filter(Post.content.ilike(f'%{search_query}%')).all()
+        if type == 'users':
+            results = User.query.filter(User.username.ilike(f'%{search_query}%')).all()
+        if type == 'meetings':
+            results = Meeting.query.filter(or_(Meeting.title.ilike(f'%{search_query}%'),
                             Meeting.content.ilike(f'%{search_query}%'))).all()
-    users = User.query.filter(User.username.ilike(f'%{search_query}%')).all()
-
-    return render_template('search.html', posts=posts, meetings=meetings, comments=comments, materials=materials,
-                           users=users)
-
+        if type == 'comments':
+            results = Comment.query.filter(Comment.content.ilike(f'%{search_query}%')).all()
+    else:
+        results = Post.query.filter(Post.content.ilike(f'%{search_query}%')).all()
+    return render_template('search.html', results=results, query=search_query, type=type if type else None)
 
 @main.route("/")
 def landing():
@@ -208,7 +207,7 @@ def delete_comment(comment_id):
         if n:   
             db.session.delete(n)
             db.session.commit()
-    comment.content = 'The user deleted this comment.'
+    comment.deleted = True
     db.session.commit()
     return jsonify({
         'message': 'Your comment has been deleted.'
