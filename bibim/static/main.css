@@ -1333,10 +1333,40 @@ a:hover i {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-#lesson {
-  
+.search-nav {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
+.search-nav a {
+  color: #383838;
+  border-radius: 4rem;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  margin-right: 20px;  
+}
+
+.search-nav a:hover {
+  background-color: rgb(238, 238, 238);
+}
+
+.search-nav .active {
+  background-color: orange;
+  color: white;
+  border-radius: 4rem;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  margin-right: 20px;  
+}
+
+.search-nav .active:hover {
+  background-color: rgb(255, 153, 0);
+}
+
+.search-result-container {
+  background-color: white;
+}
 
 .filter-select:focus {
   outline: none;

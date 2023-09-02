@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
-
+{% block title %}Search results for '{{ request.args.get('q', '') }}' - Bibimhak{% endblock %}
 {% block content %}
-    <nav class="materials-nav">
+    <nav class="search-nav">
         <a href="{{ url_for('main.search', q=query, type='posts') }}">Posts</a>
         <a href="{{ url_for('main.search',  q=query, type='materials')}}">Materials</a>
         <a href="{{ url_for('main.search', q=query, type='questions')}}">Questions</a>
@@ -11,13 +11,191 @@
     </nav>
     {% if results %}
         {% for result in results %}
-            <div>
-                {{ result.content}}
-            </div>
+            {% if type == 'posts' or not type %}
+                <a href="{{ url_for('posts.post', post_id=result.id) }}">
+                    <div class="post">
+                        <div class="post-header">
+                            <img class="post-profile-pic" src="{{ url_for('static', filename='pics/' + result.author.image_file)}}" alt="Profile Image">
+                            <h2 class="post-username">liamteacher</h2>                      
+                            <span class="post-span">•</span>
+                            <p class="post-date">1 h</p>
+                        </div>
+                        <div class="post-content">
+                            <p>{{ result.content }}</p>
+                        </div>
+                        <div class="post-footer">
+                            <div class="comments" id="post-comments-1">
+        
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% elif type == 'comments' %}
+                {% if result.post_id %}
+                    <a href="{{ url_for('posts.post', post_id=result.post.id)}}" class="user-a">
+                    {% set coms = result.post.comments_count() %}
+                {% if result.post.author == user%}
+                    {% set head = "their own post" %}
+                {% else %}
+                    {% set head = result.post.author.username + "'s post" %}
+                {% endif %}
+                {% elif result.material_id %}
+                    <a href="{{ url_for('materials.material', material_id=result.material.id)}}" class="user-a">
+                    {% set coms = result.material.comments_count() %}
+                    {% set head = result.material.title %}
+                    {% set likes = result.material.likes|length %}
+                {% elif result.meeting_id %}  
+                    <a href="{{ url_for('meetings.meeting', meeting_id=result.meeting.id)}}" class="user-a">
+                    {% set coms = result.meeting.comments_count() %}
+                    {% set head = result.meeting.title %}
+                    {% set likes = result.meeting.likes|length %}
+                {% endif %}
+                    <div class="post">
+                        <div class="post-content">
+                            <p id="post-content-{{ result.id }}">{{ result.commenter.username}} commented on {{ head }}</p>
+                        </div>
+
+                        <div class="material-post-container">
+                            <div style="width: 100%;">
+                                <div class="material-post-header">
+                                    <div style="display: flex;">
+                                        <div class="question-post-title">
+                                            <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + result.commenter.image_file)}}" alt="Profile Picture">
+                                            <span class="material-post-author">{{ result.commenter.username }}</span>
+                                            <span class="material-post-date">{{ post_timestamp(result.date_posted) }} ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="question-post-content">
+                                    {{ result.content|striptags|escape|replace('\n', '')|replace('  ', ' ')|truncate(200, killwords=False, end='...') }}
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="material-post-footer">
+                                        <div style="display: flex; align-items: center;"> 
+                                        </div>
+                                        <div class="material-post-comment-info">
+                                            <span class="material-post-likes">{{ result.likes|length }}</span>
+                                            <span>likes</span>
+                                            <span class="material-post-comments">{{ result.comments|length }}</span>
+                                            <span>replies</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-likes" style="display: flex;">
+                            <p class="like-counter">{{ likes }}</p>
+                            <span>likes</span>
+                            <p class="like-counter">{{ coms }}</p>
+                            <span>comments</span>
+                            <p class="post-date">Posted {{ post_timestamp(result.date_posted) }} ago</p>
+                        </div>
+                    </div>
+                </a>
+           
+            {% elif type == 'questions' %}
+                <a href="{{ url_for('materials.material', material_id=result.id)}}">
+                    <div class="material-post-container">
+                        <div style="width: 100%;">
+                            <div class="material-post-header">
+                                <div style="display: flex;">
+                                    <div class="question-post-title">
+                                        {{ result.title }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-post-content">
+                                {{ result.content|striptags|escape|replace('\n', '')|replace('  ', ' ')|truncate(200, killwords=False, end='...') }}
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="material-post-footer">
+                                    <div style="display: flex; align-items: center;"> 
+                                        <div class="material-post-tags">
+                                            <div class="tag">
+                                                {{ result.grade }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="material-post-comment-info">
+                                        <i class="fa-regular fa-heart"></i>
+                                        <span class="material-post-likes">{{ result.likes|length }}</span>
+                                        <i class="fa-regular fa-comment"></i>
+                                        <span class="material-post-comments">{{ result.comments|length }}</span>
+                                    </div>
+                                </div>
+                                <div class="material-post-user-info">
+                                    <span class="material-post-author">Asked by</span>
+                                    <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + result.creator.image_file)}}" alt="Profile Picture">
+                                    <span class="material-post-author">{{ result.creator.username }}</span>
+                                    <span class="material-post-date">{{ post_timestamp(result.date_posted) }} ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% elif type == 'materials' %}
+                <a href="{{ url_for('materials.material', material_id=result.id)}}">
+                    <div class="material-post-container">
+                        <div style="width: 100%;">
+                            <div class="material-post-header">
+                                <div style="display: flex;">
+                                    <div class="material-post-grade">
+                                        Grade {{ result.grade }}
+                                    </div>
+                                    {% if result.lesson_id %}
+                                        <div class="">{{ result.lesson_title() }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="material-post-user-info">
+                                    <span class="material-post-author">Posted by</span>
+                                    <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + result.creator.image_file)}}" alt="Profile Picture">
+                                    <span class="material-post-author">{{ result.creator.username }}</span>
+                                    <span class="material-post-date">{{ post_timestamp(result.date_posted) }} ago</span>
+                                </div>
+                            </div>
+                            <div class="material-post-title">{{ result.title }}</div>
+                            <div class="material-post-footer">
+                                <div style="display: flex; align-items: center;"> 
+                                    <div class="material-post-tags">
+                                        {% for tag in result.tags %}
+                                            <div class="tag">
+                                                {{ tag.tagname }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="material-post-comment-info">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <span class="material-post-likes">{{ result.likes_count() }}</span>
+                                    <i class="fa-regular fa-comment"></i>
+                                    <span class="material-post-comments">{{ result.comments_count() }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% elif type == 'users' %}
+                <a href="{{ url_for('users.user_profile', username=result.username)}}">
+                    <div class="search-result-container">
+                        <div>
+                            <div>
+                                <img class="user-page-profile-image" src="{{ url_for('static', filename='pics/' + result.image_file)}}" alt="Profile Image">
+                                <span>{{ result.username }}</span>
+                                <span>{{ result.karma }}</span>
+                                <span>reputation</span>
+                            </div>
+                            <div>
+            
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endif %}
         {% endfor %}
     {% else %}
         <div>
             No results matching that search
         </div>
     {% endif %}
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
 {% endblock content %}  

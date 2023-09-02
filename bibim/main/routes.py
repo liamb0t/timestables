@@ -24,7 +24,7 @@ def search():
     if type:
         if type == 'materials':
             results = Material.query.filter(or_(Material.title.ilike(f'%{search_query}%'),
-                            Material.content.ilike(f'%{search_query}%'))).all()
+                            Material.content.ilike(f'%{search_query}%'))).filter(Material.level != 'question').all()
         if type == 'posts' and not results:
             results = Post.query.filter(Post.content.ilike(f'%{search_query}%')).all()
         if type == 'users':
@@ -32,11 +32,16 @@ def search():
         if type == 'meetings':
             results = Meeting.query.filter(or_(Meeting.title.ilike(f'%{search_query}%'),
                             Meeting.content.ilike(f'%{search_query}%'))).all()
+        if type == 'questions':
+            results = Material.query.filter_by(level='question').filter(or_(Material.title.ilike(f'%{search_query}%'),
+                            Material.content.ilike(f'%{search_query}%'))).all()
         if type == 'comments':
             results = Comment.query.filter(Comment.content.ilike(f'%{search_query}%')).all()
     else:
         results = Post.query.filter(Post.content.ilike(f'%{search_query}%')).all()
-    return render_template('search.html', results=results, query=search_query, type=type if type else None)
+    print('results', results)
+    return render_template('search.html', results=results, query=search_query, type=type if type else None,
+                           post_timestamp=post_timestamp)
 
 @main.route("/")
 def landing():
@@ -45,7 +50,7 @@ def landing():
 
 @main.route("/login", methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and current_user.verified:
         return redirect(url_for('main.home'))
     form = LoginForm()
     if form.validate_on_submit():
@@ -154,7 +159,7 @@ def home():
         return redirect(url_for('main.home'))
     return render_template('home.html', post_form=post_form, edit_form=edit_form, popular_posts=popular_posts, 
                            popular_materials=popular_materials, timestamper=post_timestamp, 
-                           upcoming_meetings=upcoming_meetings, recent_questions=recent_questions)
+                           upcoming_meetings=upcoming_meetings, recent_questions=recent_questions, type=type)
 
 @main.route("/download/<int:file_id>", methods=["GET"])
 @login_required

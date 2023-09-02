@@ -47,7 +47,11 @@
           <div class="search-bar">
             <i class="fas fa-search"></i>
             <form method="GET" action="{{ url_for('main.search')}}">
-              <input type="search" name="q" placeholder="Search...">
+              <input id="main-search" type="search" name="q" placeholder="Search...">
+              {% set type_paramater = request.args.get('type', '') %}
+              {% if type_paramater %}
+                <input type="hidden" name="type" value="{{ request.args.get('type', '') }}">
+              {% endif %}
             </form>
           </div>  
           <div class="profile">

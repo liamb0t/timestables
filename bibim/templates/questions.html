@@ -33,46 +33,46 @@
                 <p>Try using a different filter or use the searchbar above.</p>
             {% endif %}
             {% for question in questions %}
-            <a href="{{ url_for('materials.material', material_id=question.id)}}">
-                <div class="material-post-container">
-              
-                <div style="width: 100%;">
-                    <div class="material-post-header">
-                        <div style="display: flex;">
-                            <div class="question-post-title">
-                               {{ question.title }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="question-post-content">
-                        {{ question.content|striptags|escape|replace('\n', '')|replace('  ', ' ')|truncate(200, killwords=False, end='...') }}
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div class="material-post-footer">
-                            <div style="display: flex; align-items: center;"> 
-                                <div class="material-post-tags">
-                                    <div class="tag">
-                                        {{ question.grade }}
-                                    </div>
+                <a href="{{ url_for('materials.material', material_id=question.id)}}">
+                    <div class="material-post-container">
+                
+                    <div style="width: 100%;">
+                        <div class="material-post-header">
+                            <div style="display: flex;">
+                                <div class="question-post-title">
+                                {{ question.title }}
                                 </div>
                             </div>
-                            <div class="material-post-comment-info">
-                                <i class="fa-regular fa-heart"></i>
-                                <span class="material-post-likes">{{ question.likes_count() }}</span>
-                                <i class="fa-regular fa-comment"></i>
-                                <span class="material-post-comments">{{ question.comments_count() }}</span>
+                        </div>
+                        <div class="question-post-content">
+                            {{ question.content|striptags|escape|replace('\n', '')|replace('  ', ' ')|truncate(200, killwords=False, end='...') }}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="material-post-footer">
+                                <div style="display: flex; align-items: center;"> 
+                                    <div class="material-post-tags">
+                                        <div class="tag">
+                                            {{ question.grade }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="material-post-comment-info">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <span class="material-post-likes">{{ question.likes_count() }}</span>
+                                    <i class="fa-regular fa-comment"></i>
+                                    <span class="material-post-comments">{{ question.comments_count() }}</span>
+                                </div>
+                            </div>
+                            <div class="material-post-user-info">
+                                <span class="material-post-author">Asked by</span>
+                                <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + question.creator.image_file)}}" alt="Profile Picture">
+                                <span class="material-post-author">{{ question.creator.username }}</span>
+                                <span class="material-post-date">{{ post_timestamp(question.date_posted) }} ago</span>
                             </div>
                         </div>
-                        <div class="material-post-user-info">
-                            <span class="material-post-author">Asked by</span>
-                            <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + question.creator.image_file)}}" alt="Profile Picture">
-                            <span class="material-post-author">{{ question.creator.username }}</span>
-                            <span class="material-post-date">{{ post_timestamp(question.date_posted) }} ago</span>
-                        </div>
                     </div>
-                </div>
-                </div>
-            </a>
+                    </div>
+                </a>
             {% endfor %}
         </div>
         {% for page_num in questions.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
