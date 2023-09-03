@@ -288,18 +288,26 @@ emoji-picker {
   position: absolute;
   right: 0;
   top: 100%;
-  width: 20vw;
+  width: 25vw;
   background-color: #fff;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1000;
   border-radius: 4px;
-  overflow-y: scroll;
   max-height: 50vh;
+  overflow-y: hidden; /* Hide overflow on this element */
 }
 
-.notif-dropdown h5 {
-  padding: 10px;
+.notif-container {
+  max-height: calc(50vh - 40px); /* Subtracting an approximate height of h5. Adjust as needed */
+  overflow-y: scroll;
 }
+
+.notif-dropdown p {
+  font-weight: bolder;
+  margin: 0;
+  padding: 5px 12px;
+}
+
 
 .notification-message {
   border-top: 1px solid rgb(195, 192, 192);

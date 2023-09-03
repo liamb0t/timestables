@@ -24,12 +24,13 @@
         </div>
 
         <nav class="search-nav" id="questions-filter-nav">
-            <a href="{{ url_for('marketplace.load_ads') }}">Marketplace</a>
-            <a href="{{ url_for('meetings.load_meetings') }}">Meetings</a>
+            <a href="{{ url_for('materials.forum') }}">All</a>
+            <a href="{{ url_for('materials.forum', b='languages') }}">Language Learning</a>
             <a href="{{ url_for('materials.forum', b='recommendations') }}">맛집</a>
             <a href="{{ url_for('materials.forum', b='visa') }}">Teaching</a>
             <a href="{{ url_for('materials.forum', b='jobs') }}">Job Adverts</a>
             <a href="{{ url_for('materials.forum', b='travel') }}">Travel</a>
+            <a href="{{ url_for('materials.forum', b='korea') }}">Korea</a>
             <a href="{{ url_for('materials.forum', b='politics') }}">Politics</a>
             <a href="{{ url_for('materials.forum', b='random') }}">Random</a>
            

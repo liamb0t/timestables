@@ -59,8 +59,18 @@
     </div>
     <div style="display: flex; justify-content: space-between;">
       <div class="like-button">
-        <i id="material-like-button" class="fa-regular fa-heart" data-material-id="{{ material.id}}"></i>
-        <span id="material-like-count" class="like-count" data-material-likes="{{ material.likes_count() }}">{{ material.likes_count() }} likes</span>
+        {% if current_user.has_liked_material(material) %}
+          <i id="material-like-button" style="color: orange;" class="fa-regular fa-heart" data-material-id="{{ material.id}}"></i>
+        {% else %}
+          <i id="material-like-button" class="fa-regular fa-heart" data-material-id="{{ material.id}}"></i>
+        {% endif %}
+        {% if material.likes|length == 1 %}
+          <span id="material-like-count" class="like-count" data-material-likes="{{ material.likes_count() }}">1 like</span>
+        {% elif material.likes|length > 1%}
+          <span id="material-like-count" class="like-count" data-material-likes="{{ material.likes_count() }}">{{ material.likes|length }} likes</span>
+        {% else %}
+          <span id="material-like-count" class="like-count" data-material-likes="{{ material.likes_count() }}"></span>
+        {% endif %}
       </div>
   
       <div class="tags">
@@ -70,7 +80,6 @@
       </div>
     </div>
    
-
     <div class="footer">
       <div class="comments">
         {% for comment in comments %}
@@ -88,17 +97,23 @@
             </div>
             <div class="footer">
               <div class="date">{{ post_timestamp(comment.date_posted) }}</div>
-              {% if comment.likes_count() > 0 %}
-                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes_count() }}" style="display: block">{{ comment.likes_count() }} likes</div>
-                {% else %}
-                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes_count() }}" style="display: none;">{{ comment.likes_count() }} likes</div>
+              {% if comment.likes|length == 1 %}
+                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes|length }}" style="display: block">1 like</div>
+              {% elif comment.likes|length > 1 %}
+                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes|length }}" style="display: block;">{{ comment.likes|length }} likes</div>
+              {% else %}
+                <div class="date" id="like-counter-{{ comment.id }}" data-count="{{ comment.likes|length }}" style="display: none;"></div>
               {% endif %}
               <div class="reply-btn" data-comment-id="{{ comment.id }}" data-author="{{ comment.commenter.username }}">Reply</div>
             </div>
           </div>
           <div class="like-btn">
             <div class="like-icon">
-              <i id="material-comment-like-icon-{{ comment.id}}" class="fa-regular fa-heart" data-comment-id="{{ comment.id }}"></i>
+              {% if current_user.has_liked_comment(comment) %}
+                <i id="material-comment-like-icon-{{ comment.id}}" style="color: orange;" class="fa-regular fa-heart" data-comment-id="{{ comment.id }}"></i>
+              {% else %}
+                <i id="material-comment-like-icon-{{ comment.id}}" class="fa-regular fa-heart" data-comment-id="{{ comment.id }}"></i>
+              {% endif %}
             </div>
           </div>
         </div>

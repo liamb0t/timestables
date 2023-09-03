@@ -77,9 +77,10 @@
                 {% endif %}
               {% endif %}
             </div>
-           
+            
             <div class="notif-dropdown" style="display: none;">
-              <h5>Notifications</h5>
+              <p>Notifications</p>
+              <div class="notif-container"></div>
             </div>
             
             <div class="profile-pic">
@@ -118,10 +119,11 @@
                   <li><a href="{{ url_for('materials.questions') }}"><i class="fa fa-chalkboard-user"></i><span>Questions</span></a></li>
                   <li><a href="{{ url_for('materials.forum') }}"><i class="fa-solid fa-globe"></i><span>Community</span></a></li>
                   <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-business-time "></i><span>Meetings</span></a></li>
+                  <li><a href="{{ url_for('marketplace.load_ads') }}"><i class="fa-solid fa-shop"></i><span>Marketplace</span></a></li>
                   <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i><span>Users</span></a></li>
                 </ul> 
             </div>
-            
+
             <div class="main-content">
                 {% block content %}{% endblock content %}
             </div>

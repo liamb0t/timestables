@@ -200,7 +200,7 @@ def like_material(material_id):
     material = Material.query.filter_by(id=material_id).first_or_404()
     if current_user.has_liked_material(material):
         current_user.unlike_material(material)
-        n = Notification.query.filter_by(user_id=current_user.id, material_id=material.id, name='material_like').first()
+        n = Notification.query.filter_by(user_id=material.user_id, material_id=material.id, name='material_like').first()
         db.session.delete(n)
         db.session.commit()
     else:

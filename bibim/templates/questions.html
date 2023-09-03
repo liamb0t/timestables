@@ -58,9 +58,9 @@
                                 </div>
                                 <div class="material-post-comment-info">
                                     <i class="fa-regular fa-heart"></i>
-                                    <span class="material-post-likes">{{ question.likes_count() }}</span>
+                                    <span class="material-post-likes">{{ question.likes|length }}</span>
                                     <i class="fa-regular fa-comment"></i>
-                                    <span class="material-post-comments">{{ question.comments_count() }}</span>
+                                    <span class="material-post-comments">{{ question.likes|length }}</span>
                                 </div>
                             </div>
                             <div class="material-post-user-info">

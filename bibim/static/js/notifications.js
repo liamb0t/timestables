@@ -1,6 +1,7 @@
 const messageCounter = document.querySelector('#message_count');
 const count = messageCounter.dataset.count;
 const notiDropdown = document.querySelector('.notif-dropdown');
+const notiContainer = document.querySelector('.notif-container');
 const notificationsBtn = document.querySelector('#notification-bell'); 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -77,7 +78,7 @@ function display_notification(data) {
     url.appendChild(notiDiv)
     const html = notificationHTML(data)
     notiDiv.innerHTML = html;
-    notiDropdown.appendChild(url);
+    notiContainer.appendChild(url);
     notiDiv.addEventListener('click', function() {
       if (!data['read']) {
         isRead(data['id']);
@@ -98,15 +99,23 @@ function notificationHTML(data) {
   const sent_data = data['sent_data'];
 
   if (type === 'post_comment' || type === 'material_comment' || type === 'reply') {
-    console.log(data)
-    return `${sent_data['author']} ${data['html']} ${sent_data['date_posted']}: ${sent_data['content']}`
+    return `
+    <span>${sent_data['author']} ${data['html']}</span>
+    <span>&bull;</span>
+    <span>${sent_data['date_posted']}</span>  
+    <div style="font-size: smaller">${sent_data['content']}</div>`
   }
   else if (type === 'material_like') {
-    console.log(data)
-    return `${sent_data['author']} ${data['html']} ${sent_data['date']}: ${user_data['title']}`
+    return `<span>${sent_data['author']} ${data['html']}</span>
+    <span>&bull;</span>
+    <span>${sent_data['date']}</span>
+    <div style="font-size: smaller">${user_data['title']}</div>`
   }
   else {
-    return `${sent_data['author']} ${data['html']} ${user_data['date_posted']}: ${user_data['content']}`
+    return `<span>${sent_data['author']} ${data['html']}</span>
+    <span>&bull;</span>
+    <span>${user_data['date_posted']}</span>
+    <div style="font-size: smaller">${user_data['content']}</div>`
   }
 }
 

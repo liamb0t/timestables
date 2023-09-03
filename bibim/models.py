@@ -629,7 +629,7 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your material:',
+                'html': 'liked your material' if material.level != 'question' else 'liked your question',
                 'url': f'/material/{material.id}',
                 'read': self.read,
             }
@@ -645,7 +645,7 @@ class Notification(db.Model):
                 'sent_data': comment.serialize(),
                 'user_data': material.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'commented on your post:',
+                'html': 'commented on your material' if material.level != 'question' else 'answered your question',
                 'url': f'/material/{material.id}',
                 'read': self.read,
             }
@@ -661,7 +661,7 @@ class Notification(db.Model):
                 'sent_data': comment.serialize(),
                 'user_data': classified.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'commented on your advert:',
+                'html': 'commented on your advert',
                 'url': f'/material/{classified.id}',
                 'read': self.read,
             }
@@ -677,7 +677,7 @@ class Notification(db.Model):
                 'sent_data': like.serialize(),
                 'user_data': classified.serialize(),
                 'timestamp': self.timestamp,
-                'html': 'liked your advert:',
+                'html': 'liked your advert',
                 'url': f'/material/{classified.id}',
                 'read': self.read,
             }

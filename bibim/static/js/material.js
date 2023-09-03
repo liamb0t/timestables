@@ -11,7 +11,6 @@ const lessonFilter = document.querySelector('#lesson');
 
 commentForm.addEventListener('submit', handleSubmit);   
 
-
 showReplyBtns.forEach(btn => {  
     btn.addEventListener('click', function() {
         const commentId = this.dataset.commentId;
@@ -23,7 +22,6 @@ showReplyBtns.forEach(btn => {
 });
 
 const commentLikeIcons = document.querySelectorAll('.like-icon i')
-console.log(commentLikeIcons)
 
 commentLikeIcons.forEach(icon => {
     icon.addEventListener('click', handleLikesComment)
@@ -116,13 +114,13 @@ function handleLikesMaterial() {
     .then(response => response.json())
     .then(data => {
         if (data['liked']) {
-            counter.innerHTML = `${count + 1} likes`;
+            counter.innerHTML = (count === 0) ? '1 like': `${count + 1} likes`;
             counter.dataset.materialLikes = count + 1;
-            mainLikeIcon.setAttribute('class', 'fa-solid fa-heart');
-            mainLikeIcon.style.color = 'red'
+            mainLikeIcon.setAttribute('class', 'fa-regular fa-heart');
+            mainLikeIcon.style.color = 'orange'
         }
         else {
-            counter.innerHTML = `${count - 1} likes`;
+            counter.innerHTML = (count === 1) ? '': (count === 2) ? '1 like': `${count - 1} likes`;
             counter.dataset.materialLikes = count - 1;
             mainLikeIcon.setAttribute('class', 'fa-regular fa-heart');
             mainLikeIcon.style.color = 'black'
@@ -139,18 +137,15 @@ function handleLikesComment() {
     .then(response => response.json())
     .then(data => {
         if (data['liked']) {
-            counter.innerHTML = `${count + 1} likes`;
+            counter.innerHTML = (count === 0) ? '1 like': `${count + 1} likes`;
             counter.dataset.count = count + 1;
-            this.setAttribute('class', 'fa-solid fa-heart');
-            this.style.color = 'red';
+            this.setAttribute('class', 'fa-regular fa-heart');
+            this.style.color = 'orange';
             counter.style.display = 'block';
         }
         else {
-            counter.innerHTML = `${count - 1} likes`;
+            counter.innerHTML = (count === 1) ? counter.style.display = 'none': (count === 2) ? '1 like': `${count - 1} likes`;
             counter.dataset.count = count - 1;
-            if (counter.dataset.count == 0) {
-                counter.style.display = 'none';
-            }
             this.setAttribute('class', 'fa-regular fa-heart');
             this.style.color = 'black';
         }
