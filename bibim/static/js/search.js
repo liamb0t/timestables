@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Check if referrer is from the same origin
     let referrer = document.referrer;
     
-    if (!referrer.includes(window.location.origin+'/search')) {
+    if (!referrer.includes(window.location.origin + window.location.pathname)) {
         localStorage.removeItem('activePage'); 
     }
 

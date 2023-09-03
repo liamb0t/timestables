@@ -7,7 +7,6 @@ from bibim.models import Material, Tag, Comment, Like, tags_table, Textbook, Not
 from bibim.materials.utils import update_textbooks_db, get_publishers, get_grades, save_file, get_file_size
 from bibim.posts.utils import post_timestamp
 from sqlalchemy import func
-from urllib.parse import unquote
 
 materials = Blueprint('materials', __name__)
 
@@ -234,21 +233,22 @@ def delete_material(material_id):
     return redirect(url_for('materials.load_materials', level=level))
 
 
-@materials.route('/questions', defaults={'section': None}, methods=["POST", "GET"])
-@materials.route('/questions/<string:section>', methods=["POST", "GET"])
-def questions(section):
+@materials.route('/questions', methods=["POST", "GET"])
+def questions():
     page = request.args.get('page', 1, type=int)
+    type = request.args.get('type', '')
     questions = Material.query.filter_by(level='question')
-    if section:
-            questions = Material.query.filter_by(level='question', section=section)
+    if type:
+            questions = Material.query.filter_by(level='question', section=type)
     questions = questions.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     return render_template('questions.html', questions=questions, post_timestamp=post_timestamp)
 
-@materials.route('/b/', defaults={'section': None}, methods=["POST", "GET"])
-@materials.route('/b/<string:section>', methods=["POST", "GET"])
-def forum(section): 
+
+@materials.route('/community', methods=["POST", "GET"])
+def forum(): 
     page = request.args.get('page', 1, type=int)
-    if section:
-        posts = Material.query.filter_by(level='questions', section=section).order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    board = request.args.get('b', '')
+    if board:
+        posts = Material.query.filter_by(level='questions', section=board).order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
     posts = Material.query.filter_by(level='questions').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
-    return render_template('forum.html', materials=posts, section=section)
+    return render_template('forum.html', materials=posts, section=board)

@@ -23,15 +23,15 @@
             </div>
         </div>
 
-        <nav class="materials-nav">
+        <nav class="search-nav" id="questions-filter-nav">
             <a href="{{ url_for('marketplace.load_ads') }}">Marketplace</a>
             <a href="{{ url_for('meetings.load_meetings') }}">Meetings</a>
-            <a href="{{ url_for('materials.forum', section='recommendations') }}">맛집</a>
-            <a href="{{ url_for('materials.forum', section='visa') }}">Teaching</a>
-            <a href="{{ url_for('materials.forum', section='jobs') }}">Job Adverts</a>
-            <a href="{{ url_for('materials.forum', section='travel') }}">Travel</a>
-            <a href="{{ url_for('materials.forum', section='politics') }}">Politics</a>
-            <a href="{{ url_for('materials.forum', section='random') }}">Random</a>
+            <a href="{{ url_for('materials.forum', b='recommendations') }}">맛집</a>
+            <a href="{{ url_for('materials.forum', b='visa') }}">Teaching</a>
+            <a href="{{ url_for('materials.forum', b='jobs') }}">Job Adverts</a>
+            <a href="{{ url_for('materials.forum', b='travel') }}">Travel</a>
+            <a href="{{ url_for('materials.forum', b='politics') }}">Politics</a>
+            <a href="{{ url_for('materials.forum', b='random') }}">Random</a>
            
             <form method="POST" action="" id="filter-submit">
                 <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
@@ -86,5 +86,6 @@
         {% endfor %}    
     </div>
     <script src="{{ url_for('static', filename='js/customSelectBtn.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
 {% endblock content %}
 

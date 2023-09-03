@@ -107,10 +107,18 @@
                             </div>
                             <div>
                                 <span style="font-size: smaller; color: grey;">{{ post.likes|length }}</span>
-                                <span style="font-size: smaller; color: grey;">likes</span>
+                                {% if post.likes|length == 1 %}
+                                    <span style="font-size: smaller; color: grey;">like</span>
+                                    {% else %}
+                                    <span style="font-size: smaller; color: grey;">likes</span>
+                                {% endif %}
                                 <span style="font-size: small;">&bull;</span>
                                 <span style="font-size: smaller; color: grey;">{{ post.comments|length }}</span>
-                                <span style="font-size: smaller; color: grey;">comments</span>
+                                {% if post.comments|length == 1 %}
+                                    <span style="font-size: smaller; color: grey;">comment</span>
+                                {% else %}
+                                    <span style="font-size: smaller; color: grey;">comments</span>
+                                {% endif %}
                                 <span style="font-size: small;">&bull;</span>
                                 <span style="font-size: smaller; color: grey;">{{ timestamper(post.date_posted) }}</span>
                             </div>
@@ -133,10 +141,18 @@
                             </div>
                             <div>
                                 <span style="font-size: smaller; color: grey;">{{ question.likes|length }}</span>
-                                <span style="font-size: smaller; color: grey;">likes</span>
+                                {% if question.likes|length == 1 %}
+                                    <span style="font-size: smaller; color: grey;">like</span>
+                                    {% else %}
+                                    <span style="font-size: smaller; color: grey;">likes</span>
+                                {% endif %}
                                 <span style="font-size: small;">&bull;</span>
                                 <span style="font-size: smaller; color: grey;">{{ question.comments|length }}</span>
-                                <span style="font-size: smaller; color: grey;">comments</span>
+                                {% if question.comments|length == 1 %}
+                                    <span style="font-size: smaller; color: grey;">comment</span>
+                                {% else %}
+                                    <span style="font-size: smaller; color: grey;">comments</span>
+                                {% endif %}
                                 <span style="font-size: small;">&bull;</span>
                                 <span style="font-size: smaller; color: grey;">{{ timestamper(question.date_posted) }}</span>
                             </div>
@@ -156,15 +172,23 @@
                         <div class="announcement-bar-entry">
                             <div class="announcement-bar-header">
                                 <a href="{{ url_for('materials.material', material_id=material.id) }}">{{ material.title | truncate(30, True, '')}}</a>
-                                 <div>
-                                <span style="font-size: smaller; color: grey;">{{ material.likes|length }}</span>
-                                <span style="font-size: smaller; color: grey;">likes</span>
-                                <span style="font-size: small;">&bull;</span>
-                                <span style="font-size: smaller; color: grey;">{{ material.comments|length }}</span>
-                                <span style="font-size: smaller; color: grey;">comments</span>
-                                <span style="font-size: small;">&bull;</span>
-                                <span style="font-size: smaller; color: grey;">{{ timestamper(material.date_posted) }}</span>
-                            </div>
+                                <div>
+                                    <span style="font-size: smaller; color: grey;">{{ material.likes|length }}</span>
+                                    {% if material.likes|length == 1 %}
+                                        <span style="font-size: smaller; color: grey;">like</span>
+                                        {% else %}
+                                        <span style="font-size: smaller; color: grey;">likes</span>
+                                    {% endif %}
+                                    <span style="font-size: small;">&bull;</span>
+                                    <span style="font-size: smaller; color: grey;">{{ material.comments|length }}</span>
+                                    {% if material.comments|length == 1 %}
+                                        <span style="font-size: smaller; color: grey;">comment</span>
+                                    {% else %}
+                                        <span style="font-size: smaller; color: grey;">comments</span>
+                                    {% endif %}
+                                    <span style="font-size: small;">&bull;</span>
+                                    <span style="font-size: smaller; color: grey;">{{ timestamper(material.date_posted) }}</span>
+                                </div>
                             </div>
                         </div>
                     </li>

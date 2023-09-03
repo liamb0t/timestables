@@ -1,10 +1,9 @@
 from flask import Blueprint, url_for, redirect, request, jsonify, flash, render_template, abort
 from flask_login import current_user, login_required
 from bibim import db
-from bibim.posts.forms import PostForm, MessageForm, EditForm
+from bibim.posts.forms import MessageForm, EditForm
 from bibim.models import Post, Comment, User, Message, Notification
 from bibim.materials.forms import CommentForm
-import datetime
 from bibim.posts.utils import post_timestamp
 
 posts = Blueprint('posts', __name__)

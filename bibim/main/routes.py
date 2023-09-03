@@ -1,11 +1,11 @@
 from flask import Blueprint, redirect, render_template, flash, url_for, request, send_file, jsonify, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from bibim.models import Post, User, Material, File, Comment, Notification, Like, Meeting
-from bibim.main.forms import LoginForm, RegistrationForm, SearchForm, ResetPasswordForm, RequestResetForm
+from bibim.main.forms import LoginForm, RegistrationForm, ResetPasswordForm, RequestResetForm
 from bibim.main.utils import send_reset_email, prompts, send_verification_email
 from bibim.posts.forms import PostForm, EditForm
 from bibim.posts.utils import post_timestamp
-from bibim import bcrpyt, db, app
+from bibim import bcrpyt, db
 import datetime
 from sqlalchemy import or_, func
 from random import choice
@@ -146,7 +146,7 @@ def home():
                             .group_by(Post)\
                             .order_by(func.count(Like.id).desc()).limit(5)
     popular_materials = Material.query.join(Material.likes, isouter=True)\
-                            .group_by(Material)\
+                            .group_by(Material).filter(Material.level != 'question')\
                             .order_by(func.count(Like.id).desc()).limit(5)
     upcoming_meetings =  Meeting.query.filter(Meeting.start_date >= current_datetime.date(),).all()
     recent_questions = Material.query.filter_by(level='question').limit(5)

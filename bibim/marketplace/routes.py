@@ -1,7 +1,7 @@
 from flask import Blueprint, url_for, redirect, request, jsonify, render_template, flash
 from flask_login import current_user, login_required
 from bibim import db
-from bibim.models import Comment, Meeting, Like, Notification, Classified
+from bibim.models import Comment, Like, Notification, Classified
 from bibim.marketplace.forms import CommentForm, AdForm, FilterForm
 from bibim.posts.utils import post_timestamp
 from bibim.materials.utils import save_file, get_file_size

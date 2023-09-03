@@ -101,12 +101,12 @@ function handleLikes() {
     .then(response => response.json())
     .then(data => {
         if (data['liked']) {
-            counter.innerHTML = `${count + 1} likes`;
+            counter.innerHTML = (count === 0) ? '1 like' : `${count + 1} likes`;
             counter.dataset.count = count + 1;
             icon.style.color = 'orange'
         }
         else {
-            counter.innerHTML = `${count - 1} likes`;
+            counter.innerHTML = (count === 1) ? '' : (count === 2) ? '1 like' : `${count - 1} likes`;
             counter.dataset.count = count - 1;
             icon.style.color = 'black'
         }
@@ -213,7 +213,7 @@ function add_post(post) {
         document.body.classList.add("body-no-scroll");
     });
     if (post['likes'] > 0 ) {
-        likesText.textContent = `${post['likes']} likes`;
+        likesText.textContent = (post['likes'] === 1) ? '1 like': `${post['likes']} likes`;
     }
    
    
@@ -330,25 +330,13 @@ function add_post(post) {
             date.textContent = comment["date_posted"];
             footer.appendChild(date);
 
-
-            if (comment["likes_count"] > 0) {
-                const likeCounter = document.createElement('div');
-                likeCounter.classList.add('date');
-                likeCounter.id = `like-counter-${comment["id"]}`;
-                likeCounter.dataset.count = comment["likes_count"];
-                likeCounter.style.display = "block";
-                likeCounter.textContent = `${comment["likes_count"]} likes`;
-                footer.appendChild(likeCounter);
-            } else {
-                const likeCounter = document.createElement('div');
-                likeCounter.classList.add('date');
-                likeCounter.id = `like-counter-${comment["id"]}`;
-                likeCounter.dataset.count = comment["likes_count"];
-                likeCounter.style.display = "none";
-                likeCounter.textContent = `${comment["likes_count"]} likes`;
-                footer.appendChild(likeCounter);
-            }
-
+            const likeCounter = document.createElement('div');
+            likeCounter.classList.add('date');
+            likeCounter.id = `comment-like-counter-${comment["id"]}`;
+            likeCounter.dataset.count = comment["likes_count"];
+            likeCounter.textContent = (comment['likes_count'] === 0) ? likeCounter.style.display = "none": (comment['likes_count'] === 1) ? '1 like': `${comment['likes_count']} likes`;
+            footer.appendChild(likeCounter);
+            
             const replyBtn = document.createElement('div');
             replyBtn.classList.add('reply-btn');
             replyBtn.textContent = "Reply";
@@ -397,8 +385,6 @@ function add_post(post) {
                 }
 
                 iElement.addEventListener('click', handleLikesComment)
-
-
 
                 divIcon.appendChild(iElement);
                 divContainer.appendChild(divIcon);
@@ -449,9 +435,9 @@ function add_post(post) {
                                     <div class="footer">
                                         <div class="date">${reply["date_posted"]}</div>
                                         
-                                        ${reply["likes_count"] > 0 ? `<div class="date" id="like-counter-${reply["id"]} data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>` : `<div class="date" id="like-counter-${reply["likes_count"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>`}
+                                        ${reply["likes_count"] > 0 ? `<div class="date" id="comment-like-counter-${reply["id"]} data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>` : `<div class="date" id="comment-like-counter-${reply["likes_count"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>`}
                                         
-                                        <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
+                                        <div class="date" id="comment-like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
                                         <div onclick="handleReply({ author: '${reply["author"]}', comment_id: ${reply["id"]}, post_id: ${post["id"]} })" class="reply-btn" data-comment-id="${reply['id']}" data-author="${reply['author']}">Reply</div>
                                         <i class="fa fa-ellipsis" onclick="handleEllipsis([${reply['id']}, '${reply['author']}', '${post['current_user']}'])"></i>
                                     </div> 
@@ -479,9 +465,9 @@ function add_post(post) {
                                 <div class="footer">
                                     <div class="date">${reply["date_posted"]}</div>
                                     
-                                    ${reply["likes_count"] > 0 ? `<div class="date" id="like-counter-${reply["id"]} data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>` : `<div class="date" id="like-counter-${reply["likes_count"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>`}
+                                    ${reply["likes_count"] > 0 ? `<div class="date" id="comment-like-counter-${reply["id"]} data-count="${reply["likes_count"]}" style="display: block">${reply["likes_count"]} likes</div>` : `<div class="date" id="comment-like-counter-${reply["likes_count"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>`}
                                     
-                                    <div class="date" id="like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
+                                    <div class="date" id="comment-like-counter-${reply["id"]}" data-count="${reply["likes_count"]}" style="display: none;">${reply["likes_count"]} likes</div>
                                 </div> 
                             </div>
                         </div>    
@@ -664,7 +650,7 @@ function handleLikesComment(reply_id) {
         comment_id = this.dataset.commentId;
     }
     
-    const counter = document.getElementById(`like-counter-${comment_id}`);
+    const counter = document.getElementById(`comment-like-counter-${comment_id}`);
     let count = parseInt(counter.dataset.count);
     const icon = document.querySelector(`#material-comment-like-icon-${comment_id}`)
 
@@ -672,18 +658,15 @@ function handleLikesComment(reply_id) {
     .then(response => response.json())
     .then(data => {
         if (data['liked']) {
-            counter.innerHTML = `${count + 1} likes`;
+            counter.innerHTML = (count === 0) ? '1 like': `${count + 1} likes`;
             counter.dataset.count = count + 1;
             icon.style.color = 'orange';
             counter.style.display = 'block';
             icon.style.marginRight = '2px'
         }
         else {
-            counter.innerHTML = `${count - 1} likes`;
+            counter.innerHTML = (count === 2) ? '1 like': (count === 1) ? counter.style.display = 'none': `${count - 1} likes`;
             counter.dataset.count = count - 1;
-            if (counter.dataset.count == 0) {
-                counter.style.display = 'none';
-            }
             icon.style.color = 'black';
             
         }

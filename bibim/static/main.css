@@ -1257,6 +1257,22 @@ a:hover i {
   margin-right: 5px;  
 }
 
+#questions-filter-nav a {
+  color: #757575;
+  border-radius: 10px;
+  text-decoration: none;
+  padding: 5px;
+  margin-right: 5px; 
+}
+
+#questions-filter-nav .active {
+  color: white;
+}
+
+#questions-filter-nav {
+  margin-left: 15px;
+}
+
 .user-filters a.active {
   color: white;
   background-color: orange;
@@ -1336,7 +1352,14 @@ a:hover i {
 .search-nav {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+}
+
+#search-filter-nav {
+
+}
+
+#questions-filter-nav {
+  
 }
 
 .search-nav a {

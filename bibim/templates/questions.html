@@ -10,17 +10,17 @@
             </div>
         </div>
         
-        <nav class="materials-nav">
+        <nav class="search-nav" id="questions-filter-nav">
             <a href="{{ url_for('materials.questions') }}">All</a>
-            <a href="{{ url_for('materials.questions', section='classroom') }}">Classroom</a>
-            <a href="{{ url_for('materials.questions', section='visa') }}">Visa</a>
-            <a href="{{ url_for('materials.questions', section='coteaching') }}">Co-teachers</a>
-            <a href="{{ url_for('materials.questions', section='contracts') }}">Contracts</a>
-            <a href="{{ url_for('materials.questions', section='epik') }}">EPIK</a>
-            <a href="{{ url_for('materials.questions', section='hagwon') }}">Hagwon</a>
-            <a href="{{ url_for('materials.questions', section='nhis') }}">NHIS</a>
-            <a href="{{ url_for('materials.questions', section='accommodation') }}">Accommodation</a>
-            <a href="{{ url_for('materials.questions', section='other') }}">Other</a>
+            <a href="{{ url_for('materials.questions', type='classroom') }}">Classroom</a>
+            <a href="{{ url_for('materials.questions', type='visa') }}">Visa</a>
+            <a href="{{ url_for('materials.questions', type='coteaching') }}">Co-teachers</a>
+            <a href="{{ url_for('materials.questions', type='contracts') }}">Contracts</a>
+            <a href="{{ url_for('materials.questions', type='epik') }}">EPIK</a>
+            <a href="{{ url_for('materials.questions', type='hagwon') }}">Hagwon</a>
+            <a href="{{ url_for('materials.questions', type='nhis') }}">NHIS</a>
+            <a href="{{ url_for('materials.questions', type='accommodation') }}">Accommodation</a>
+            <a href="{{ url_for('materials.questions', type='other') }}">Other</a>
           
             <form method="POST" action="" id="filter-submit">
                 <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
@@ -88,5 +88,6 @@
         {% endfor %}    
     </div>
     <script src="{{ url_for('static', filename='js/customSelectBtn.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
 {% endblock content %}
 

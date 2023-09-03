@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Search results for '{{ request.args.get('q', '') }}' - Bibimhak{% endblock %}
 {% block content %}
-    <nav class="search-nav">
+    <nav class="search-nav" id="search-filter-nav">
         <a href="{{ url_for('main.search', q=query, type='posts') }}">Posts</a>
         <a href="{{ url_for('main.search',  q=query, type='materials')}}">Materials</a>
         <a href="{{ url_for('main.search', q=query, type='questions')}}">Questions</a>
