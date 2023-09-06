@@ -42,6 +42,7 @@ def load_materials(level):
     form = SelectForm()
     publishers = Textbook.query.with_entities(Textbook.publisher).filter(Textbook.level == level).distinct().all()
     form.publisher.choices = ['Textbook', 'All'] + [publisher[0] for publisher in publishers]
+    form.grade.choices = get_grades(level)
     
     if form.validate_on_submit():
         filter = request.args.get('f', 1, type=str)
@@ -75,10 +76,24 @@ def load_materials(level):
                 materials = materials.join(Material.likes, isouter=True)\
                             .group_by(Material)\
                             .order_by(func.count(Like.id).desc())
+            elif filter == 'liked':
+                materials = materials.join(Material.likes, isouter=True)\
+                            .group_by(Material).filter(Like.user_id==current_user.id)\
+                            .order_by(func.count(Comment.id).desc())
         else:
             print(form.errors)
     materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=10)
     return render_template('materials.html', materials=materials, level=level, form=form, post_timestamp=post_timestamp)
+
+
+@materials.route("/materials/liked", methods=['GET', 'POST'])
+def liked_materials():
+    page = request.args.get('page', 1, type=int)
+    materials = Material.query.join(Material.likes, isouter=True)\
+                        .group_by(Material).filter(Like.user_id==current_user.id, Material.level!='question', Material.level!='community')\
+                        .order_by(Like.date_created.desc()).paginate(page=page, per_page=10)
+    return render_template('liked_materials.html', materials=materials, post_timestamp=post_timestamp)
+
 
 @materials.route("/material/<int:material_id>", methods=["POST", "GET"])
 @login_required
@@ -126,11 +141,12 @@ def create_material(level):
     publishers = Textbook.query.with_entities(Textbook.publisher).filter(Textbook.level == level).distinct().all()
     form.publisher.choices = [publisher[0] for publisher in publishers]
     form.grade.choices = get_grades(level)
+    del form.grade.choices[1]
     if form.validate_on_submit():
         tagnames = [form.publisher.data, form.material_type.data]
         material = Material(title=form.title.data, level=level, grade=form.grade.data, 
                             content=request.form.get('ckeditor'), creator=current_user)
-        if level == 'question':
+        if level == 'question' or level == 'community':
             material.section = form.grade.data
         if form.lesson.data:
             material.lesson_id = form.lesson.data
@@ -200,16 +216,8 @@ def like_material(material_id):
     material = Material.query.filter_by(id=material_id).first_or_404()
     if current_user.has_liked_material(material):
         current_user.unlike_material(material)
-        n = Notification.query.filter_by(user_id=material.user_id, material_id=material.id, name='material_like').first()
-        db.session.delete(n)
-        db.session.commit()
     else:
-        like = current_user.like_material(material)
-        db.session.commit()
-        if material.creator != current_user:
-            n = Notification(name='material_like', like_id=like.id, user_id=material.user_id, material_id=material.id)
-            db.session.add(n)
-            db.session.commit()
+        current_user.like_material(material)
     return jsonify({
         'liked': current_user.has_liked_material(material)
     })
@@ -249,6 +257,7 @@ def forum():
     page = request.args.get('page', 1, type=int)
     board = request.args.get('b', '')
     if board:
-        posts = Material.query.filter_by(level='questions', section=board).order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
-    posts = Material.query.filter_by(level='questions').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
-    return render_template('forum.html', materials=posts, section=board)
+        posts = Material.query.filter_by(level='community', section=board).order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    else:
+        posts = Material.query.filter_by(level='community').order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
+    return render_template('forum.html', posts=posts, section=board, post_timestamp=post_timestamp)

@@ -7,6 +7,20 @@
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <div>
+                    {{ form.tag.label }}
+                    {% if form.tag.errors %}
+                        {{form.tag(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.tag.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.tag(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.title.label }}
                     {% if form.title.errors %}
                         {{form.title(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
@@ -20,34 +34,7 @@
                 </div>
                 
                 <div>
-                    {% if form.tag.errors %}
-                        {{form.tag(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {% for error in form.tag.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.tag(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div>
-                    {% if form.fee.errors %}
-                        {{form.fee(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {% for error in form.fee.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.fee(class="form-control form-control-lg") }}
-                    {% endif %}
-
-                </div>
-                   
-                <div>
-                  
+                    {{ form.content.label }}
                     {% if form.content.errors %}
                         {{form.content(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
@@ -59,10 +46,26 @@
                         {{ form.content(class="form-control form-control-lg")}}
                     {% endif %}
                 </div>
+                
+                <div>
+                    {{ form.fee.label(class="form-control-label") }}
+                    {% if form.fee.errors %}
+                        {{form.fee(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.fee.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="input-wrapper">
+                            <span class="prefix">₩</span>
+                            {{ form.fee(class="price-input-field") }}
+                        </div>
+                    {% endif %}
+                </div>
 
                 <div>
                     {{ form.files.label(class="form-control-label") }}
-                    
                     {% if form.files.errors %}
                         {{form.files(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
@@ -71,7 +74,18 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.files(class="form-control form-control-lg")}}
+                        {{ form.files()}}
+                        <div id="drop-area">
+                            <div>
+                                <label for="files" class="file-upload-label">Add photos</label>
+                            </div>
+                            <div>
+                               Accepts .jpg and .png
+                            </div>
+                          
+                        </div>
+                      
+                      
                     {% endif %}
                 </div>
 
@@ -82,5 +96,6 @@
         </form>
     </div>
     <script src="{{ url_for('static', filename='js/create_meeting.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropArea.js') }}"></script>
    
 {% endblock content %}

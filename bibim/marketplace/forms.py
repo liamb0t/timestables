@@ -2,19 +2,18 @@ from flask_wtf import FlaskForm
 from wtforms import (StringField, TextAreaField, SubmitField, 
                      BooleanField, SearchField, MultipleFileField, SelectField, HiddenField,
                      IntegerField, TimeField, FileField)
-from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError, Optional
+from wtforms.validators import DataRequired, ValidationError, Optional, NumberRange
 from wtforms_components import DateField
 from flask_wtf.file import FileAllowed
 
 class AdForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()], render_kw={'placeholder': 'Title'})
-    content = TextAreaField('Description', validators=[DataRequired()], render_kw={'placeholder': 'Description'})
-    cover_pic = FileField()
-    address = HiddenField('address')
-    files = MultipleFileField('Photos (.jpg, and .png)', 
-                            validators=[FileAllowed(['jpg', 'png', ])])
-    fee = IntegerField('Fee', validators=[Optional()], render_kw={'placeholder': 'Price ₩'})
-    tag = SelectField('Category', choices=[(x, x) for x in ['Category', 'Home', 'Books',
+    title = StringField('Title *', validators=[DataRequired()])
+    content = TextAreaField('Description *', validators=[DataRequired()])
+    location = StringField('Location')
+    files = MultipleFileField('Photos', 
+                            validators=[FileAllowed(['jpg', 'png'])])
+    fee = IntegerField('Price *', validators=[Optional(), NumberRange(min=1, max=100000000)])
+    tag = SelectField('Category *', choices=[(x, x) for x in ['Home', 'Books',
                                                                               'Sports', 'Electronics', 'Music',
                                                                               'Clothes', 'Appliances', 'Other goods '
                                                                             ]])

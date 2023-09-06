@@ -25,6 +25,42 @@ a:hover {
   text-decoration: none;
 }
 
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.prefix {
+  position: absolute;
+  left: 5px;
+}
+
+.price-input-field {
+  padding-left: 20px; /* Adjust based on the size of the prefix */
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+
+#drop-area {
+  display: flex;
+  flex-direction: column;
+  border: 2px dashed #ccc;
+  width: 20rem;
+  height: 10rem;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .flash-messages {
   position: fixed;
@@ -327,7 +363,7 @@ i {
 }
 
 a:hover i {
-  transform: scale(1.6);
+  transform: scale(1.2);
 }
 
 .notification {
@@ -388,12 +424,14 @@ a:hover i {
   display: block;
   font-size: 16px;
   text-decoration: none;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 10px 20px;
+  border-radius: 50px;
   transition: background-color 0.3s ease;
 }
 
 .sidebar i {
+  height: 1rem;
+  width: 1rem;
   transform: scale(1.1);
   margin: 0;
 }
@@ -413,7 +451,20 @@ a:hover i {
   padding: 0;
 }
 
+#files {
+  display: none;
+}
 
+.file-upload-label {
+  background-color: #e6f2f7;
+  padding: 10px 15px;
+  color: #3c3241;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 40px;
+  display: inline-block;
+}
 
 .sidebar .sidebar-option {
   margin-left: 10px;
@@ -421,6 +472,7 @@ a:hover i {
 }
 
 .sidebar ul li a.active{
+  background-color: rgba(203, 203, 203, 0.879);
   font-weight: bold;
 }
 
@@ -428,9 +480,6 @@ a:hover i {
   background-color: rgba(154, 154, 154, 0.138);
   color: #161616;
 }
-
-
-
 
 
 /* main content styling */
@@ -1887,4 +1936,16 @@ footer {
 
 .user-name, .user-reputation, .user-duration {
   margin: 10px 0;
+}
+
+
+
+/* Media query for screens larger than 1980px */
+
+@media (min-width: 1980px) {
+  .navbar {
+      /* styles for .my-class when the screen width is more than 1980px */
+      padding: 0 20rem;
+      /* ...other styles... */
+  }
 }

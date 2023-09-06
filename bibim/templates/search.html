@@ -140,6 +140,7 @@
                             <div class="material-post-header">
                                 <div style="display: flex;">
                                     <div class="material-post-grade">
+                                      
                                         Grade {{ result.grade }}
                                     </div>
                                     {% if result.lesson_id %}
@@ -157,7 +158,11 @@
                             <div class="material-post-footer">
                                 <div style="display: flex; align-items: center;"> 
                                     <div class="material-post-tags">
+                                        <div class="tag">
+                                            {{ result.level }} school
+                                        </div>
                                         {% for tag in result.tags %}
+        
                                             <div class="tag">
                                                 {{ tag.tagname }}
                                             </div>

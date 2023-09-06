@@ -1,22 +1,20 @@
 const links = document.querySelectorAll('.sidebar ul li a');
 
-links.forEach((link) => {
-  link.addEventListener('click', (event) => {
-    // Remove the 'active' class from all links
-    links.forEach((link) => {
-      link.classList.remove('active');
-    });
 
-    // Add the 'active' class to the clicked link
-    link.classList.add('active');
-
-    // Store the active link information in localStorage
-    localStorage.setItem('activeLink', link.getAttribute('href'));
-  });
+links.forEach(link => {
+    if (link.getAttribute('href') === window.location.pathname) {
+      link.classList.add('active');
+    } 
+    else {
+        link.classList.remove('active');
+    }
 });
 
 const sidebarOptions = document.querySelectorAll('.sidebar-option');
 const materialsLink = document.getElementById('materials-link');
+const showMore = document.getElementById('more-options-link');
+const showLess = document.getElementById('less-options-link');
+const moreOptions = document.querySelectorAll('.sidebar-more-option');
 
 materialsLink.addEventListener('click', function() {
   sidebarOptions.forEach(elem => {
@@ -29,14 +27,21 @@ materialsLink.addEventListener('click', function() {
   });
 })
 
-// Check if there is an active link in localStorage
-const activeLink = localStorage.getItem('activeLink');
-if (activeLink) {
-  const link = document.querySelector(`.sidebar ul li a[href="${activeLink}"]`);
-  if (link) {
-    link.classList.add('active');
-  }
-}
+showMore.addEventListener('click', function() {
+  moreOptions.forEach(elem=>{
+    elem.style.display = 'block'
+  })
+  this.style.display = 'none'
+  showLess.style.display = 'block'
+})
+
+showLess.addEventListener('click', function() {
+  moreOptions.forEach(elem=>{
+    elem.style.display = 'none'
+  })
+  this.style.display = 'none'
+  showMore.style.display = 'block'
+})
 
 function handleSubmit(event) {
   event.preventDefault();

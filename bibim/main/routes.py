@@ -39,7 +39,6 @@ def search():
             results = Comment.query.filter(Comment.content.ilike(f'%{search_query}%')).all()
     else:
         results = Post.query.filter(Post.content.ilike(f'%{search_query}%')).all()
-    print('results', results)
     return render_template('search.html', results=results, query=search_query, type=type if type else None,
                            post_timestamp=post_timestamp)
 

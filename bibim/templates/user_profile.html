@@ -47,13 +47,13 @@
        
     </div>
     
-    <div class="user-filters">
-        <a class="active" href="{{ url_for('users.user_profile', username=user.username, filter='posts')}}">Posts</a>
+    <nav class="search-nav" id="questions-filter-nav">
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='posts')}}">Posts</a>
         <a href="{{ url_for('users.user_profile', username=user.username, filter='materials')}}">Materials</a>
-        <a href="{{ url_for('users.user_profile', username=user.username, filter='questions ')}}">Questions</a>
+        <a href="{{ url_for('users.user_profile', username=user.username, filter='questions')}}">Questions</a>
         <a href="{{ url_for('users.user_profile', username=user.username, filter='meetings')}}">Meetings</a>
         <a href="{{ url_for('users.user_profile', username=user.username, filter='comments')}}">Comments</a>
-    </div>
+    </nav>  
     <div class="user-content">
         {% if posts %}
             {% for post in posts %}
@@ -156,5 +156,6 @@
         {% endif %}
     </div>
     <script src="{{ url_for('static', filename='js/user_profile.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
 </div>
 {% endblock content %}

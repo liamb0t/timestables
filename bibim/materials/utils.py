@@ -35,20 +35,25 @@ def get_publishers(level):
     
 def get_grades(level):
     if level == 'elementary':
-        return [('0', 'Select Grade'), ('1', '1st Grade'), ('2', '2nd Grade'), 
-                ('3', '3rd Grade'), ('4', '4th Grade'), ('5', '5th Grade'), ('6', '6th Grade')]
+        return [('0', 'Grade'), ('All', 'All'),  ('1', 'Grade 1'), ('2', 'Grade 2'), 
+                ('3', 'Grade 3'), ('4', 'Grade 4'), ('5', 'Grade 5'), ('6', 'Grade 6'),
+                ('7', 'Kinder'), ('8', 'After'), ('9', 'Phonics')]
     elif level == 'middle':
-        return [('0', 'Select Grade'), ('1', '1st Grade'), ('2', '2nd Grade'), 
-                ('3', '3rd Grade')]
+        return [('0', 'Grade'), ('All', 'All'), ('1', 'Grade 1'), ('2', 'Grade 2'), 
+                ('3', 'Grade 3')]
     elif level == 'high':
-        return [('0', 'Select Grade'), ('1', '1st Grade'), ('2', '2nd Grade'), 
-                ('3', '3rd Grade')]
-    elif level == 'question':
-        return [('0', 'Select category'), ('classroom', 'Classroom'), ('visa', 'Visa'), 
-                ('coteaching', 'Co-teachers'), ('epik', 'EPIK'), ('hagwon', 'Hagwon'), 
-                ('nhis', 'NHIS'), ('accommodation', 'Accommodation'), ('contracts', 'Contracts'), ('other', 'Other'), ]
+        return [('0', 'Grade'), ('All', 'All'), ('1', 'Grade 1'), ('2', 'Grade 2'), 
+                ('3', 'Grade 3')]
+    elif level == 'community':
+        return [('0', 'Select forum'), ('languages', 'Language'), ('recommendations', '맛집'), 
+                ('teaching', 'Teaching'), ('jobs', 'Jobs'), ('travel', 'Travel'), ('korea', 'Korea'),
+                ('politics', 'Politics'), ('random', 'Random')]
     else:
-        return
+        return [('0', 'Question category'), ('classroom', 'Classroom'), ('visa', 'Visa'), 
+                ('coteaching', 'Co-teachers'), ('contracts', 'Contracts'), ('epik', 'EPIK'), ('hagwon', 'Hagwon'), 
+                ('nhis', 'NHIS'), ('accommodation', 'Accommodation'), ('other', 'Other')]
+
+      
 
 def update_textbooks_db():
     file_path = os.path.join(current_app.root_path, 'textbooks.txt')

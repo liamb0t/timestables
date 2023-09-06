@@ -27,9 +27,7 @@ class MaterialForm(FlaskForm):
         raise ValidationError('Please select at least one tag.')
 
 class SelectForm(FlaskForm):
-    grade = SelectField('Grade', choices=[('0', 'Grade'), ('All', 'All'), ('1', 'Grade 1'), ('2', 'Grade 2'), ('3', 'Grade 3'), ('4', 'Grade 4'),
-                                          ('5', 'Grade 5'), ('6', 'Grade 6'), ('7', 'Kinder'), 
-                                          ('1', 'After'), ('1', 'Phonics'),])
+    grade = SelectField('Grade', choices=[])
     
     publisher = SelectField('Publisher', choices=['Textbook', 'All'])
     lesson = SelectField('Lesson', choices=['Lesson', 'All'], validate_choice=False)

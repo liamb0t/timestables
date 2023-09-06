@@ -38,20 +38,19 @@ function handleLikes() {
     .then(response => response.json())
     .then(data => {
         if (data['liked']) {
-            likeCounter.innerHTML = `${count + 1} likes`;
+            likeCounter.innerHTML = (count === 0) ? '1 like': `${count + 1} likes`;
             likeCounter.dataset.postLikes = count + 1;
-            likeBtn.setAttribute('class', 'fa-solid fa-heart');
-            likeBtn.style.color = 'red'
+            this.setAttribute('class', 'fa-regular fa-heart');
+            this.style.color = 'orange';
         }
         else {
-            likeCounter.innerHTML = `${count - 1} likes`;
+            likeCounter.innerHTML = (count === 1) ? likeCounter.style.display = 'none': (count === 2) ? '1 like': `${count - 1} likes`;
             likeCounter.dataset.postLikes = count - 1;
-            likeBtn.setAttribute('class', 'fa-regular fa-heart');
-            likeBtn.style.color = 'black'
+            this.setAttribute('class', 'fa-regular fa-heart');
+            this.style.color = 'black';
         }
     })
 }
-
 function handleLikesComment() {
     const comment_id = this.dataset.commentId;
     const counter = document.getElementById(`like-counter-${comment_id}`);
@@ -61,18 +60,15 @@ function handleLikesComment() {
     .then(response => response.json())
     .then(data => {
         if (data['liked']) {
-            counter.innerHTML = `${count + 1} likes`;
+            counter.innerHTML = (count === 0) ? '1 like': `${count + 1} likes`;
             counter.dataset.count = count + 1;
-            this.setAttribute('class', 'fa-solid fa-heart');
-            this.style.color = 'red';
+            this.setAttribute('class', 'fa-regular fa-heart');
+            this.style.color = 'orange';
             counter.style.display = 'block';
         }
         else {
-            counter.innerHTML = `${count - 1} likes`;
+            counter.innerHTML = (count === 1) ? counter.style.display = 'none': (count === 2) ? '1 like': `${count - 1} likes`;
             counter.dataset.count = count - 1;
-            if (counter.dataset.count == 0) {
-                counter.style.display = 'none';
-            }
             this.setAttribute('class', 'fa-regular fa-heart');
             this.style.color = 'black';
         }

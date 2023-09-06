@@ -1,80 +1,10 @@
 {% extends "layout.html" %}
-{% block title %}Bibimhak - Materials{% endblock %}
+{% block title %}Liked materials - Bibimhak{% endblock %}
 {% block content %}
     <div class="main-container">
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 20px; padding-top: 20px">
-        <h2>Materials for {{ level }} school</h1>
-        <div>
-            <i class="fa-solid fa-pencil"></i>
-            <a class="create-btn" href="{{ url_for('materials.create_material', level=level) }}">Create</a>
-        </div>
-        
-    </div>
-
-    <div class="materials-filters" data-level="{{ level }}">
-        <form method="POST" action="" id="filter-submit">
-            {{ form.hidden_tag() }}
-            {% if level == 'camp' %}
-               
-            {% else %}
-                <div class="select-options" id="selectOptions">
-                    <h5>Sort by</h5>
-                    <div class="adv-filter" data-para="likes">Likes</div>
-                    <div class="adv-filter" data-para="new">Latest</div>
-                    <div class="adv-filter" data-para="old">Oldest</div>
-                    <div class="adv-filter" data-para="liked">Liked by me</div>
-                    <div class="adv-filter" data-para="comments">Comments</div>
-                    <div class="adv-filter" data-para="following">Following</div>
-                </div>
-               
-
-                {% if form.grade.errors %}
-                {{form.grade(class="form-control form-control-lg is-invalid")}}
-                <div class="invalid-feedback">
-                    {% for error in form.grade.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                    {{ form.grade(class="filter-select")}}
-                {% endif %}
-    
-                {% if form.publisher.errors %}
-                    {{form.publisher(class="form-control form-control-lg is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.publisher.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                        {{ form.publisher(class="filter-select")}}
-                {% endif %}
-    
-                {% if form.lesson.errors %}
-                    {{form.lesson(class="form-control form-control-lg is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.lesson.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                        {{ form.lesson(class="filter-select")}}
-                {% endif %}
-    
-                {% if form.type.errors %}
-                    {{form.type(class="form-control form-control-lg is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.type.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                        {{ form.type(class="filter-select")}}
-                {% endif %}
-            {% endif %}
-            <i id="custom-select" class="fa-solid fa-ellipsis-vertical"></i>
-        </form>
+        <h2>Liked materials</h1>
     </div>
 
     <div class="material-posts">
@@ -101,6 +31,9 @@
                             <div class="material-post-footer">
                                 <div style="display: flex; align-items: center;"> 
                                     <div class="material-post-tags">
+                                        <div class="tag">
+                                            {{ material.level }}
+                                        </div>
                                         {% for tag in material.tags %}
                                         <div class="tag">
                                             {{ tag.tagname }}

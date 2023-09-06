@@ -29,4 +29,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+let fileInput = document.querySelector('#files');
+let fileInputLabel = document.querySelector('.file-upload-label');
+
+fileInput.addEventListener('change', function() {
+    let files = fileInput.files;
+    if (files.length === 1) {
+        fileInputLabel.textContent = files[0].name;
+    } else {
+        fileInputLabel.textContent = `${files.length} files selected`;
+    }
+});
+
+const params = new URLSearchParams(window.location.search);
+const type = params.get('type');
+
+
+// If 'type' parameter exists, set the dropdown value
+if(type) {
+  const dropdown = document.getElementById("grade");
+  dropdown.value = type;
+}
+
 

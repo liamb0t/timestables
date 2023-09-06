@@ -141,7 +141,7 @@ function handleLikesComment() {
             counter.dataset.count = count + 1;
             this.setAttribute('class', 'fa-regular fa-heart');
             this.style.color = 'orange';
-            counter.style.display = 'block';
+            counter.style.display = 'block'
         }
         else {
             counter.innerHTML = (count === 1) ? counter.style.display = 'none': (count === 2) ? '1 like': `${count - 1} likes`;
@@ -152,5 +152,6 @@ function handleLikesComment() {
     })
 }
 
-  
+
+
   

@@ -116,17 +116,24 @@ class User(db.Model, UserMixin):
     
     def like_material(self, material):
         like = Like(user_id=self.id, material_id=material.id)
+        if material.creator != current_user:
+            material.creator.karma += 1
         db.session.add(like)
+        db.session.commit()
+        if material.creator != current_user:
+            n = Notification(name='material_like', like_id=like.id, user_id=material.user_id, material_id=material.id)
+            db.session.add(n)
+            db.session.commit()
         return like
 
     def unlike_material(self, material):
-        Notification.query.filter_by(
-            name='material_like',
+        like = Like.query.filter_by(
             user_id=self.id,
-            id=self.id).delete()
-        Like.query.filter_by(
-            user_id=self.id,
-            material_id=material.id).delete()
+            material_id=material.id).first()
+        db.session.delete(like)
+        if material.creator != current_user:
+            material.creator.karma -= 1
+        db.session.commit()
 
     def has_liked_material(self, material):
         return Like.query.filter(

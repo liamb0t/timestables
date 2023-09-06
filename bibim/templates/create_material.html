@@ -72,14 +72,15 @@
                 {% endif %}
                 <div>
                     {% if form.files.errors %}
-                        {{form.files(class="form-control form-control-lg is-invalid")}}
+                        {{form.files()}}
                         <div class="invalid-feedback">
                             {% for error in form.files.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.files(class="form-control form-control-lg")}}
+                        {{ form.files()}}
+                        <label for="files" class="file-upload-label">Upload files</label>
                     {% endif %}
                 </div>
             </fieldset>

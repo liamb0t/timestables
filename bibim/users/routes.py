@@ -35,8 +35,8 @@ def unfollow(username):
     return redirect(url_for('users.user_profile', username=username))
 
 @users.route("/users/<string:username>")
-@users.route("/users/<string:username>/<string:filter>")
-def user_profile(username, filter=None):
+def user_profile(username):
+    filter = request.args.get('filter', '')
     form = FollowForm()
     user = User.query.filter_by(username=username).first_or_404()
     followers = user.followers.all()

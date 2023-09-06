@@ -12,10 +12,20 @@
     </div>
 
     <div class="like-button">
-      <i id="material-like-button" class="fa-regular fa-heart" data-post-id="{{ post.id}}"></i>
-      <span id="material-like-count" class="like-count" data-post-likes="{{ post.likes_count() }}">{{ post.likes_count() }} likes</span>
+      {% if current_user.has_liked_post(post) %}
+        <i id="material-like-button" class="fa-regular fa-heart" style="color: orange;" data-post-id="{{ post.id}}"></i>
+      {% else %}
+        <i id="material-like-button" class="fa-regular fa-heart" data-post-id="{{ post.id}}"></i>
+      {% endif %}
+     
+      {% if post.likes|length == 1 %}
+        <span id="material-like-count" class="like-count" data-post-likes="{{ post.likes|length }}">{{ post.likes|length }} like</span>
+      {% elif post.likes|length > 1 %}
+        <span id="material-like-count" class="like-count" data-post-likes="{{ post.likes|length }}">{{ post.likes|length }} likes</span>
+      {% elif post.likes|length == 0 %}
+        <span id="material-like-count" class="like-count" data-post-likes="{{ post.likes|length }}"></span>
+      {% endif %}
     </div>
-
 
     <div class="footer">
       <div class="comments">

@@ -120,7 +120,11 @@
                   <li><a href="{{ url_for('materials.forum') }}"><i class="fa-solid fa-globe"></i><span>Community</span></a></li>
                   <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-business-time "></i><span>Meetings</span></a></li>
                   <li><a href="{{ url_for('marketplace.load_ads') }}"><i class="fa-solid fa-shop"></i><span>Marketplace</span></a></li>
-                  <li><a href="{{ url_for('users.display_users') }}"><i class="fa fa-trophy"></i></i><span>Users</span></a></li>
+                  
+                  <li><a href='#' id="more-options-link"><i class="fa fa-chevron-down" style="padding-left: 2px;"></i></i><span>More</span></a></li>
+                  <li><a class="sidebar-more-option" href="{{ url_for('materials.liked_materials') }}" style="display: none;"><i class="fa-solid fa-thumbs-up"></i></i></i><span>Liked materials</span></a></li>
+                  <li><a class="sidebar-more-option" href="{{ url_for('users.display_users') }}" style="display: none;"><i class="fa fa-user"></i></i><span>Users</span></a></li>
+                  <li><a href='#' id="less-options-link" style="display: none;"><i class="fa fa-chevron-up"></i></i><span>Less</span></a></li>
                 </ul> 
             </div>
 

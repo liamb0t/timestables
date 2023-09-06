@@ -19,7 +19,11 @@
             </div>
             <div>
                 <i class="fa-solid fa-pencil"></i>
-                <a class="create-btn" href="{{ url_for('materials.create_material', level='community') }}">Make a post</a>
+                {% if request.args.get('b') %}
+                    <a class="create-btn" href="{{ url_for('materials.create_material', level='community', type=request.args.get('b')) }}">Make a post</a>
+                {% else %}
+                    <a class="create-btn" href="{{ url_for('materials.create_material', level='community') }}">Make a post</a>
+                {% endif %}
             </div>
         </div>
 
@@ -27,7 +31,7 @@
             <a href="{{ url_for('materials.forum') }}">All</a>
             <a href="{{ url_for('materials.forum', b='languages') }}">Language Learning</a>
             <a href="{{ url_for('materials.forum', b='recommendations') }}">맛집</a>
-            <a href="{{ url_for('materials.forum', b='visa') }}">Teaching</a>
+            <a href="{{ url_for('materials.forum', b='teaching') }}">Teaching</a>
             <a href="{{ url_for('materials.forum', b='jobs') }}">Job Adverts</a>
             <a href="{{ url_for('materials.forum', b='travel') }}">Travel</a>
             <a href="{{ url_for('materials.forum', b='korea') }}">Korea</a>
@@ -41,32 +45,50 @@
         </nav>
         
         <div class="material-posts">
-            {% if materials.total == 0 %}
+            {% if posts.total == 0 %}
                 <h3>Hm...it seems like there are no results with those attributes. 🙅</h3>
                 <p>Try using a different filter or use the searchbar above.</p>
             {% endif %}
-            {% for material in materials %}
-                <a href="{{ url_for('materials.material', material_id=material.id)}}">
+            {% for post in posts %}
+                <a href="{{ url_for('materials.material', material_id=post.id)}}">
                     <div class="material-post-container">
-                    <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + material.creator.image_file)}}" alt="Profile Picture">
-                    <div>
+                
+                    <div style="width: 100%;">
                         <div class="material-post-header">
-                            <div class="material-post-grade">Grade {{ material.grade }}</div>
-                            <div class="material-post-title">{{ material.title }}</div>
-                            
-                        </div>
-                        <div class="material-post-footer">
-                            <div class="material-post-user-info">
-                                <span class="material-post-author">Posted by {{ material.creator.username }}</span>
-                                
-                                <span class="material-post-date">{{ post_timestamp(material.date_posted) }} ago</span>
+                            <div style="display: flex;">
+                                <div class="question-post-title">
+                                {{ post.title }}
+                                </div>
                             </div>
-                        
-                            <div class="material-post-comment-info">
-                                <i class="fa-regular fa-heart"></i>
-                                <span class="material-post-likes">{{ material.likes_count() }}</span>
-                                <i class="fa-regular fa-comment"></i>
-                                <span class="material-post-comments">{{ material.comments_count() }}</span>
+                        </div>
+                        <div class="question-post-content">
+                            {{ post.content|striptags|escape|replace('\n', '')|replace('  ', ' ')|truncate(200, killwords=False, end='...') }}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="material-post-footer">
+                                <div style="display: flex; align-items: center;"> 
+                                    <div class="material-post-tags">
+                                        <div class="tag">
+                                            {% if post.grade == 'recommendations' %}
+                                                맛집 
+                                            {% else %}
+                                                {{ post.grade }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="material-post-comment-info">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <span class="material-post-likes">{{ post.likes|length }}</span>
+                                    <i class="fa-regular fa-comment"></i>
+                                    <span class="material-post-comments">{{ post.likes|length }}</span>
+                                </div>
+                            </div>
+                            <div class="material-post-user-info">
+                                <span class="material-post-author">Asked by</span>
+                                <img class="material-post-profile-picture" src="{{ url_for('static', filename='pics/' + post.creator.image_file)}}" alt="Profile Picture">
+                                <span class="material-post-author">{{ post.creator.username }}</span>
+                                <span class="material-post-date">{{ post_timestamp(post.date_posted) }} ago</span>
                             </div>
                         </div>
                     </div>
@@ -74,9 +96,9 @@
                 </a>
             {% endfor %}
         </div>
-        {% for page_num in materials.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
             {% if page_num %}
-                {% if materials.page == page_num %}
+                {% if posts.page == page_num %}
                     <a style="background-color: rgba(244, 130, 37, 1); color: white;" class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
                 {% else %}
                     <a class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>

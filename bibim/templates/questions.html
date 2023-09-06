@@ -6,7 +6,11 @@
             <h2>Questions</h1>
             <div>
                 <i class="fa-solid fa-pencil"></i>
-                <a class="create-btn" href="{{ url_for('materials.create_material', level='question') }}">Ask a question</a>
+                {% if request.args.get('type') %}
+                    <a class="create-btn" href="{{ url_for('materials.create_material', level='question', type=request.args.get('type')) }}">Ask a question</a>
+                {% else %}
+                    <a class="create-btn" href="{{ url_for('materials.create_material', level='question') }}">Ask a question</a>
+                {% endif %}
             </div>
         </div>
         
@@ -89,5 +93,6 @@
     </div>
     <script src="{{ url_for('static', filename='js/customSelectBtn.js') }}"></script>
     <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+
 {% endblock content %}
 
