@@ -454,7 +454,7 @@ function add_post(post) {
                         html = `
                         <div class="comment-container" style="margin-left: 50px;">
                             <div>
-                                <a href="">
+                                <a>
                                     <img class="user-pic" src="/static/pics/default.jpg" alt="User profile picture">
                                 </a> 
                             </div>
@@ -555,46 +555,12 @@ function createLikesPopup(user) {
 
   // Create the content div
   const contentDiv = document.createElement('div');
-  contentDiv.classList.add('likes-content');
-
-  // Create the user list
-  const userList = document.createElement('ul');
-  userList.classList.add('user-list');
-
-  // Create a sample user list item
-  const userItem = document.createElement('li');
-
-  // Create the user info container
-  const userInfo = document.createElement('div');
-  userInfo.classList.add('user-info');
-
-  // Create the link to the user profile
-  const userProfileLink = document.createElement('a');
-  userProfileLink.href = `/users/${user["username"]}`;
-
-  // Create the user profile picture
-  const userProfileImg = document.createElement('img');
-  userProfileImg.src =  `static/pics/${user['pic']}`;
-  userProfileImg.alt = 'User Profile Picture';
-
-  // Create the username span
-  const usernameSpan = document.createElement('span');
-  usernameSpan.classList.add('username');
-  usernameSpan.textContent = user["username"];
-
-  // Create the follow button
-  const followButton = document.createElement('button');
-  followButton.classList.add('follow-button');
-  followButton.textContent = 'Follow';
-
-  // Append the elements together
-  userProfileLink.appendChild(userProfileImg);
-  userProfileLink.appendChild(usernameSpan);
-  userInfo.appendChild(userProfileLink);
-  userInfo.appendChild(followButton);
-  userItem.appendChild(userInfo);
-  userList.appendChild(userItem);
-  contentDiv.appendChild(userList);
+  contentDiv.innerHTML = `
+        <div class="user-row">
+            <img class="profile-pic" src="static/pics/${user['pic']}" alt="User1 Name">
+            <span class="username">${user['username']}</span>
+            <button class="follow-btn">Follow</button>
+        </div>` 
   popupContainer.appendChild(contentDiv);
 
   // Append the likes popup to the document body

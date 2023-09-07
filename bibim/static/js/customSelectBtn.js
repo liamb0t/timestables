@@ -7,7 +7,7 @@ const lessonFilter = document.querySelector('#lesson')
 const textBookFilter = document.querySelector('#publisher')
 
 const gradeFilter = document.querySelector('#grade')
-
+const lesson = localStorage.getItem('lesson')
 
 document.addEventListener('DOMContentLoaded', function() {
   const publisher = textBookFilter.value;
@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
     lessonFilter.style.display = 'inline'
   }
 })
-  
 
 function toggleOptions() {
   const rect = this.getBoundingClientRect();
@@ -40,6 +39,9 @@ function handleOutsideClick(event) {
 
 document.querySelectorAll('.filter-select').forEach(select => {
   select.onchange = function() {
+    if (select.id == 'lesson') {
+      localStorage.setItem('lesson', select.value)
+    }
     document.querySelector('#filter-submit').submit()
   }
 });
@@ -59,11 +61,11 @@ document.querySelectorAll('.adv-filter').forEach(select => {
   }
 });
 
-
-textBookFilter.onchange = function() {
+window.onload = function() {
   fetch(`/get_lessons/${filters.dataset.level}/${gradeFilter.value}/${textBookFilter.value}`)  
     .then(response => response.json())
     .then(data => {
+    if (data['lesson_choices']) {
       lessonFilter.innerHTML = ''
       data['lesson_choices'].forEach(choice => {
         let option = document.createElement('option');
@@ -74,6 +76,11 @@ textBookFilter.onchange = function() {
         option.value = choice[0];
         option.text = text
         lessonFilter.appendChild(option);
+        if (lesson == option.value) {
+          lessonFilter.value = lesson
+        }
       });
-    })
+    }
+  })
 }
+

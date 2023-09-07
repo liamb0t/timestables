@@ -21,7 +21,7 @@
     </head>
     <body>
         <div class="top-line"></div>
-        <div class="likes-popup"> </div>
+        <div class="likes-popup"></div>
         <div class="options-popup">
           <div style="color: red; font-weight: bold;">Report</div>
           <div style="color: red; font-weight: bold;" class="delete-btn" data-toggle="modal" data-target="#deleteModal">Delete</div>
@@ -104,44 +104,39 @@
             </div>
           </div>
         </div>  
-        
+        <div class="sidebar">
+          <ul>
+            <li><a href="{{ url_for('main.home') }}"><i class="fa fa-house"></i><span>Home</span></a></li>
+            <li><a id="materials-link" href="#"><i class="fa fa-book"></i><span>Library</span></a></li>
+            <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa-solid fa-seedling"></i><span>Elementary</span></a></li>
+            <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='middle') }}"><i class="fa fa-school"></i><span>Middle School</span></a></li>
+            <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='high') }}"><i class="fa fa-graduation-cap"></i><span>High School</span></a></li>
+            <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-tent"></i><span>Camp</span></a></li>
+            <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='games') }}"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
+            
+            <li><a href="{{ url_for('materials.questions') }}"><i class="fa fa-chalkboard-user"></i><span>Questions</span></a></li>
+            <li><a href="{{ url_for('materials.forum') }}"><i class="fa-solid fa-globe"></i><span>Community</span></a></li>
+            <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-business-time "></i><span>Meetings</span></a></li>
+            <li><a href="{{ url_for('marketplace.load_ads') }}"><i class="fa-solid fa-shop"></i><span>Marketplace</span></a></li>
+            
+            <li><a href='#' id="more-options-link"><i class="fa fa-chevron-down" style="padding-left: 2px;"></i></i><span>More</span></a></li>
+            <li><a class="sidebar-more-option" href="{{ url_for('materials.liked_materials') }}" style="display: none;"><i class="fa-solid fa-thumbs-up"></i></i></i><span>Liked materials</span></a></li>
+            <li><a class="sidebar-more-option" href="{{ url_for('users.display_users') }}" style="display: none;"><i class="fa fa-user"></i></i><span>Users</span></a></li>
+            <li><a href='#' id="less-options-link" style="display: none;"><i class="fa fa-chevron-up"></i></i><span>Less</span></a></li>
+          </ul> 
+      </div>
         <div class="wrapper">
-            <div class="sidebar">
-                <ul>
-                  <li><a href="{{ url_for('main.home') }}"><i class="fa fa-house"></i><span>Home</span></a></li>
-                  <li><a id="materials-link" href="#"><i class="fa fa-book"></i><span>Library</span></a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='elementary') }}"><i class="fa-solid fa-seedling"></i><span>Elementary</span></a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='middle') }}"><i class="fa fa-school"></i><span>Middle School</span></a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='high') }}"><i class="fa fa-graduation-cap"></i><span>High School</span></a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='camp') }}"><i class="fa fa-tent"></i><span>Camp</span></a></li>
-                  <li><a class="sidebar-option" href="{{ url_for('materials.load_materials', level='games') }}"><i class="fa fa-gamepad"></i><span>Games</span></a></li>
-                  
-                  <li><a href="{{ url_for('materials.questions') }}"><i class="fa fa-chalkboard-user"></i><span>Questions</span></a></li>
-                  <li><a href="{{ url_for('materials.forum') }}"><i class="fa-solid fa-globe"></i><span>Community</span></a></li>
-                  <li><a href="{{ url_for('meetings.load_meetings') }}"><i class="fa fa-business-time "></i><span>Meetings</span></a></li>
-                  <li><a href="{{ url_for('marketplace.load_ads') }}"><i class="fa-solid fa-shop"></i><span>Marketplace</span></a></li>
-                  
-                  <li><a href='#' id="more-options-link"><i class="fa fa-chevron-down" style="padding-left: 2px;"></i></i><span>More</span></a></li>
-                  <li><a class="sidebar-more-option" href="{{ url_for('materials.liked_materials') }}" style="display: none;"><i class="fa-solid fa-thumbs-up"></i></i></i><span>Liked materials</span></a></li>
-                  <li><a class="sidebar-more-option" href="{{ url_for('users.display_users') }}" style="display: none;"><i class="fa fa-user"></i></i><span>Users</span></a></li>
-                  <li><a href='#' id="less-options-link" style="display: none;"><i class="fa fa-chevron-up"></i></i><span>Less</span></a></li>
-                </ul> 
-            </div>
 
             <div class="main-content">
                 {% block content %}{% endblock content %}
             </div>
 
-            <div >
+            <div class="announcement-bar-content">
               {% block announcement_bar %}{% endblock announcement_bar %}
             </div>
           </div>
 
-          <footer>
-            <div class="footer-content">
-            
-            </div>
-          </footer>
+         
          
           <!--Modal-->
           <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

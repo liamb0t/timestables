@@ -12,9 +12,10 @@ class MaterialForm(FlaskForm):
     publisher = SelectField('Publisher', validate_choice=False)
     level = HiddenField()
     lesson = SelectField('Lesson', choices=[], validate_choice=False)
-    material_type = SelectField('Type of Material', validate_choice=False, choices=[(x, x) for x in ['Select a tag', 'Bomb game', 'Writing game',
-                                                                              'Reading game', 'Review game', 'Intro PPT',
-                                                                              'Words in songs', 'Non-tech game'
+    material_type = SelectField('Type of Material', validate_choice=False, choices=[(x, x) for x in ['Select a tag', 'Bomb game', 'Writing',
+                                                                              'Reading', 'Speaking', 'Listening', 'Review', 
+                                                                              'Intro PPT', 'Phonics', 'Multi-skill', 'Worksheets',
+                                                                              'Words in songs', 'Non-tech'
                                                                             ]])
     submit = SubmitField('Create Material') 
 
@@ -31,9 +32,10 @@ class SelectForm(FlaskForm):
     
     publisher = SelectField('Publisher', choices=['Textbook', 'All'])
     lesson = SelectField('Lesson', choices=['Lesson', 'All'], validate_choice=False)
-    type = SelectField('Type of Material', choices=[(x, x) for x in ['Material Type', 'Any', 'Bomb game', 'Writing game',
-                                                                              'Reading game', 'Review game', 'Intro PPT',
-                                                                              'Words in songs', 'Non-tech game'
+    type = SelectField('Type of Material', choices=[(x, x) for x in ['Material Type', 'Any', 'Bomb game', 'Writing',
+                                                                              'Reading', 'Speaking', 'Listening', 'Review', 
+                                                                              'Intro PPT', 'Phonics', 'Multi-skill', 'Worksheets',
+                                                                              'Words in songs', 'Non-tech'
                                                                             ]])
     submit = SubmitField('Filter')
 

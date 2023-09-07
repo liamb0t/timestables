@@ -24,17 +24,19 @@
         </ul>
     </nav>
     <!-- Your landing page content goes here -->
-    
-    <div class="image-container">
-        <div class="text">
-            <h1>Where teachers mix and share their experience</h1>
-            <p>Bibimhak is a community-based platform for teachers to find and contribute materials for teaching, 
-                get answers to questions regarding daily life in and outside of school, 
-                and a social network to meet other teachers.</p>
-            <a class="big-sign-up-button" href="{{ url_for('main.register') }}">Join the Community</a>
+    <div style="display: flex; height: 92vh; justify-content: center;">
+        <div class="image-container">
+            <div class="text">
+                <h1>Where teachers mix and share their experience</h1>
+                <p>Bibimhak is a community-based platform for teachers to find and contribute materials for teaching, 
+                    get answers to questions regarding daily life in and outside of school, 
+                    and a social network to meet other teachers.</p>
+                <a class="big-sign-up-button" href="{{ url_for('main.register') }}">Join the Community</a>
+            </div>
+            <img src="{{ url_for('static', filename='landing_page/teacher.png')}}">
         </div>
-        <img src="{{ url_for('static', filename='landing_page/teacher.png')}}">
     </div>
+   
     <footer>
         <div class="footer-container">
           <div class="logo">

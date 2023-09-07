@@ -1,6 +1,6 @@
 :root {
   --navbar-height: 4rem;
-  --sidebar-width: 18rem;
+  --sidebar-width: 15rem;
   --sidebar-padding-top: 2rem;
   --conversations--width: 20rem;
 }
@@ -81,10 +81,9 @@ input[type="number"] {
 }
 
 .main-container {
+  min-width: 50rem;
   background-color: white;
   border-radius: 10px;
-  margin: 0 auto;
-  width: 50rem; 
 }
 
 
@@ -351,7 +350,7 @@ emoji-picker {
 }
 
 body {
-  padding-top: 70px;
+  padding-top: var(--navbar-height);
   background-color: #e6e6ea;
 }
 
@@ -398,7 +397,8 @@ a:hover i {
 /* wrapper styling */
 .wrapper {
   display: flex;
-  flex-direction: row;
+  justify-content: space-around;
+  margin-left: calc(var(--sidebar-width) + 1.25rem)
 }
 
 /* sidebar styling */
@@ -408,7 +408,6 @@ a:hover i {
   bottom: 0;
   background-color: #e6e6ea;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  padding: 0px 20px;
   padding-top: var(--sidebar-padding-top);
   width: var(--sidebar-width); /* You may have to specify a width for your sidebar */
 }
@@ -425,7 +424,8 @@ a:hover i {
   font-size: 16px;
   text-decoration: none;
   padding: 10px 20px;
-  border-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
   transition: background-color 0.3s ease;
 }
 
@@ -484,9 +484,7 @@ a:hover i {
 
 /* main content styling */
 .main-content {
-  width: 60rem;
   overflow-y: scroll;
-  margin-left: var(--sidebar-width); 
   padding-top: var(--sidebar-padding-top);
 }
 
@@ -817,9 +815,8 @@ a:hover i {
 /* Styling for displaying posts */
 
 .posts {
+  max-width: 35rem;
   border-radius: 20px;
-  margin: 0 auto;
-  width: 35rem;
 }
 
 .post-container {
@@ -868,6 +865,10 @@ a:hover i {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.announcement-bar-content {
+  max-width: 24rem;
 }
 
 .announcement-bar-entry {

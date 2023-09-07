@@ -3,10 +3,11 @@ from flask_login import current_user, login_required
 from bibim import db
 from bibim.materials.forms import CommentForm
 from bibim.materials.forms import MaterialForm, SelectForm
-from bibim.models import Material, Tag, Comment, Like, tags_table, Textbook, Notification
+from bibim.models import Material, Tag, Comment, Like, tags_table, Textbook, Notification, Post, Meeting
 from bibim.materials.utils import update_textbooks_db, get_publishers, get_grades, save_file, get_file_size
 from bibim.posts.utils import post_timestamp
 from sqlalchemy import func
+import datetime
 
 materials = Blueprint('materials', __name__)
 
@@ -20,16 +21,14 @@ def update_textbooks():
         print('Error updating textbooks:', e)
         return redirect(url_for('main.home'))
 
-@materials.route("/get_lessons/<string:level>/<int:grade>/<string:publisher>")
+@materials.route("/get_lessons/<string:level>/<string:grade>/<string:publisher>")
 @login_required
 def get_lesson_choices(level, grade, publisher):
     textbook = Textbook.query.filter_by(publisher=publisher, level=level, grade=grade).first()
-   
+    lesson_choices = None
     # If no textbook found, return an error response
-    if textbook is None:
-        return jsonify({'error': 'Textbook not found'}), 404
-
-    lesson_choices = [(lesson.id, lesson.title) for lesson in textbook.lessons]
+    if textbook is not None:
+        lesson_choices = [(lesson.id, lesson.title) for lesson in textbook.lessons]
 
     return jsonify({
         'lesson_choices': lesson_choices
@@ -57,12 +56,16 @@ def load_materials(level):
             tag = Tag.query.filter_by(tagname=publisher).first()
             if tag:
                 materials = materials.filter(Material.material_tag.contains(tag))
+            else:
+                materials = materials.filter_by(grade=999)
         if lesson != 'All' and lesson != 'Lesson':
             materials = materials.filter_by(lesson_id=lesson)
         if material_type != 'Any' and material_type != 'Material Type':
             tag = Tag.query.filter_by(tagname=material_type).first()
             if tag:
                 materials = materials.filter(Material.material_tag.contains(tag))
+            else:
+                materials = materials.filter_by(grade=999)
         if filter:
             if filter == 'new':
                 materials = materials.order_by(Material.date_posted.desc())
@@ -82,6 +85,7 @@ def load_materials(level):
                             .order_by(func.count(Comment.id).desc())
         else:
             print(form.errors)
+    
     materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=10)
     return render_template('materials.html', materials=materials, level=level, form=form, post_timestamp=post_timestamp)
 
@@ -246,10 +250,21 @@ def questions():
     page = request.args.get('page', 1, type=int)
     type = request.args.get('type', '')
     questions = Material.query.filter_by(level='question')
+    current_datetime = datetime.datetime.utcnow()
+    popular_posts = Post.query.join(Post.likes, isouter=True)\
+                            .group_by(Post)\
+                            .order_by(func.count(Like.id).desc()).limit(5)
+    popular_materials = Material.query.join(Material.likes, isouter=True)\
+                            .group_by(Material).filter(Material.level != 'question')\
+                            .order_by(func.count(Like.id).desc()).limit(5)
+    upcoming_meetings =  Meeting.query.filter(Meeting.start_date >= current_datetime.date(),).all()
+    recent_questions = Material.query.filter_by(level='question').limit(5)
     if type:
             questions = Material.query.filter_by(level='question', section=type)
     questions = questions.order_by(Material.date_posted.desc()).paginate(page=page, per_page=15)
-    return render_template('questions.html', questions=questions, post_timestamp=post_timestamp)
+    return render_template('questions.html', questions=questions, post_timestamp=post_timestamp,
+                           popular_posts=popular_posts, popular_materials=popular_materials, upcoming_meetings=upcoming_meetings,
+                           recent_questions=recent_questions)
 
 
 @materials.route('/community', methods=["POST", "GET"])
