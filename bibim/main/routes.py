@@ -57,8 +57,7 @@ def login():
         if user and bcrpyt.check_password_hash(user.password, form.password.data):
             if user.verified:
                 login_user(user)
-                nextpage = request.args.get('next')
-                return redirect(url_for(nextpage)) if nextpage else redirect(url_for('main.home'))
+                return redirect(url_for('main.home'))
             else:
                 flash('Please confirm your email address to login.', 'danger')
                 return redirect(url_for('main.login'))  

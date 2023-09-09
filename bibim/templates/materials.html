@@ -9,23 +9,78 @@
             <i class="fa-solid fa-pencil"></i>
             <a class="create-btn" href="{{ url_for('materials.create_material', level=level) }}">Create</a>
         </div>
-        
     </div>
 
     <div class="materials-filters" data-level="{{ level }}">
-        <form method="POST" action="" id="filter-submit">
-            {{ form.hidden_tag() }}
+        <form method="GET" action="" id="filter-submit">
+           
             {% if level == 'camp' %}
                
             {% else %}
                 <div class="select-options" id="selectOptions">
                     <h5>Sort by</h5>
-                    <div class="adv-filter" data-para="likes">Likes</div>
-                    <div class="adv-filter" data-para="new">Latest</div>
-                    <div class="adv-filter" data-para="old">Oldest</div>
-                    <div class="adv-filter" data-para="liked">Liked by me</div>
-                    <div class="adv-filter" data-para="comments">Comments</div>
-                    <div class="adv-filter" data-para="following">Following</div>
+                    <a href="{{ url_for('materials.load_materials', 
+                        level=level, 
+                        page=page_num, 
+                        grade=form.grade.data, 
+                        publisher=form.publisher.data, 
+                        lesson=form.lesson.data, 
+                        type=form.type.data,
+                        f='likes') }}">{{ page_num }}
+                        <div class="adv-filter">Top</div>
+                    </a>
+                  
+                    <a href="{{ url_for('materials.load_materials', 
+                        level=level, 
+                        page=page_num, 
+                        grade=form.grade.data, 
+                        publisher=form.publisher.data, 
+                        lesson=form.lesson.data, 
+                        type=form.type.data,
+                        f='new') }}">{{ page_num }}
+                        <div class="adv-filter">Newest</div>
+                    </a>
+                    <a href="{{ url_for('materials.load_materials', 
+                        level=level, 
+                        page=page_num, 
+                        grade=form.grade.data, 
+                        publisher=form.publisher.data, 
+                        lesson=form.lesson.data, 
+                        type=form.type.data,
+                        f='old') }}">{{ page_num }}
+                        <div class="adv-filter">Oldest</div>
+                    </a>
+                    <a href="{{ url_for('materials.load_materials', 
+                        level=level, 
+                        page=page_num, 
+                        grade=form.grade.data, 
+                        publisher=form.publisher.data, 
+                        lesson=form.lesson.data, 
+                        type=form.type.data,
+                        f='liked') }}">{{ page_num }}
+                        <div class="adv-filter">Liked by me</div>
+                    </a>
+                    <a href="{{ url_for('materials.load_materials', 
+                    level=level, 
+                    page=page_num, 
+                    grade=form.grade.data, 
+                    publisher=form.publisher.data, 
+                    lesson=form.lesson.data, 
+                    type=form.type.data,
+                    f='comments') }}">{{ page_num }}
+                    <div class="adv-filter">Comments</div>
+                </a>
+                <a href="{{ url_for('materials.load_materials', 
+                    level=level, 
+                    page=page_num, 
+                    grade=form.grade.data, 
+                    publisher=form.publisher.data, 
+                    lesson=form.lesson.data, 
+                    type=form.type.data,
+                    f='following') }}">{{ page_num }}
+                    <div class="adv-filter">Following</div>
+                </a>
+
                 </div>
                
 
@@ -127,17 +182,20 @@
             </a>
         {% endfor %}
     </div>
-    {% for page_num in materials.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-        {% if page_num %}
-            {% if materials.page == page_num %}
-                <a style="background-color: rgba(244, 130, 37, 1); color: white;" class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
+    <div class="paginate-container">
+        {% for page_num in materials.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% set type = request.args.get('type')%}
+            {% if page_num %}
+                {% if materials.page == page_num %}
+                    <div class="paginate-btn-active">{{page_num}}</div>
+                {% else %}
+                    <a class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num, grade=form.grade.data, publisher=form.publisher.data, lesson=form.lesson.data, type=form.type.data) }}">{{ page_num }}</a>
+                {% endif %}
             {% else %}
-                <a class="paginate-btn" href="{{ url_for('materials.load_materials', level=level, page=page_num) }}">{{ page_num }}</a>
+                ...
             {% endif %}
-        {% else %}
-            ...
-        {% endif %}
-    {% endfor %}    
+        {% endfor %}  
+    </div>  
     </div>  
     <script src="{{ url_for('static', filename='js/customSelectBtn.js') }}"></script>
 {% endblock content %}

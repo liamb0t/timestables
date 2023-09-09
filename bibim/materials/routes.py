@@ -34,59 +34,65 @@ def get_lesson_choices(level, grade, publisher):
         'lesson_choices': lesson_choices
     })
 
-@materials.route("/materials/<string:level>", methods=['GET', 'POST'])
+@materials.route("/materials/<string:level>", methods=['GET'])
 def load_materials(level):
+    # Get filter criteria from request.args
+    grade = request.args.get('grade', '', type=str)
+    publisher = request.args.get('publisher', '', type=str)
+    lesson = request.args.get('lesson', '', type=str)
+    material_type = request.args.get('type', '', type=str)
+    filter = request.args.get('f', type=str)
     page = request.args.get('page', 1, type=int)
-    materials = Material.query.filter_by(level=level)
+    
     form = SelectForm()
     publishers = Textbook.query.with_entities(Textbook.publisher).filter(Textbook.level == level).distinct().all()
     form.publisher.choices = ['Textbook', 'All'] + [publisher[0] for publisher in publishers]
     form.grade.choices = get_grades(level)
-    
-    if form.validate_on_submit():
-        filter = request.args.get('f', 1, type=str)
-        grade = form.grade.data
-        publisher = form.publisher.data
-        lesson = form.lesson.data
-        material_type = form.type.data
+   
+    form.grade.data = grade
+    form.publisher.data = publisher
+    form.lesson.data = lesson
+    form.type.data = material_type
 
-        if grade != 'All' and grade != '0':
-            materials = materials.filter_by(grade=grade)
-        if publisher != 'All' and publisher != 'Textbook':
-            tag = Tag.query.filter_by(tagname=publisher).first()
-            if tag:
-                materials = materials.filter(Material.material_tag.contains(tag))
-            else:
-                materials = materials.filter_by(grade=999)
-        if lesson != 'All' and lesson != 'Lesson':
-            materials = materials.filter_by(lesson_id=lesson)
-        if material_type != 'Any' and material_type != 'Material Type':
-            tag = Tag.query.filter_by(tagname=material_type).first()
-            if tag:
-                materials = materials.filter(Material.material_tag.contains(tag))
-            else:
-                materials = materials.filter_by(grade=999)
-        if filter:
-            if filter == 'new':
-                materials = materials.order_by(Material.date_posted.desc())
-            elif filter == 'old':
-                materials = materials.order_by(Material.date_posted.asc())
-            elif filter == 'comments':
-                materials = materials.join(Material.comments, isouter=True)\
-                            .group_by(Material)\
-                            .order_by(func.count(Comment.id).desc())
-            elif filter == 'likes':
-                materials = materials.join(Material.likes, isouter=True)\
-                            .group_by(Material)\
-                            .order_by(func.count(Like.id).desc())
-            elif filter == 'liked':
-                materials = materials.join(Material.likes, isouter=True)\
-                            .group_by(Material).filter(Like.user_id==current_user.id)\
-                            .order_by(func.count(Comment.id).desc())
+    materials = Material.query.filter_by(level=level)
+
+    if grade not in ['All', '0', '']:
+        materials = materials.filter_by(grade=grade)
+    if publisher not in ['All', 'Textbook', '']:
+        tag = Tag.query.filter_by(tagname=publisher).first()
+        if tag:
+            materials = materials.filter(Material.material_tag.contains(tag))
         else:
-            print(form.errors)
-    
+            materials = materials.filter_by(grade=999)
+    if lesson not in ['All', 'Lesson', '']:
+        materials = materials.filter_by(lesson_id=lesson)
+    if material_type not in ['Any', 'Material Type', '']:
+        tag = Tag.query.filter_by(tagname=material_type).first()
+        if tag:
+            materials = materials.filter(Material.material_tag.contains(tag))
+        else:
+            materials = materials.filter_by(grade=999)
+
+    if filter:
+        if filter == 'new':
+            materials = materials.order_by(Material.date_posted.desc())
+        elif filter == 'old':
+            materials = materials.order_by(Material.date_posted.asc())
+        elif filter == 'comments':
+            materials = materials.join(Material.comments, isouter=True)\
+                        .group_by(Material)\
+                        .order_by(func.count(Comment.id).desc())
+        elif filter == 'likes':
+            materials = materials.join(Material.likes, isouter=True)\
+                        .group_by(Material)\
+                        .order_by(func.count(Like.id).desc())
+        elif filter == 'liked':
+            materials = materials.join(Material.likes, isouter=True)\
+                        .group_by(Material).filter(Like.user_id==current_user.id)\
+                        .order_by(func.count(Comment.id).desc())
+
     materials = materials.order_by(Material.date_posted.desc()).paginate(page=page, per_page=10)
+    
     return render_template('materials.html', materials=materials, level=level, form=form, post_timestamp=post_timestamp)
 
 

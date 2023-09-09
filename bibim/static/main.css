@@ -198,10 +198,18 @@ input[type="number"] {
 }
 
 #emoji-icon {
+  
   cursor: pointer;
   margin: 0;
   margin-right: 1rem;
 }
+#picture-icon {
+
+  cursor: pointer;
+  margin: 0;
+  margin-right: 0.9rem;
+}
+
 
 emoji-picker {
   --background: white;
@@ -264,6 +272,10 @@ emoji-picker {
   overflow: hidden;
 }
 
+.navbar .profile-pic:hover {
+  cursor: pointer;
+}
+
 .navbar .profile-pic img {
   width: 100%;
   height: auto;
@@ -283,9 +295,13 @@ emoji-picker {
   border-radius: 4px;
 }
 
+.profile-dropdown:hover {
+  cursor: default;
+}
+
 .profile-dropdown a {
   color: black;
-  padding: 12px 16px;
+  padding: 0.25rem 0.35rem;
   text-decoration: none;
   display: block;
 }
@@ -307,13 +323,18 @@ emoji-picker {
   margin-right: 8px;
 }
 
+.profile-dropdown .header img:hover {
+  cursor: pointer;
+}
+
 .profile-dropdown .logout-btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  
 }
 
 .profile-dropdown .logout-btn i {
+  transform: scale(1);
   margin-right: 8px;
 }
 
@@ -484,7 +505,7 @@ a:hover i {
 
 /* main content styling */
 .main-content {
-  overflow-y: scroll;
+  overflow-y: hidden;
   padding-top: var(--sidebar-padding-top);
 }
 
@@ -516,20 +537,46 @@ a:hover i {
   color: white;
 }
 
+.paginate-container {
+  padding: 15px;
+}
+
 .paginate-btn {
   display: inline-block;
-  padding: 5px 10px;
+  width: 1.7rem;                
+  height: 1.7rem;                
+  line-height: 1.7rem;  
+  text-align: center;                 
   border-radius: 5px;
-  border: 1px solid #00000014;
+  border: 1px solid #2929295a;
   background-color: #fff;
   color: #252525;
   text-decoration: none;
 }
 
-.paginate-btn:hover {
-  background-color: #49494944;
-  text-decoration: none;
+.paginate-btn-active {
+
+    display: inline-block;       
+    width: 1.7rem;                
+    height: 1.7rem;                
+    line-height: 1.7rem;          
+    text-align: center;          
+
+    border: none;            
+    border-radius: 5px;       
+
+    background-color: orange;  
+    color: white;               
+
+    text-decoration: none; 
 }
+
+.paginate-btn:hover {
+  background-color: #49494920;
+  text-decoration: none;
+  color: black;
+}
+
 
 .material-container {
   background-color: white;
@@ -836,6 +883,10 @@ a:hover i {
   border-radius: 20px;
 }
 
+.post-tools-container {
+  display: flex;
+}
+
 .post-form-container textarea {
   padding-bottom: 30px;
 }
@@ -847,8 +898,9 @@ a:hover i {
 }
 
 .post-form-footer {
+  width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -1081,6 +1133,22 @@ a:hover i {
 
 .fa-ellipsis:hover {
   color: #b0b0b0;
+}
+
+.fa-ellipsis-vertical {
+  transition: background-color 0.3s, border-radius 0.3s;  
+    
+  display: inline-flex;      /* Uses flex for centering */
+  width: 1.25rem;               
+  height: 1.5rem;              
+  align-items: center;       /* Vertically centers the icon */
+  justify-content: center;   /* Horizontally centers the icon */
+  border-radius: 5px;        
+  
+}
+
+.fa-ellipsis-vertical:hover {
+  background-color: #f5f5f5;  
 }
 
 /* likes pop up style */
@@ -1468,10 +1536,16 @@ a:hover i {
   padding: 12px;
 }
 
+.select-options h5 {
+  padding: 0.25rem;
+  margin: 0;
+  color: rgb(67, 67, 67);
+}
+
 .select-options a {
+  font-size: 0.9rem;
   display: block;
-  padding: 8px 14px;
-  color: black;
+  color: rgb(67, 67, 67);
   text-decoration: none;
 }
 
@@ -1481,7 +1555,7 @@ a:hover i {
 
 .adv-filter {
   border-radius: 10px;
-  padding: 5px;
+  padding: 0.25rem 0.25rem;
 }
 
 .adv-filter:hover {

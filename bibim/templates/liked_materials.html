@@ -9,8 +9,8 @@
 
     <div class="material-posts">
         {% if materials.total == 0 %}
-            <h3>Hm...it seems like there are no results with those attributes. 🙅</h3>
-            <p>Try using a different filter or use the searchbar above.</p>
+            <h3>You have no currently liked materials</h3>
+            <p>Checkout some materials <a href="{{ url_for('materials.load_materials', level='elementary')}}">here</p>
         {% endif %}
         {% for material in materials %}
             <a href="{{ url_for('materials.material', material_id=material.id)}}">

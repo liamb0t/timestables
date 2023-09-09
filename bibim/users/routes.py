@@ -60,12 +60,6 @@ def user_profile(username):
                            following_count=following_count, member_time=member_time, 
                            followers=followers, following=following, posts=posts, post_timestamp=post_timestamp)
 
-@users.route("/users/<string:username>")
-def edit_profile(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    return render_template('edit_profile.html', user=user)
-
-
 @users.route("/users/<string:username>/<string:contents>")
 def user_contents(username, contents):
     if contents == 'posts':

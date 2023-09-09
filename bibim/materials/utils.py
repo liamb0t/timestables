@@ -53,8 +53,6 @@ def get_grades(level):
                 ('coteaching', 'Co-teachers'), ('contracts', 'Contracts'), ('epik', 'EPIK'), ('hagwon', 'Hagwon'), 
                 ('nhis', 'NHIS'), ('accommodation', 'Accommodation'), ('other', 'Other')]
 
-      
-
 def update_textbooks_db():
     file_path = os.path.join(current_app.root_path, 'textbooks.txt')
     with open(file_path, 'r') as f:

@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function toggleOptions() {
   const rect = this.getBoundingClientRect();
-  options.style.right = (document.documentElement.clientWidth - rect.right + 20) + 'px';
+  options.style.left = rect.left + 'px';
+  options.style.top = rect.bottom + 5 + 'px';
   
   if (options.style.display === "none" || options.style.display === "") {
     options.style.display = "block";
@@ -46,27 +47,14 @@ document.querySelectorAll('.filter-select').forEach(select => {
   }
 });
 
-document.querySelectorAll('.adv-filter').forEach(select => {
-  select.onclick = function() {
-    const currentURL = window.location.href;
-    const baseUrl = currentURL.split('?')[0];
-    let newURL;
-
-    // Check if the URL already has query parameters
-   
-    newURL = baseUrl + `?f=${this.dataset.para}`
-   
-    history.pushState(null, '', newURL);
-    document.querySelector('#filter-submit').submit()
-  }
-});
-
 window.onload = function() {
   fetch(`/get_lessons/${filters.dataset.level}/${gradeFilter.value}/${textBookFilter.value}`)  
     .then(response => response.json())
     .then(data => {
     if (data['lesson_choices']) {
-      lessonFilter.innerHTML = ''
+      for (let i = lessonFilter.options.length - 1; i >= 2; i--) {
+        lessonFilter.remove(i);
+      }
       data['lesson_choices'].forEach(choice => {
         let option = document.createElement('option');
         let text = choice[1];

@@ -1,14 +1,26 @@
 from flask_wtf import FlaskForm
-from wtforms import (StringField, TextAreaField, SubmitField,
-                     BooleanField, PasswordField, MultipleFileField, SelectField, HiddenField)
-from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError
+from wtforms import (StringField, SubmitField,
+                    MultipleFileField, SelectField, HiddenField)
+from wtforms.validators import DataRequired, ValidationError
 from flask_ckeditor import CKEditorField
+from bibim.main.utils import total_files_max_size
+from flask_wtf.file import FileAllowed
+
+allowed_extensions = [
+    'jpeg', 'jpg', 'png', 'gif',  # Image formats
+    'ppt', 'pptx',                # Presentation formats
+    'mp4', 'mp3', 'wav', 'mov',   # Audio/Video formats
+    'pdf',                        # Document format
+    'doc', 'docx',                # Word document formats
+    'xls', 'xlsx',                # Excel formats
+    'zip', 'rar'                  # Archive formats
+]
 
 class MaterialForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()], render_kw={'placeholder': 'Title'})
     grade = SelectField('Grade', validators=[DataRequired()])
     content = CKEditorField('Content', render_kw={'placeholder': 'Text'})
-    files = MultipleFileField('Attachments')
+    files = MultipleFileField('Attachments', validators=[FileAllowed(allowed_extensions), total_files_max_size(500)])
     publisher = SelectField('Publisher', validate_choice=False)
     level = HiddenField()
     lesson = SelectField('Lesson', choices=[], validate_choice=False)

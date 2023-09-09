@@ -8,6 +8,17 @@
             <fieldset class="form-group">
                 {{ form.lat }}
                 {{ form.lng }}
+
+                <div id="drop-area">
+                    <div>
+                        {{ form.cover_pic()}}
+                        <label for="cover_pic" class="file-upload-label">Upload picture</label>
+                    </div>
+                    <div>
+                       Accepts .jpg and .png
+                    </div>
+                  
+                </div>
                 <div>
                     {% if form.title.errors %}
                         {{form.title(class="form-control form-control-lg is-invalid")}}

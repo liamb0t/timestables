@@ -5,6 +5,7 @@ from bibim.models import Comment, Meeting, Like, Notification
 from bibim.meetings.forms import CommentForm, MeetingForm, FilterForm
 from bibim.posts.utils import post_timestamp
 from bibim.materials.utils import save_file, get_file_size
+from bibim.users.utils import save_picture
 from sqlalchemy import func, or_
 
 meetings = Blueprint('meetings', __name__)
@@ -93,7 +94,10 @@ def create_meeting():
                             content=form.content.data, organizer=current_user, location=form.location.data, 
                             tag=form.tag.data, start_time=form.start_time.data, start_date=form.start_date.data,
                             lat=float(form.lat.data), lng=float(form.lng.data), address=form.address.data)
-        db.session.add(meeting)
+        if form.cover_pic.data:
+            cover_pic = save_picture(form.cover_pic.data)
+            meeting.cover_pic = cover_pic
+        db.session.add(meeting) 
         if form.files.data:
             for file in form.files.data:
                 if file.filename != '':

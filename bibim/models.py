@@ -451,7 +451,9 @@ class Meeting(db.Model):
     location = db.Column(db.String(100), nullable=False)
     lat = db.Column(db.Float)
     lng = db.Column(db.Float)
+    cover_pic = db.Column(db.String(20), nullable=False, default='default.jpg')
     address = db.Column(db.String(150))
+
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     comments = db.relationship('Comment', backref='meeting')

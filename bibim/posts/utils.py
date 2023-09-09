@@ -15,7 +15,7 @@ def post_timestamp(date_posted):
 
     # determine the closest time interval
     if time_diff.total_seconds() < MINUTE:
-        time_since = 'Just now'
+        time_since = f'{int(time_diff.total_seconds())} s'
     elif MINUTE <= time_diff.total_seconds() < HOUR:
         time_since = f'{int(time_diff.total_seconds() / MINUTE)} m'
     elif HOUR <= time_diff.total_seconds() < DAY:

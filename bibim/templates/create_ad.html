@@ -74,9 +74,9 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.files()}}
                         <div id="drop-area">
                             <div>
+                                {{ form.files()}}
                                 <label for="files" class="file-upload-label">Add photos</label>
                             </div>
                             <div>
@@ -84,8 +84,6 @@
                             </div>
                           
                         </div>
-                      
-                      
                     {% endif %}
                 </div>
 

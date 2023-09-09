@@ -1,7 +1,8 @@
 import datetime
 import os
 import secrets
-from flask import current_app, url_for
+from flask import current_app
+
 
 def date_member_since(date_joined):
     join_date = date_joined.date()
@@ -31,3 +32,12 @@ def save_picture(form_picture):
     form_picture.save(picture_path)
 
     return picture_fn
+
+def file_max_size(max_size):
+    max_bytes = max_size*1024*1024
+    def file_length_check(form, field):
+        for file in field.data:
+            if len(file.read()) > max_bytes:
+                raise ValidationError(f"File size must be less than {max_size}MB")
+            file.seek(0)
+    return file_length_check

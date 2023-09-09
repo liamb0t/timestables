@@ -5,7 +5,7 @@ from wtforms import (StringField, TextAreaField, SubmitField,
 from wtforms.validators import Email, DataRequired, EqualTo, Length, ValidationError, Optional
 from wtforms_components import DateField
 from flask_wtf.file import FileAllowed
-
+from bibim.main.utils import file_max_size
 
 class MeetingForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()], render_kw={'placeholder': 'Event name'})
@@ -15,7 +15,7 @@ class MeetingForm(FlaskForm):
     start_time = TimeField(validators=[DataRequired()])
     end_date = DateField(validators=[Optional()])
     end_time = TimeField(validators=[Optional()])
-    cover_pic = FileField()
+    cover_pic = FileField('Cover picture', validators=[FileAllowed(['jpeg', 'png']), file_max_size(10)])
     lat = HiddenField('lat', validators=[Optional()])
     lng = HiddenField('lng', validators=[Optional()])
     address = HiddenField('address')
